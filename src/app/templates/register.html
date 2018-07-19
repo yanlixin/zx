@@ -1,0 +1,111 @@
+{% extends "basemini.html" %}
+{% block content %}
+
+<div class="login">
+        <div class="login-box register">
+           <h1>
+      登录择校
+      <a href="javascript:;" class="pull-right js-trun">注册<i class="fa fa-arrow-circle-o-right"></i>
+      </a>
+    </h1> 
+      <form id="login-form" class="form-vertical" method="post" action="http://www.howzhi.com/login_check" >
+    
+                   
+            <div class="form-group">
+              <label class="control-label" for="login_username">帐号</label>
+              <div class="controls">
+                <label class="fa-label">
+                  <i class="fa fa-user"></i>
+                </label>
+                                   <input class="form-control" id="login_username" type="text" name="_username" value="" required placeholder='手机/用户名' />
+                             <div class="help-block"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="login_password">密码</label>
+              <div class="controls">
+                <label class="fa-label">
+                  <i class="fa fa-unlock-alt"></i>
+                </label>
+                <input class="form-control" id="login_password" type="password" name="_password" required placeholder='密码'/>
+              </div>
+            </div>
+    
+            <div class="form-group">
+              <div class="controls">
+                <span class="checkbox mtm ">
+                  <label> <input type="checkbox" name="_remember_me" checked="checked"> 记住密码 </label>
+                  <a class="pull-right active" href="" tppabs="">忘记密码</a>
+                </span>
+              </div>
+              <input class="login-btn btn-primary btn" type="submit" value="登录" />
+                
+            </div>    
+            <input type="hidden" name="_target_path" value="/">
+            <input type="hidden" name="_csrf_token" value="th3ajqNZhzL8ZSWAwnD5cVzExe7OhkduzcJ_Hj1yQVo">
+          </form>    </div> 
+    </div>
+        <div class="login-box ">
+          <h1>
+        注册择校账号
+        <a href="/login" class="pull-right js-trun" >登录<i class="fa fa-arrow-circle-o-right"></i>
+        </a>
+    </h1>
+        <form id="register-form" class="form-vertical" method="post" action="http://www.howzhi.com/register?goto=/">
+            <div class="form-group mb40">
+                <label class="control-label required" for="register_mobile">手机号码</label>
+                <div class="controls">
+                <label class="fa-label">
+                    <i class="hz-icon icon-demo25"></i>
+                </label>
+                <input type="text" id="register_mobile" name="verifiedMobile" required="required"
+                        class="form-control" data-url="/register/mobile/check"
+                        placeholder="手机号码">
+                </div>
+            </div>
+            <div class="form-group mb40">
+                <label class="control-label required" for="register_password">密码</label>
+                <div class="controls">
+                   <label class="fa-label">
+                        <i class="hz-icon icon-lock"></i>
+                      </label>
+                    <input type="password" id="register_password" name="password" required="required" class="form-control"
+                           placeholder="密码">
+                </div>
+            </div>
+            <div class="form-group mb40  email_mobile_msg">
+                <label class="control-label required" for="sms_code">短信验证码</label>
+                <div class="controls row">
+                    <div class="col-xs-6" style="width: 154px;">
+                        <input type="text" class="form-control ident" id="sms_code" name="sms_code" placeholder="短信验证码"
+                            required="required"  data-url="/edu_cloud/sms_check/sms_registration">
+                    </div>
+                    <div class="col-xs-6">
+                        <a href="#modal" data-toggle="modal" class="btn ident btn-primary btn-lg  form-control  js-sms-send disabled"
+                        data-url="/register/captcha/modal"
+                        data-sms-url="/edu_cloud/sms_send">
+                            <span id="js-time-left"></span>
+                            <span id="js-fetch-btn-text">获取短信验证码</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb40 agren">
+                <div class="controls">
+                    <label style="margin-top: 14px;"><input type="checkbox" id="user_terms" checked="checked"> 我已阅读并同意<a href="userterms.htm" tppabs="http://www.howzhi.com/userterms" target="_blank">《服务协议》</a>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+              <div class="controls">
+                <button type="submit" id="register-btn " data-submiting-text="正在提交" 
+                  class="login-btn btn-primary btn">注册
+                </button>
+              </div>
+            </div>
+            <input type="hidden" name="captcha_enabled" value="1"/>
+            <input type="hidden" name="_csrf_token" value="th3ajqNZhzL8ZSWAwnD5cVzExe7OhkduzcJ_Hj1yQVo">
+        </form>
+    
+    </div>
+{% endblock %}

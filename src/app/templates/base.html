@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>择校网</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/1.css">
+	<link rel="stylesheet" href="/static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/static/font/iconfont.css">
+    <link rel="stylesheet" media="screen" href="/static/css/hz-font/iconfont.css-7.5.15.1.css" tppabs="" />
+    <link rel="stylesheet" type="text/css" href="/static/css/detailed.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/ng.css">
+	<link rel="stylesheet" href="/static/css/reset.css">
+    <script src="/static/js/jquery-1.11.1.min.js"></script>
+    <script src="/static/js/unslider.min.js"></script>
+    
+	<script>
+            $(document).ready(function(e) {
+                var progress = $(".progress"),li_width = $("#b04 li").length;
+                var unslider04 = $('#b04').unslider({
+                    dots: true,
+                    complete:function(index){
+                        progress.animate({"width":(100/li_width)*(index+1)+"%"});
+                    }
+                }),
+    
+                data04 = unslider04.data('unslider');
+                $('.unslider-arrow04').click(function() {
+                    var fn = this.className.split(' ')[1];
+                    data04[fn]();
+                });
+            });
+        </script>
+</head>
+<body>
+        
+	<div class="top">
+		<div class="top-logo"><img src="/static/img/logo.png-7.5.15.1.png" alt=""></div>
+		<div class="top-address">
+			<input type="text" placeholder="北京" id="place" name="" style="font-size: 16px">
+	<!-- 城市 -->
+	<div id="in_city" style="display: none"></div>
+
+	<!-- <script type="text/javascript" src="static/js/cityTemplate.js"></script> 
+	<script type="text/javascript">
+
+	    var inCity = $(".city_a_le1 a"); //城市
+	    var pla = $("#place");  //出发地
+	    var dest = $("#destination");  //目的地
+	    // 默认值
+	    inCity.width = "345";  //城市选择框  宽
+	    inCity.height = "auto";  //城市选择框  高
+	    inCity.id = "#in_city";  //城市选择框  父级ID
+	    inCity.Children = '.city_a_le1';  //城市名box
+	    // 初始化 城市HTML模板
+	    $(inCity.id).prepend(inCity._template.join(''));
+	    inCity.Hot(cityA);
+	    
+	    //城市 导航
+	    var apay = $(".screen a");
+
+	    var placeThis; //当前选择标签
+	    apay.click(function(obj){  //城市导航
+	        inCity.payment($(this));
+	    })
+
+	    inCity.place(pla); //出发地
+	    inCity.destination(dest);  //目的地
+        inCity.cityClick(cityA); //显示赋值城市
+        -->
+	</script>
+		</div>
+		<nav>
+			<ul class="nav-list">
+				<li><a href="/">首页</a></li>
+				<li><a href="ng">幼儿园</a></li>
+				<li><a href="#">小学</a></li>
+				<li><a href="#">初中</a></li>
+				<li><a href="#">高中</a></li>
+				<li><a href="#">大学</a></li>
+				<li><a href="#">培训机构</a></li>
+			</ul>
+		</nav>
+		<div class="top-entry">
+			<ul>
+				<li><a href="/register">注册</a></li>
+				<li><a href="/login">登陆</a></li>
+				<li><a href="#">公众号</a></li>
+			</ul>
+		</div>	</div>
+
+	<div class="banner-all">
+	<div class="banner" id="b04">
+		<ul>
+			<li class="slider-item"><a href="#"><img src="static/img/01.jpg" alt="" width="100%" height="100%" ></a></li>
+			<li class="slider-item"><a href="#"><img src="static/img/02.jpg" alt="" width="100%" height="100%" ></a></li>
+			<li class="slider-item"><a href="#"><img src="static/img/03.jpg" alt="" width="100%" height="100%" ></a></li>
+		</ul>
+		<a href="javascript:void(0);" class="unslider-arrow04 prev"><img class="arrow" id="al" src="static/img/arrowl.png" alt="prev" width="20" height="35"></a>
+		<a href="javascript:void(0);" class="unslider-arrow04 next"><img class="arrow" id="ar" src="static/img/arrowr.png" alt="next" width="20" height="37"></a>
+	</div>
+	
+	</div>
+	{% block content %}{% endblock %}
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }} </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+      <div class="col-md-4 ">
+      <a href="index.htm" tppabs=""><img src="" tppabs="" alt=""></a>
+      </div>
+      <div class="col-md-4 about">
+        <span><a href="#" tppabs="#">关注我们<i class="hz-icon icon-weixin"></i></a>
+			<div class="weixin"><img src="static/img/timg00.gif" alt=""></div>
+        </span>|
+        <span><a href="#" tppabs="#" target="_blank">合作申请</a></span>|
+        <span><a href="#" tppabs="#">意见反馈</a></span><br>
+        <span style="margin-left: "><a href="#" tppabs="#">联系方式：xxx@qq.com</a></span><br/>
+              </div>
+      <div class="row">
+        <div style="width:300px;margin:0 auto; padding:20px 0; margin-left: 530px;">
+		 		<a target="_blank" href="javascript:if(confirm('#'))window.location='#'" tppabs="#" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="static/img/filing.png-7.5.15.1.png" tppabs="#" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">备案号 xxxx号</p></a>
+		 	</div>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+</body>
+</html>
