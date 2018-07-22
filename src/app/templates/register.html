@@ -17,7 +17,7 @@
                 <label class="fa-label">
                   <i class="fa fa-user"></i>
                 </label>
-                                   <input class="form-control" id="login_username" type="text" name="_username" value="" required placeholder='手机/用户名' />
+                <input class="form-control" id="login_username" type="text" name="login_username" value="" required placeholder='手机/用户名' />
                              <div class="help-block"></div>
               </div>
             </div>
@@ -27,7 +27,7 @@
                 <label class="fa-label">
                   <i class="fa fa-unlock-alt"></i>
                 </label>
-                <input class="form-control" id="login_password" type="password" name="_password" required placeholder='密码'/>
+                <input class="form-control" id="login_password" type="password" name="login_password" required placeholder='密码'/>
               </div>
             </div>
     
@@ -43,7 +43,8 @@
             </div>    
             <input type="hidden" name="_target_path" value="/">
             <input type="hidden" name="_csrf_token" value="th3ajqNZhzL8ZSWAwnD5cVzExe7OhkduzcJ_Hj1yQVo">
-          </form>    </div> 
+          </form>    
+        </div> 
     </div>
         <div class="login-box ">
           <h1>
@@ -51,14 +52,14 @@
         <a href="/login" class="pull-right js-trun" >登录<i class="fa fa-arrow-circle-o-right"></i>
         </a>
     </h1>
-        <form id="register-form" class="form-vertical" method="post" action="http://www.howzhi.com/register?goto=/">
+        <form id="register-form" class="form-vertical" method="post" action="register">
             <div class="form-group mb40">
                 <label class="control-label required" for="register_mobile">手机号码</label>
                 <div class="controls">
                 <label class="fa-label">
                     <i class="hz-icon icon-demo25"></i>
                 </label>
-                <input type="text" id="register_mobile" name="verifiedMobile" required="required"
+                <input type="text" id="register_mobile" name="register_mobile" required="required"
                         class="form-control" data-url="/register/mobile/check"
                         placeholder="手机号码">
                 </div>
@@ -69,7 +70,7 @@
                    <label class="fa-label">
                         <i class="hz-icon icon-lock"></i>
                       </label>
-                    <input type="password" id="register_password" name="password" required="required" class="form-control"
+                    <input type="password" id="register_password" name="register_password" required="required" class="form-control"
                            placeholder="密码">
                 </div>
             </div>
@@ -90,6 +91,15 @@
                     </div>
                 </div>
             </div>
+            {{ form.csrf_token }}
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message | safe }}</li>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
             <div class="form-group mb40 agren">
                 <div class="controls">
                     <label style="margin-top: 14px;"><input type="checkbox" id="user_terms" checked="checked"> 我已阅读并同意<a href="userterms.htm" tppabs="http://www.howzhi.com/userterms" target="_blank">《服务协议》</a>

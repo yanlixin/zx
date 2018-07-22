@@ -31,7 +31,15 @@
                 <input class="form-control" id="login_password" type="password" name="login_password" required placeholder='密码'/>
               </div>
             </div>
-    
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message | safe }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
             <div class="form-group">
               <div class="controls">
                 <span class="checkbox mtm ">

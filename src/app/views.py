@@ -1,11 +1,20 @@
-from flask import render_template, flash, redirect
-from app import app
-from .forms import LoginForm
+from flask import render_template, flash, redirect, session, url_for, request, g
+from flask_login import login_user, logout_user, current_user, login_required
+from werkzeug.urls import url_parse
+#from flask_babel import _
+from app import app, db, lm
+from .forms import LoginForm,RegistrationForm
+from .models import User
+
+@lm.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 @app.route('/')
 @app.route('/index')
+@login_required
 def index():
-    user = { 'nickname': 'Miguel' } # fake user
+    user = g.user
     catlist = [ # fake array of posts
         {
             'id':'1',
@@ -69,21 +78,53 @@ def ng():
     return render_template("ng.html",
         school = {})
 
+@lm.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+@app.before_request
+def before_request():
+    g.user = current_user
+
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
+    print(form.login_username.data)
     if form.validate_on_submit():
-        flash('login username="' + form.login_username.data + '", login password=' + str(form.login_password.data))
-        if form.login_username.data== form.login_password.data:
-            return redirect('/index')
-        else:
-            flash('有户名或密码错误')
-    return render_template('login.html',
-        title = 'Sign In',
-        form = form)
+        session['remember_me'] = False
+        
+    if form.validate_on_submit():
+        user = User.query.filter_by(loginname=form.login_username.data).first()
+        if user is None or not user.check_password(form.login_password.data):
+            flash('账号或密码错误')
+            return redirect(url_for('login'))
+        login_user(user, False)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
+    return render_template('login.html', title='Sign In', form=form)
 
-@app.route('/register')
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/register', methods = ['GET', 'POST'])
 def register():
-    return render_template("register.html",
-        school = {})
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    print(form.validate_on_submit())
+    if form.validate_on_submit():
+        user = User(loginname=form.register_mobile.data)
+        user.set_password(form.register_password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register',
+                           form=form)
+    
