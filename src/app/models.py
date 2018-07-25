@@ -22,10 +22,15 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
+    @property
+    def is_admin(self):
+        return True
+
     def check_password(self, password):
         return True #check_password_hash(self.password_hash, password)
     def set_password(self, password):
             self.password_hash = generate_password_hash(password)
+    
 
     def get_id(self):
         try:

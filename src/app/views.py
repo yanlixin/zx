@@ -112,19 +112,33 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/checkloginname')
+def checkloginname():
+    logout_user()
+    return redirect(url_for('index'))
+
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
-    print(form.validate_on_submit())
+    
     if form.validate_on_submit():
-        user = User(loginname=form.register_mobile.data)
-        user.set_password(form.register_password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
+        user = User.query.filter_by(loginname=form.register_mobile.data).first()
+        if user :
+            flash('登录名已存,请重新确认后输入!')
+        else :
+            user = User(loginname=form.register_mobile.data)
+            user.set_password(form.register_password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('恭喜您, 你已经注册成功了!')
+            return redirect(url_for('login'))
     return render_template('register.html', title='Register',
                            form=form)
+
+@app.route('/admin')
+def admin():
     
+    return render_template("admin.html",
+        school = {})
