@@ -1,0 +1,84 @@
+CREATE TABLE 'Schools' (
+'schoolid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'districtid' INTEGER DEFAULT NULL,
+'schoolname' TEXT(128) DEFAULT NULL,
+'schooldesc' TEXT(1024) DEFAULT NULL,
+'addr' TEXT(126) DEFAULT NULL,
+'tuition' TEXT(64) DEFAULT NULL,
+'features' TEXT(1024) DEFAULT NULL,
+'phone' TEXT(64) DEFAULT NULL,
+'intro' TEXT(1024) DEFAULT NULL,
+'team' TEXT(1024) DEFAULT NULL,
+'founded' TEXT(32) DEFAULT NULL,
+'age' TEXT(63) DEFAULT NULL,
+'scale' TEXT(64) DEFAULT NULL,
+'population' TEXT(32) DEFAULT NULL,
+'duration' TEXT(32) DEFAULT NULL,
+'foreignduration' TEXT(1024) DEFAULT NULL,
+'schoolbus' TEXT(16) DEFAULT NULL,
+'cramclass' TEXT DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL,
+'lastupdatedbydate' TEXT DEFAULT NULL,
+'lastupdatedbymanagerid' INTEGER DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Cities' (
+'cityid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'provid' INTEGER DEFAULT NULL REFERENCES 'Provinces' ('provid'),
+'cityname' TEXT(64) DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Provinces' (
+'provid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'provname' TEXT(64) DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Districts' (
+'districtid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'cityid' INTEGER DEFAULT NULL REFERENCES 'Cities' ('cityid'),
+'districtname' TEXT(64) DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Users' (
+'userid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'username' TEXT(64) DEFAULT NULL,
+'loginname' TEXT(64) DEFAULT NULL,
+'loginpwd' TEXT(64) DEFAULT NULL,
+'mobile' TEXT(32) DEFAULT NULL,
+'email' TEXT(64) DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'createdbydatetime' TEXT DEFAULT NULL,
+'lastupdatedbydatetime' TEXT DEFAULT NULL,
+'lasteupdatedbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Mangers' (
+'managerid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'managername' TEXT(63) DEFAULT NULL,
+'loginname' TEXT(64) DEFAULT NULL,
+'loginpwd' TEXT(512) DEFAULT NULL,
+'mobile' TEXT(32) DEFAULT NULL,
+'email' TEXT(64) DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL,
+'lastupdatedbydate' TEXT DEFAULT NULL,
+'lastupdatedbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Categories' (
+'catid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'catname' TEXT DEFAULT NULL,
+'catdesc' TEXT DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'createdbydate' INTEGER DEFAULT NULL,
+'createdbymanagerid' TEXT DEFAULT NULL
+);
+

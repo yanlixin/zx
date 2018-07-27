@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, session, url_for, request, g
+from flask import render_template, flash, redirect, session, url_for, request, g ,jsonify, request, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 #from flask_babel import _
@@ -139,6 +139,12 @@ def register():
 
 @app.route('/admin')
 def admin():
-    
     return render_template("admin.html",
         school = {})
+
+@app.route('/users', methods=['GET'])
+def admin_shcoollist():
+    page = request.args.get('offset', 0, type=int)
+    per_page = min(request.args.get('limit', 10, type=int), 100)
+    data = User.to_collection_dict(User.query, page, per_page, 'api.get_users')
+    return jsonify(data)

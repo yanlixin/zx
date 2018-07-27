@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
+<!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
+<sql>
+<datatypes db="sqlite">
+	<group label="Affinity">
+		<type label="Text" default="" length="1" sql="TEXT" quote="'" color="rgb(255,200,200)"/>
+		<type label="Numeric" default="0" length="0" sql="NUMERIC" quote="" color="rgb(238,238,170)"/>
+		<type label="Integer" default="0" length="0" sql="INTEGER" quote="" color="rgb(238,238,170)"/>
+		<type label="Real" default="0" length="0" sql="REAL" quote="" color="rgb(238,238,170)"/>
+		<type label="None" default="" length="0" sql="NONE" quote="" color="rgb(200,255,200)"/>
+	</group>
+</datatypes><table x="136" y="92" name="Schools">
+<row name="schoolid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="districtid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="schoolname" null="1" autoincrement="0">
+<datatype>TEXT(128)</datatype>
+<default>NULL</default></row>
+<row name="schooldesc" null="1" autoincrement="0">
+<datatype>TEXT(1024)</datatype>
+<default>NULL</default></row>
+<row name="addr" null="1" autoincrement="0">
+<datatype>TEXT(126)</datatype>
+<default>NULL</default></row>
+<row name="tuition" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default><comment>学费</comment>
+</row>
+<row name="features" null="1" autoincrement="0">
+<datatype>TEXT(1024)</datatype>
+<default>NULL</default><comment>特色</comment>
+</row>
+<row name="phone" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="intro" null="1" autoincrement="0">
+<datatype>TEXT(1024)</datatype>
+<default>NULL</default></row>
+<row name="team" null="1" autoincrement="0">
+<datatype>TEXT(1024)</datatype>
+<default>NULL</default></row>
+<row name="founded" null="1" autoincrement="0">
+<datatype>TEXT(32)</datatype>
+<default>NULL</default><comment>建校时间</comment>
+</row>
+<row name="age" null="1" autoincrement="0">
+<datatype>TEXT(63)</datatype>
+<default>NULL</default><comment>学生年龄段</comment>
+</row>
+<row name="scale" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="population" null="1" autoincrement="0">
+<datatype>TEXT(32)</datatype>
+<default>NULL</default><comment>师生数</comment>
+</row>
+<row name="duration" null="1" autoincrement="0">
+<datatype>TEXT(32)</datatype>
+<default>NULL</default><comment>上课时间</comment>
+</row>
+<row name="foreignduration" null="1" autoincrement="0">
+<datatype>TEXT(1024)</datatype>
+<default>NULL</default><comment>外教授课时长</comment>
+</row>
+<row name="schoolbus" null="1" autoincrement="0">
+<datatype>TEXT(16)</datatype>
+<default>NULL</default><comment>校车</comment>
+</row>
+<row name="cramclass" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default><comment>课后托班</comment>
+</row>
+<row name="recordstatus" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="createdbydate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="createdbymanagerid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="lastupdatedbydate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="lastupdatedbymanagerid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="kobe">
+<part>schoolid</part>
+</key>
+</table>
+<table x="492" y="126" name="Cities">
+<row name="cityid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="provid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="Provinces" row="provid" />
+</row>
+<row name="cityname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>cityid</part>
+</key>
+</table>
+<table x="693" y="64" name="Provinces">
+<row name="provid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="provname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>provid</part>
+</key>
+</table>
+<table x="690" y="260" name="Districts">
+<row name="districtid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cityid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="Cities" row="cityid" />
+</row>
+<row name="districtname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>districtid</part>
+</key>
+</table>
+<table x="787" y="416" name="Users">
+<row name="userid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="username" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="loginname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="loginpwd" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="mobile" null="1" autoincrement="0">
+<datatype>TEXT(32)</datatype>
+<default>NULL</default></row>
+<row name="email" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="recordstatus" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="createdbydatetime" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="lastupdatedbydatetime" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="lasteupdatedbymanagerid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>userid</part>
+</key>
+</table>
+<table x="400" y="366" name="Mangers">
+<row name="managerid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="managername" null="1" autoincrement="0">
+<datatype>TEXT(63)</datatype>
+<default>NULL</default></row>
+<row name="loginname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="loginpwd" null="1" autoincrement="0">
+<datatype>TEXT(512)</datatype>
+<default>NULL</default></row>
+<row name="mobile" null="1" autoincrement="0">
+<datatype>TEXT(32)</datatype>
+<default>NULL</default></row>
+<row name="email" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="recordstatus" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="createdbydate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="createdbymanagerid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="lastupdatedbydate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="lastupdatedbymanagerid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>managerid</part>
+</key>
+</table>
+<table x="954" y="201" name="Categories">
+<row name="catid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="catname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="catdesc" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="recordstatus" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="createdbydate" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="createdbymanagerid" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>catid</part>
+</key>
+</table>
+</sql>
