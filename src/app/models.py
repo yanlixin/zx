@@ -58,29 +58,38 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
-    
+
+def props_with_(obj):
+    pr = {}
+    for name in dir(obj):
+        value = getattr(obj, name)
+        if not name.startswith('__') and not callable(value):
+            pr[name] = value
+    return pr
+
+
 class School(db.Model):
+    __tablename__ = 'Schools'
 
-    __tablename__ = 'School'
-
-    id = db.Column(db.Integer, primary_key=True)
-    schoolname = db.Column(db.String(120), unique=True)
-    schooldesc = db.Column(db.String(1024))
-    addr = db.Column(db.String(126))
-    tuition = db.Column(db.String(64))
-    features = db.Column(db.String(1024))
-    phone = db.Column(db.String(32))
-    intro = db.Column(db.String(1024))
-    team = db.Column(db.String(1024))
-    founded = db.Column(db.String(16))
-    city = db.Column(db.String(64))
-    age = db.Column(db.String(64))
-    size = db.Column(db.String(64))
-    population = db.Column(db.String(32))
-    duration = db.Column(db.String(32))
-    foreignduration = db.Column(db.String(1024))
-    schoolbus = db.Column(db.String(16))
-    cramclass = db.Column(db.String(16))
+    id = db.Column("schoolid",db.Integer, primary_key=True)
+    name = db.Column("schoolname",db.String(120), unique=True)
+    desc = db.Column("schooldesc",db.String(1024))
+    addr = db.Column("addr",db.String(126))
+    tuition = db.Column("tuition",db.String(64))
+    features = db.Column("features",db.String(1024))
+    phone = db.Column("phone",db.String(32))
+    intro = db.Column("intro",db.String(1024))
+    team = db.Column("team",db.String(1024))
+    founded = db.Column("founded",db.String(16))
+    #city = Column("city",String(64))
+    age = db.Column("age",db.String(64))
+    size = db.Column("scale",db.String(64))
+    population = db.Column("population",db.String(32))
+    duration = db.Column("duration",db.String(32))
+    foreignduration = db.Column("foreignduration",db.String(1024))
+    schoolbus = db.Column("schoolbus",db.String(16))
+    cramclass = db.Column("cramclass",db.String(16))
+    sortindex =db.Column("sortindex",db.Integer)
     
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -92,5 +101,6 @@ class School(db.Model):
                 value = value[0]
             setattr(self, property, value)
 
+    
     def __repr__(self):
         return str(self.schoolname)

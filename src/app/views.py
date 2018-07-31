@@ -4,7 +4,7 @@ from werkzeug.urls import url_parse
 #from flask_babel import _
 from app import app, db, lm
 from .forms import LoginForm,RegistrationForm
-from .models import User
+from .models import User,School
 
 @lm.user_loader
 def load_user(id):
@@ -12,53 +12,32 @@ def load_user(id):
 
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
     user = g.user
+    data = School.query.all()
+    
     catlist = [ # fake array of posts
         {
             'id':'1',
             'name':'幼儿园',
-            'schoollist':[{
-                'id':1,
-                'name':'xxx',
-                'desc':'',
-                'addr':'',
-                'tuition':0,
-                'features':'特色',
-                'phone':'电话',
-                'intro':'特色介绍',
-                'team':'团队介绍',
-                'founded':'建校时间',
-                'city':'',
-                'age':'学生年龄段',
-                'size':'学校规模',
-                'population':'师生数',
-                'duration':'上课时间',
-                'foreignduration':'外教授课时长',
-                'schoolbus':'校车',
-                'cramclass':'课后托班'
-                }],
+            'schoollist':data,
             'author': { 'nickname': 'John' },
             'body': 'Beautiful day in Portland!'
         },
         {
             'id':'2',
             'name':'小学',
-            'author': { 'nickname': 'Susan' },
-            'body': 'The Avengers movie was so cool!'
+            'schoollist':data,
         },
         {
             'id':'3',
             'name':'初中',
-            'author': { 'nickname': 'Susan' },
-            'body': 'The Avengers movie was so cool!'
+            'schoollist':data,
         },
         {
             'id':'4',
             'name':'高中',
-            'author': { 'nickname': 'Susan' },
-            'body': 'The Avengers movie was so cool!'
+            'schoollist':data,
         }
     ]
     return render_template("index.html",
@@ -69,8 +48,11 @@ def index():
 
 @app.route('/detailed')
 def detailed():
+    id = request.args.get('id', 1, type=int)
+    data = School.query.get(id)
+    #jsonify(User.query.get_or_404(id).to_dict())
     return render_template("detailed.html",
-        school = {})
+        school = data)
 
 
 @app.route('/ng')

@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime 
 from datetime import datetime  
 
+
 class User(db.Model, UserMixin):
     __tablename__ = 'managers'
 
@@ -36,15 +37,40 @@ def request_loader(request):
     user = User.query.filter_by(username=username).first()
     return user if user else None
 
+class Province(db.Model):
+    __tablename__ = 'Provinces'
+
+    id = Column("provid",Integer, primary_key=True)
+    name = Column("provname",String(120), unique=True)
+    sortindex = Column("sortindex",Integer)
+    def to_dict(self):
+        data = {'id': self.id,'name': self.name,'text':self.name}
+        return data
+
+class City(db.Model):
+    __tablename__ = 'Cities'
+
+    id = Column("cityid",Integer, primary_key=True)
+    provid = Column("provid",Integer)
+    name = Column("cityname",String(120))
+    sortindex = Column("sortindex",Integer)
+    def to_dict(self):
+        data = {'id': self.id,'name': self.name,'text':self.name,'provid':self.provid}
+        return data
+
 class District(db.Model):
     __tablename__ = 'Districts'
 
     id = Column("districtid",Integer, primary_key=True)
+    cityid = Column("cityid",Integer)
     name = Column("districtname",String(120), unique=True)
     sortindex = Column("sortindex",Integer)
+    def to_dict(self):
+        data = {'id': self.id,'name': self.name,'text':self.name,'cityid':self.cityid}
+        return data
 
 class Category(db.Model):
-    __tablename__ = 'Categoies'
+    __tablename__ = 'Categories'
 
     id = Column("catid",Integer, primary_key=True)
     name = Column("catname",String(120), unique=True)
@@ -56,24 +82,25 @@ class School(db.Model):
 
     __tablename__ = 'Schools'
 
-    id = Column(Integer, primary_key=True)
-    schoolname = Column(String(120), unique=True)
-    schooldesc = Column(String(1024))
-    addr = Column(String(126))
-    tuition = Column(String(64))
-    features = Column(String(1024))
-    phone = Column(String(32))
-    intro = Column(String(1024))
-    team = Column(String(1024))
-    founded = Column(String(16))
-    city = Column(String(64))
-    age = Column(String(64))
-    size = Column(String(64))
-    population = Column(String(32))
-    duration = Column(String(32))
-    foreignduration = Column(String(1024))
-    schoolbus = Column(String(16))
-    cramclass = Column(String(16))
+    id = Column("schoolid",Integer, primary_key=True)
+    name = Column("schoolname",String(120), unique=True)
+    desc = Column("schooldesc",String(1024))
+    addr = Column("addr",String(126))
+    tuition = Column("tuition",String(64))
+    features = Column("features",String(1024))
+    phone = Column("phone",String(32))
+    intro = Column("intro",String(1024))
+    team = Column("team",String(1024))
+    founded = Column("founded",String(16))
+    districtid = Column("districtid",Integer)
+    age = Column("age",String(64))
+    scale = Column("scale",String(64))
+    population = Column("population",String(32))
+    duration = Column("duration",String(32))
+    foreignduration = Column("foreignduration",String(1024))
+    schoolbus = Column("schoolbus",String(16))
+    cramclass = Column("cramclass",String(16))
+    sortindex = Column("sortindex",Integer)
     
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -86,4 +113,28 @@ class School(db.Model):
             setattr(self, property, value)
 
     def __repr__(self):
-        return str(self.schoolname)
+        return str(self.name)
+    
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'desc':self.desc,
+            'addr': self.addr,
+            'tuition': self.tuition,
+            'features':self.features,
+            'phone': self.phone,
+            'intro': self.intro,
+            'team':self.team,
+            'districtid':self.districtid,
+            'founded': self.founded,
+            'age': self.age,
+            'scale':self.scale,
+            'population': self.population,
+            'duration': self.duration,
+            'foreignduration':self.foreignduration,
+            'schoolbus': self.schoolbus,
+            'cramclass': self.cramclass,
+            'sortindex':self.sortindex,
+            }
+        return data
