@@ -2,7 +2,7 @@ from app.zx import blueprint
 from flask import render_template,request
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,Category,School,Province,City
+from app.base.models import User,District,Grade,Category,School,Province,City
 from app import db
 import logging
 import json
@@ -106,10 +106,14 @@ def school_edit():
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
     districts=[item.to_dict() for item in District.query.all()]
+    grades=[item.to_dict() for item in Grade.query.all()]
+    cats=[item.to_dict() for item in Category.query.all()]
     return render_template(
             'schooledit.html',
             school=school,
-            provList=json.dumps(provs,ensure_ascii=False),
+            catList=json.dumps(cats),
+            gradeList=json.dumps(grades),
+            provList=json.dumps(provs),
             cityList=json.dumps(cities),
             districtList=json.dumps(districts)
         )

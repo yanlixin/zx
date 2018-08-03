@@ -69,6 +69,17 @@ class District(db.Model):
         data = {'id': self.id,'name': self.name,'text':self.name,'cityid':self.cityid}
         return data
 
+class Grade(db.Model):
+    __tablename__ = 'Grades'
+
+    id = Column("gradeid",Integer, primary_key=True)
+    name = Column("gradename",String(120), unique=True)
+    desc = Column("gradedesc",String(120))
+    sortindex = Column("sortindex",Integer)
+    def to_dict(self):
+        data = {'id': self.id,'name': self.name,'text':self.name}
+        return data
+
 class Category(db.Model):
     __tablename__ = 'Categories'
 
@@ -76,23 +87,34 @@ class Category(db.Model):
     name = Column("catname",String(120), unique=True)
     desc = Column("catdesc",String(120))
     sortindex = Column("sortindex",Integer)
-
+    def to_dict(self):
+        data = {'id': self.id,'name': self.name,'text':self.name}
+        return data
 
 class School(db.Model):
 
     __tablename__ = 'Schools'
 
     id = Column("schoolid",Integer, primary_key=True)
+    catid = Column("catid",Integer)
+    catname =Column("catname",String(128))
+    gradeid = Column("gradeid",Integer)
+    gradename =Column("gradename",String(128))
     name = Column("schoolname",String(120), unique=True)
     desc = Column("schooldesc",String(1024))
-    addr = Column("addr",String(126))
+    addr = Column("addr",String(128))
     tuition = Column("tuition",String(64))
     features = Column("features",String(1024))
     phone = Column("phone",String(32))
     intro = Column("intro",String(1024))
     team = Column("team",String(1024))
     founded = Column("founded",String(16))
+    provid = Column("provid",Integer)
+    provname = Column("provname",String(128))
+    cityid = Column("cityid",Integer)
+    cityname = Column("cityname",String(128))
     districtid = Column("districtid",Integer)
+    districtname = Column("districtname",String(128))
     age = Column("age",String(64))
     scale = Column("scale",String(64))
     population = Column("population",String(32))
@@ -101,7 +123,13 @@ class School(db.Model):
     schoolbus = Column("schoolbus",String(16))
     cramclass = Column("cramclass",String(16))
     sortindex = Column("sortindex",Integer)
-    
+    img = Column("img",String(126))
+    thumb = Column("thumb",String(126))
+    isbest = Column("isbest",Integer)
+    isnew = Column("isnew",Integer)
+    ishot = Column("ishot",Integer)
+    istopshow = Column("istopshow",Integer)
+
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
             # depending on whether value is an iterable or not, we must
@@ -118,6 +146,10 @@ class School(db.Model):
     def to_dict(self):
         data = {
             'id': self.id,
+            'catid':self.catid,
+            'catname':self.catname,
+            'gradeid':self.gradeid,
+            'gradename':self.gradename,
             'name': self.name,
             'desc':self.desc,
             'addr': self.addr,
@@ -126,7 +158,12 @@ class School(db.Model):
             'phone': self.phone,
             'intro': self.intro,
             'team':self.team,
+            'provid':self.provid,
+            'provname':self.provname,
+            'cityid':self.cityid,
+            'cityname':self.cityname,
             'districtid':self.districtid,
+            'districtname':self.districtname,
             'founded': self.founded,
             'age': self.age,
             'scale':self.scale,
@@ -136,5 +173,11 @@ class School(db.Model):
             'schoolbus': self.schoolbus,
             'cramclass': self.cramclass,
             'sortindex':self.sortindex,
+            'img': self.img,
+            'thumb': self.thumb,
+            'isbest': self.isbest,
+            'isnew':self.isnew,
+            'ishot':self.ishot,
+            'istopshow':self.istopshow,
             }
         return data

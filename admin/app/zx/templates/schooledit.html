@@ -12,10 +12,15 @@
                 <input type="hidden" name="txt-id" id="txt-id" value="{{school.id}}" />
                 <input type="text" id="txt-name" name="txt-name" class="form-control" placeholder="请输入名称" value="{{school.name}}" />
             </div>
-            <label class="col-sm-2 control-label"><span style="color: red" >*&nbsp;</span>排序</label>
+            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>类别</label>
     
-            <div class="col-sm-4">
-                <input type="text" id="txt-sort-index" name="txt-sort-index" class="form-control" placeholder="请输入排序"  value="{{school.sortindex}}" />
+            <div class="col-sm-2">
+                <select id="catid" name="catid" class="form-control" data-placeholder="请选择类别"></select>
+            </div>
+            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>级别</label>
+    
+            <div class="col-sm-2">
+                <select id="gradeid" name="gradeid" class="form-control" data-placeholder="请选择级别"></select>
             </div>
         </div>
         <div class="hr-line-dashed-10"></div>
@@ -138,20 +143,29 @@
         <div class="form-group">
                 <label class="col-sm-2 control-label">外教授课时长</label>
         
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <input type="text" id="txt-foreignduration" name="txt-foreignduration" class="form-control" placeholder="请输入外教授课时长" value="{{school.foreignduration}}" />
                 </div>
                 <label class="col-sm-2 control-label">校车</label>
         
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <input type="text" id="txt-schoolbus" name="txt-schoolbus" class="form-control" placeholder="请输入校车" value="{{school.schoolbus}}" />
                 </div>
+        </div>
+        <div class="form-group">
+        
                 <label class="col-sm-2 control-label">课后托班</label>
         
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <input type="text" id="txt-cramclass" name="txt-cramclass" class="form-control" placeholder="请输入课后托班" value="{{school.cramclass}}" />
                 </div>
+                <label class="col-sm-2 control-label"><span style="color: red" >*&nbsp;</span>排序</label>
+            
+                <div class="col-sm-4">
+                    <input type="text" id="txt-sort-index" name="txt-sort-index" class="form-control" placeholder="请输入排序"  value="{{school.sortindex}}" />
+                </div>
         </div>
+        
     </div>
     <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
     <script src="{{ url_for('static', filename='build/js/Zt.Common.min.js') }}"></script>
@@ -162,48 +176,32 @@
     <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script>
     $(document).ready(function () {
+        var gradeList={{gradeList|safe}};
+        var catList={{catList|safe}};
         var provList={{provList|safe}};
         var cityList={{cityList|safe}};
         var districtList={{districtList|safe}};
         var districtid=parseInt("{{school.districtid}}");
         var cityid=0;
         var provid=0;
-        provList.unshift({"id":0,"text":"select","provid":-1});
-        $("#provid").select2({"data": provList});
-        if(districtid>0){
-            var data=[{"id":0,"text":"select","cityid":-1}];
-            $.each(districtList,function(i,item){
-                if(item.id==districtid){
-                    data.push(item);
-                    cityid=item.cityid
-                }
-            });
-            $("#districtid").select2({"data": data})
-            var data=[{"id":0,"text":"select","provid":-1}];
-            $.each(cityList,function(i,item){
-                if(item.id==cityid){
-                    data.push(item);
-                    
-                    provid=item.provid
-                }
-            })
-            $("#cityid").select2({"data": data})
-            $("#districtid").val(districtid);
-            $("#cityid").val(cityid);
-            $("#provid").val(1);
-        }
-        
+        catList.unshift({"id":0,"text":"select"});
+        $("#catid").select2({"data": catList}).val({{school.catid}}).trigger("change");;
+        gradeList.unshift({"id":0,"text":"select"});
+        $("#gradeid").select2({"data": gradeList}).val({{school.gradeid}}).trigger("change");;
+       
+        provList.unshift({"id":0,"text":"select","provid":-1})
+        $("#provid").select2({"data": provList}).val({{school.provid}}).trigger("change");
         
         $("#cityid").select2({
             
             "data": [{"id":0,"text":"select","city":-1}],
-            "selectedValue": 'select',
+            "selectedValue": '0',
             //"allowClear": true
         });
         $("#districtid").select2({
             
             "data": [{"id":0,"text":"select"}],
-            "selectedValue": 'select',
+            "selectedValue": '0',
             //"allowClear": true
         });
         $('#provid').on('select2:select', function (e) {
@@ -219,7 +217,7 @@
                 "data": data,
                 "selectedValue": '',
                 //"allowClear": true
-            })
+            }).val({{school.cityid}}).trigger("change");
         });
         $('#cityid').on('select2:select', function (e) {
             var data = e.params.data;
@@ -234,7 +232,7 @@
                 "data": data,
                 "selectedValue": '',
                 //"allowClear": true
-            })
+            }).val({{school.districtid}})
         });
         
         var $win = getSubWinBody('school_create');
@@ -247,6 +245,10 @@
 
             var subData = {
                 id: $("#txt-id").val(),
+                catid: $("#catid").val(),
+                catname: $("#catid").select2('data')[0].text,
+                gradeid: $("#gradeid").val(),
+                gradename: $("#gradeid").select2('data')[0].text,
                 name: $("#txt-name").val(),
                 sortIndex: $("#txt-sort-index").val(),
                 desc: $("#txt-desc").val(),
@@ -264,7 +266,12 @@
                 foreignduration: $("#txt-foreignduration").val(),
                 schoolbus: $("#txt-schoolbus").val(),
                 cramclass: $("#txt-cramclass").val(),
-                districtid:$("#districtid").val()
+                provid:$("#provid").val(),
+                provname:$("#provid").select2('data')[0].text,
+                cityid:$("#cityid").val(),
+                cityname:$("#cityid").select2('data')[0].text,
+                districtid:$("#districtid").val(),
+                districtname:$("#districtid").select2('data')[0].text,
             };
             var url = '/zx/school/create';
             l.ladda('start');

@@ -22,7 +22,22 @@ CREATE TABLE 'Schools' (
 'createdbymanagerid' INTEGER DEFAULT NULL,
 'lastupdatedbydate' TEXT DEFAULT NULL,
 'lastupdatedbymanagerid' INTEGER DEFAULT NULL,
-'sortindex' INTEGER DEFAULT NULL
+'sortindex' INTEGER DEFAULT NULL,
+'catid' INTEGER DEFAULT NULL,
+'catname' TEXT DEFAULT NULL,
+'povid' INTEGER DEFAULT NULL,
+'provnae' TEXT DEFAULT NULL,
+'cityid' INTEGER DEFAULT NULL,
+'cityname' TEXT DEFAULT NULL,
+'districtname' TEXT DEFAULT NULL,
+'img' TEXT DEFAULT NULL,
+'thumb' TEXT DEFAULT NULL,
+'isbest' INTEGER DEFAULT NULL,
+'isnew' INTEGER DEFAULT NULL,
+'ishot' INTEGER DEFAULT NULL,
+'istopshow' INTEGER DEFAULT NULL,
+'gradeid' INTEGER DEFAULT NULL,
+'gradename' TEXT DEFAULT NULL
 );
 
 CREATE TABLE 'Cities' (
@@ -78,7 +93,16 @@ CREATE TABLE 'Categories' (
 'catdesc' TEXT DEFAULT NULL,
 'sortindex' INTEGER DEFAULT NULL,
 'recordstatus' INTEGER DEFAULT NULL,
-'createdbydate' INTEGER DEFAULT NULL,
-'createdbymanagerid' TEXT DEFAULT NULL
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL
 );
 
+CREATE TABLE 'Grades' (
+'gradeid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'gradename' TEXT DEFAULT NULL,
+'gradedesc' TEXT DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL
+);

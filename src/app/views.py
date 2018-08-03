@@ -1,10 +1,12 @@
 from flask import render_template, flash, redirect, session, url_for, request, g ,jsonify, request, url_for
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
+import json
+from sqlalchemy import or_
 #from flask_babel import _
 from app import app, db, lm
 from .forms import LoginForm,RegistrationForm
-from .models import User,School
+from .models import User,School,Grade,Category,District
 
 @lm.user_loader
 def load_user(id):
@@ -13,38 +15,10 @@ def load_user(id):
 @app.route('/')
 @app.route('/index')
 def index():
-    user = g.user
-    data = School.query.all()
-    
-    catlist = [ # fake array of posts
-        {
-            'id':'1',
-            'name':'幼儿园',
-            'schoollist':data,
-            'author': { 'nickname': 'John' },
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'id':'2',
-            'name':'小学',
-            'schoollist':data,
-        },
-        {
-            'id':'3',
-            'name':'初中',
-            'schoollist':data,
-        },
-        {
-            'id':'4',
-            'name':'高中',
-            'schoollist':data,
-        }
-    ]
+    gradelist=[item.to_dict() for item in Grade.query.all()]
     return render_template("index.html",
         title = 'Home',
-        user = user,
-        catlist = catlist)
-
+        gradelist =gradelist)
 
 @app.route('/detailed')
 def detailed():
@@ -57,8 +31,14 @@ def detailed():
 
 @app.route('/ng')
 def ng():
+    id = request.args.get('id', -1, type=int)
+    catid = request.args.get('catid', -1, type=int)
+    data=[item.to_dict() for item in School.query.filter(or_(School.gradeid==id,-1==id)).filter(or_(School.catid==catid,-1==catid))]
+    distList=[item.to_dict() for item in District.query.all()]
     return render_template("ng.html",
-        school = {})
+        id=id,
+        distlist=distList,
+        schoollist = data)
 
 @lm.user_loader
 def load_user(id):

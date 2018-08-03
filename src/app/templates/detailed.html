@@ -2,7 +2,7 @@
 {% block content %}
 <div class="all">
         <div class="top-one">
-            <p>北京幼儿园<span>></span>朝阳区<span>></span>望京<span>></span>mini family</p>
+            <p>{{school.catname}}<span>></span>{{school.cityname}}<span>></span>{{school.districtname}}<span>></span>{{school.name}}</p>
         </div>
         <div class="middle"><br>
             <p>{{school.name}}</p><br>
@@ -11,7 +11,7 @@
             <p>特色：{{school.features}}</p><br>
             <p>电话：{{school.phone}}</p>
             <div class="other">
-                <a href="#">其他校区</a>
+                <a href="/ng">其他校区</a>
             </div>
         </div>
         <div class="bottom">
