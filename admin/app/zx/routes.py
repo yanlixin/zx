@@ -89,6 +89,7 @@ def school_create():
             dd=db.session.query(School).filter_by(id=school.id)
             dd.update(school.to_dict() )
         else:
+            school.id=None
             db.session.add(school)
         db.session.commit()
     except Exception as e:  # 这样做就写不了reason了
@@ -99,7 +100,7 @@ def school_create():
 
     return json.dumps({'valid':True,'result':result,'msg':msg })
 
-@blueprint.route('/schooledit', methods=['GET'])
+@blueprint.route('/school/edit', methods=['GET'])
 @login_required
 def school_edit():
     id = request.args.get('id', -1, type=int)
@@ -118,6 +119,18 @@ def school_edit():
             cityList=json.dumps(cities),
             districtList=json.dumps(districts)
         )
+
+@blueprint.route('/school/delete', methods=['POST'])
+@login_required
+def school_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=School.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
 
 @blueprint.route('/gallery/list', methods=['GET'])
 @login_required
@@ -141,6 +154,19 @@ def gallery_edit():
             schoolid=id,
         )
 
+
+@blueprint.route('/gallery/delete', methods=['POST'])
+@login_required
+def gallery_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=SchoolGallery.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+
 @blueprint.route('/gallery/show', methods=['GET'])
 @login_required
 def gallery_photo():
@@ -163,7 +189,6 @@ def gallery_create():
     dataHeight = request.form.get('dataHeight')
     dataWidth = request.form.get('dataWidth')
    
-    print('dataX=%s\r\ndataY=%s\r\ndataHeight=%s\r\ndataWidth=%s' % (dataX,dataY,dataHeight,dataWidth))
     gallery = SchoolGallery(**request.form)
     imagename = os.path.splitext(gallery.path)
     fullname = '%s%s%s' % (base_path,r'/files/',gallery.path)
@@ -172,7 +197,6 @@ def gallery_create():
     if gallery.schoolid is not None:
         id = str(gallery.schoolid)
 
-    print(id)
     folder =''.join([base_path,r'/files/scools/',id,r'/']) 
     if not os.path.exists(folder):
         os.makedirs(folder)

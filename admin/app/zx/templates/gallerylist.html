@@ -8,6 +8,7 @@
   <link href="{{ url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='vendors/jquery-ui/themes/base/jquery-ui.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
   {% endblock stylesheets %}
 
 {% block content %}
@@ -45,9 +46,8 @@
                           <div class="mask">
                             <p>{{gallery.title}}</p>
                             <div class="tools tools-bottom">
-                              <a href="#"><i class="fa fa-link"></i></a>
-                              <a href="#"><i class="fa fa-pencil"></i></a>
-                              <a href="#"><i class="fa fa-times"></i></a>
+                              <a href="javascript:void(0)" data-click-name="view" data-click-value="{{gallery.id}}" ><i class="fa fa-link"></i></a>
+                              <a href="javascript:void(0)" data-click-name="delete" data-click-value="{{gallery.id}}"><i class="fa fa-times"></i></a>
                             </div>
                           </div>
                         </div>
@@ -86,28 +86,28 @@
   <script src="{{ url_for('static', filename='vendors/jszip/dist/jszip.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
   <script src="{{ url_for('static', filename='build/js/Zt.dialog.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
   
   <script>
       $(document).ready(function () {
          var $win = $("[data-panel-id='gallery_list']");
          var $table = $("#datatable-school");
- 
-         $win.on("click", "button", function () {
+         $win.on("click", "button,a", function () {
              if ($(this).has("data-click-name")) {
                  var clickName = $(this).attr("data-click-name");
                  var clickValue = $(this).attr("data-click-value");
- 
                  switch(clickName){
                      case "create":
-                         var url = '/zx/gallery/create';
+                         var url = '/zx/gallery/create?schoolid='+{{school.id}};
                          $("#galleryDialog").ztdialog({
                              'url': url,
                              'title': "添加图片",
                              'buttons': 'Save',
                              'height': 800,
                              'width': 1200,
-                             'fnSaved': function () { $table.DataTable().draw(false); }
+                             'fnSaved': function () { window.location.reload();}
                          });
                          break;
                     
@@ -119,7 +119,7 @@
                              'confirmButtonText': '确定删除',
                              'cancelButtonText': '取消删除',
                              'fnConfirmCallback': function (parms) {
-                                 var url = '/zx/schooldelete' + parms.id;
+                                 var url = '/zx/gallery/delete?id=' + parms.id;
                                  $.post(url, function (rtn) {
                                      var rtnDto = JSON.parse(rtn);
                                      if (rtnDto.result) {
@@ -128,7 +128,7 @@
                                              'text': '信息删除成功',
                                              'type': 'success'
                                          });
-                                         RefreshDeptTable();
+                                         window.location.reload();
                                      } else {
                                          ZTAlert({
                                              'title': '删除失败',

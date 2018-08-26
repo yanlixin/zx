@@ -8,6 +8,7 @@
   <link href="{{ url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='vendors/jquery-ui/themes/base/jquery-ui.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
   
 {% endblock stylesheets %}
 
@@ -89,7 +90,9 @@
   <script src="{{ url_for('static', filename='vendors/jszip/dist/jszip.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
   <script src="{{ url_for('static', filename='build/js/Zt.dialog.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
   <script>
      $(document).ready(function () {
         var $win = $("[data-panel-id='school_list']");
@@ -103,7 +106,7 @@
                 switch(clickName){
                     case "create":
                     case "edit":
-                        var url = clickName == "create" ? '/zx/schooledit' : '/zx/schooledit?id=' + clickValue;
+                        var url = clickName == "create" ? '/zx/school/edit' : '/zx/school/edit?id=' + clickValue;
                         $("#schoolDialog").ztdialog({
                             'url': url,
                             'title': clickName == "create"?"添加学校": "修改学校",
@@ -125,7 +128,7 @@
                             'confirmButtonText': '确定删除',
                             'cancelButtonText': '取消删除',
                             'fnConfirmCallback': function (parms) {
-                                var url = '/zx/schooldelete' + parms.id;
+                                var url = '/zx/school/delete?id=' + parms.id;
                                 $.post(url, function (rtn) {
                                     var rtnDto = JSON.parse(rtn);
                                     if (rtnDto.result) {
@@ -134,7 +137,7 @@
                                             'text': '信息删除成功',
                                             'type': 'success'
                                         });
-                                        RefreshDeptTable();
+                                        $table.DataTable().draw(false);
                                     } else {
                                         ZTAlert({
                                             'title': '删除失败',
