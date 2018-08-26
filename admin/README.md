@@ -43,10 +43,11 @@ This project shows:
 ### 3. Set the FLASK_APP environment variable
     (Windows) set FLASK_APP=gentelella.py
     (Unix) export FLASK_APP=gentelella.py
+           export FLASK_DEBUG=1
+- [Debug Mode]http://flask.pocoo.org/docs/0.12/quickstart/#debug-mode
 
 ### 4. Run the application
     flask run --host=0.0.0.0
-
 ### 4. Go the http://127.0.0.1:5000/
 
 ### 5. Create an account and log in

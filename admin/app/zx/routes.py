@@ -1,12 +1,15 @@
 from app.zx import blueprint
-from flask import render_template,request
+from flask import render_template,request,make_response
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,Grade,Category,School,Province,City
-from app import db
+from app.base.models import User,District,Grade,Category,School,SchoolGallery,Province,City
+from app import db,uploaded_photos,base_path
 import logging
 import json
 import sys
+import uuid
+import os
+from PIL import Image
 
 from .forms import SchoolForm
 @blueprint.route('/<template>')
@@ -82,9 +85,8 @@ def school_create():
     result='OK'
     msg=''
     try:
-        if int(school.id)>=0:
+        if int(school.id)>0:
             dd=db.session.query(School).filter_by(id=school.id)
-            logging.debug(dd)
             dd.update(school.to_dict() )
         else:
             db.session.add(school)
@@ -100,9 +102,8 @@ def school_create():
 @blueprint.route('/schooledit', methods=['GET'])
 @login_required
 def school_edit():
-    id = request.args.get('id', 1, type=int)
+    id = request.args.get('id', -1, type=int)
     school = School.query.get(id)
-    
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
     districts=[item.to_dict() for item in District.query.all()]
@@ -117,3 +118,111 @@ def school_edit():
             cityList=json.dumps(cities),
             districtList=json.dumps(districts)
         )
+
+@blueprint.route('/gallery/list', methods=['GET'])
+@login_required
+def gallery_list():
+    schoolid = request.args.get('schoolid', -1, type=int)
+    school = School.query.get(schoolid)
+    galleries =[item.to_dict() for item in SchoolGallery.query.filter_by(schoolid=schoolid)]
+    print(len(galleries))
+    return render_template(
+            'gallerylist.html',
+            school=school,
+            galleryList=galleries,
+        )
+
+@blueprint.route('/gallery/create', methods=['GET'])
+@login_required
+def gallery_edit():
+    id = request.args.get('schoolid', -1, type=int)
+    return render_template(
+            'galleryedit.html',
+            schoolid=id,
+        )
+
+@blueprint.route('/gallery/show', methods=['GET'])
+@login_required
+def gallery_photo():
+    id = request.args.get('id', -1, type=int)
+    gallery = SchoolGallery.query.get(id)
+    imagename = os.path.splitext(gallery.path)
+    origin = [base_path,r'/files/scools/',str(gallery.schoolid),r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+
+    image_data = open(os.path.join(base_path, originname), "rb").read()
+    response = make_response(image_data)
+    response.headers['Content-Type'] = 'image/png'
+    return response
+
+@blueprint.route('/gallery/save', methods=['POST'])
+@login_required
+def gallery_create():
+    dataX = request.form.get('dataX')
+    dataY = request.form.get('dataY')
+    dataHeight = request.form.get('dataHeight')
+    dataWidth = request.form.get('dataWidth')
+   
+    print('dataX=%s\r\ndataY=%s\r\ndataHeight=%s\r\ndataWidth=%s' % (dataX,dataY,dataHeight,dataWidth))
+    gallery = SchoolGallery(**request.form)
+    imagename = os.path.splitext(gallery.path)
+    fullname = '%s%s%s' % (base_path,r'/files/',gallery.path)
+    im = Image.open(fullname)
+    id = '-1'
+    if gallery.schoolid is not None:
+        id = str(gallery.schoolid)
+
+    print(id)
+    folder =''.join([base_path,r'/files/scools/',id,r'/']) 
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    origin = [base_path,r'/files/scools/',id,r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+    im.save(originname)
+    cropedIm = im.crop((int(dataX), int(dataY), int(dataWidth), int(dataHeight)))
+    imgName=''.join([r'/files/scools/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    originFullName = [base_path,imgName]
+    cropedIm.save(''.join(originFullName))
+    dataWidth = '190' 
+    dataHeight = '130'
+    cropedIm = im.resize((int(dataWidth), int(dataHeight)),Image.ANTIALIAS)
+    thumName=''.join([r'/files/scools/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumFullName = [base_path,thumName]
+    cropedIm.save(''.join(thumFullName))
+    result='OK'
+    msg=''
+    db.session.add(gallery)
+    db.session.commit()
+
+    dd=db.session.query(School).filter_by(id=int(id))
+    dd.img=origin
+    dd.thumb=origin
+    dd.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/gallery/upload', methods=['POST'])
+def flask_upload():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            logging.debug('No file part')
+            return json.dumps({'code': -1, 'filename': '', 'msg': 'No file part'})
+        file = request.files['file']
+        # if user does not select file, browser also submit a empty part without filename
+        if file.filename == '':
+            logging.debug('No selected file')
+            return json.dumps({'code': -1, 'filename': '', 'msg': 'No selected file'})
+        else:
+            try:
+                fname = '%s%s%s' % ('', uuid.uuid1(), os.path.splitext(file.filename)[1])
+
+                filename = uploaded_photos.save(file, name=fname)
+                #print(filename)
+                logging.debug('%s url is %s' % (filename, uploaded_photos.url(filename)))
+                return json.dumps({'code': 0, 'filename': filename, 'msg': uploaded_photos.url(filename)})
+            except Exception as e:
+                logging.debug('upload file exception: %s' % e)
+                return json.dumps({'code': -1, 'filename': '', 'msg': 'Error occurred'})
+    else:
+        return json.dumps({'code': -1, 'filename': '', 'msg': 'Method not allowed'})

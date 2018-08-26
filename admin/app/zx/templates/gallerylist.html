@@ -1,0 +1,150 @@
+{% extends "base_site.html" %}
+
+{% block title %} Table Dynamic {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+  <link href="{{ url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendors/jquery-ui/themes/base/jquery-ui.min.css') }}" rel="stylesheet">
+  {% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main" data-panel-id='gallery_list'>
+    
+          <div class="clearfix"></div>
+    
+          <div class="row">
+            <div class="col-md-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>相册 <small> {{school.name}} </small></h2>
+                  <div class="title_right">
+                      <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                         &nbsp;
+                          <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" data-click-name="create"><i class="fa fa-plus"></i>新增</button>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+    
+                  <div class="row">
+    
+                   
+                    {% for gallery in galleryList %}
+                    <div class="col-md-55">
+                      <div class="thumbnail">
+                        <div class="image view view-first">
+                          <img style="width: 100%; display: block;" src="/zx/gallery/show?id={{gallery.id}}" alt="image" />
+                          <div class="mask">
+                            <p>{{gallery.title}}</p>
+                            <div class="tools tools-bottom">
+                              <a href="#"><i class="fa fa-link"></i></a>
+                              <a href="#"><i class="fa fa-pencil"></i></a>
+                              <a href="#"><i class="fa fa-times"></i></a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="caption">
+                          <p>{{gallery.desc}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hide" id="galleryDialog"></div> 
+{% endblock content %}
+
+{% block javascripts %}
+  {{ super() }}
+  <!-- Datatables -->
+  <script src="{{ url_for('static', filename='vendors/jquery-ui/jquery-ui.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/jszip/dist/jszip.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ url_for('static', filename='build/js/Zt.dialog.min.js') }}"></script>
+  
+  <script>
+      $(document).ready(function () {
+         var $win = $("[data-panel-id='gallery_list']");
+         var $table = $("#datatable-school");
+ 
+         $win.on("click", "button", function () {
+             if ($(this).has("data-click-name")) {
+                 var clickName = $(this).attr("data-click-name");
+                 var clickValue = $(this).attr("data-click-value");
+ 
+                 switch(clickName){
+                     case "create":
+                         var url = '/zx/gallery/create';
+                         $("#galleryDialog").ztdialog({
+                             'url': url,
+                             'title': "添加图片",
+                             'buttons': 'Save',
+                             'height': 800,
+                             'width': 1200,
+                             'fnSaved': function () { $table.DataTable().draw(false); }
+                         });
+                         break;
+                    
+                     case "delete":
+                         ZTConfirm({
+                             "title": "删除学校",
+                             "text": "是否确认删除?",
+                             'parms': { id: clickValue },
+                             'confirmButtonText': '确定删除',
+                             'cancelButtonText': '取消删除',
+                             'fnConfirmCallback': function (parms) {
+                                 var url = '/zx/schooldelete' + parms.id;
+                                 $.post(url, function (rtn) {
+                                     var rtnDto = JSON.parse(rtn);
+                                     if (rtnDto.result) {
+                                         ZTAlert({
+                                             'title': '删除成功',
+                                             'text': '信息删除成功',
+                                             'type': 'success'
+                                         });
+                                         RefreshDeptTable();
+                                     } else {
+                                         ZTAlert({
+                                             'title': '删除失败',
+                                             'text': rtnDto.msg,
+                                             'type': 'error'
+                                         });
+                                     }
+                                 }, "text");
+                             }
+                         });
+                         break;
+                 
+                 }
+             }
+         });
+     
+     });
+   </script>
+{% endblock javascripts %}

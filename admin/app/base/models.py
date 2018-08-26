@@ -181,3 +181,39 @@ class School(db.Model):
             'istopshow':self.istopshow,
             }
         return data
+
+class SchoolGallery(db.Model):
+    __tablename__ = 'schoolgalleries'
+    id = Column("galleryid",Integer, primary_key=True)
+    schoolid=Column("schoolid",Integer)
+    title = Column("imagetitle",String(120))
+    desc = Column("imagedesc",String(120))
+    path = Column("imagepath",String(120))
+    isdefault = Column("isdefault",Integer)
+    istopshow = Column("istopshow",Integer)
+    isenable = Column("isenable",Integer)
+    sortindex = Column("sortindex",Integer)
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'schoolid':self.schoolid,
+            'title': self.title,
+            'text':self.title,
+            'path':self.path,
+            'isdefault': self.isdefault,
+            'istopshow':self.istopshow,
+            'isenable':self.isenable,
+            'sortindex':self.sortindex,
+        }
+        return data

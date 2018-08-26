@@ -1,13 +1,13 @@
-from flask import render_template, flash, redirect, session, url_for, request, g ,jsonify, request, url_for
+from flask import render_template, flash, redirect, session, url_for, request, g ,jsonify, request,make_response
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 import json
-from sqlalchemy import or_
+from sqlalchemy import func,or_
 #from flask_babel import _
-from app import app, db, lm
+from app import app, db, lm,base_path
 from .forms import LoginForm,RegistrationForm
 from .models import User,School,Grade,Category,District
-
+import os
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -24,19 +24,43 @@ def index():
 def detailed():
     id = request.args.get('id', 1, type=int)
     data = School.query.get(id)
+    
     #jsonify(User.query.get_or_404(id).to_dict())
     return render_template("detailed.html",
         school = data)
-
-
+@app.route('/img')
+def gallery_photo():
+    id = request.args.get('id', -1, type=int)
+    school = School.query.get(id)
+    
+    image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
+    if school.thumb is not None:
+        print(base_path)
+        print(''.join([base_path,  school.thumb]))
+        #image_data = open(os.path.join(base_path, school.thumb), "rb").read()
+        image_data = open(''.join([base_path,  school.thumb]), "rb").read()
+    response = make_response(image_data)
+    response.headers['Content-Type'] = 'image/png'
+    return response
+    
 @app.route('/ng')
 def ng():
     id = request.args.get('id', -1, type=int)
     catid = request.args.get('catid', -1, type=int)
-    data=[item.to_dict() for item in School.query.filter(or_(School.gradeid==id,-1==id)).filter(or_(School.catid==catid,-1==catid))]
+    pageIndex = request.args.get('pageindex', 1, type=int)
+    pageSize=2
+    data=[item.to_dict() for item in School.query.filter(or_(School.gradeid==id,-1==id)).filter(or_(School.catid==catid,-1==catid)).limit(pageSize).offset((pageIndex-1)*pageSize)]
     distList=[item.to_dict() for item in District.query.all()]
+    count=db.session.query(func.count(School.id)).filter(or_(School.gradeid==id,-1==id)).filter(or_(School.catid==catid,-1==catid)).scalar()
+    pageCount=pageCount=count/pageSize
+    if count%pageSize >0 :
+        pageCount=count/pageSize+1
+
     return render_template("ng.html",
         id=id,
+        pagecount=pageCount,
+        pageindex=pageIndex,
+        catid=catid,
         distlist=distList,
         schoollist = data)
 

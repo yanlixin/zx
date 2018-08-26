@@ -122,6 +122,7 @@ class School(db.Model):
     def __repr__(self):
         return str(self.schoolname)
 
+
     def to_dict(self):
         data = {
             'id': self.id,
@@ -154,6 +155,7 @@ class School(db.Model):
             'sortindex' :self.sortindex,
             'img': self.img,
             'thumb': self.thumb,
+            'thumb_url':str(self.thumb)+'__',
             'isbest': self.isbest,
             'isnew':self.isnew,
             'ishot':self.ishot,

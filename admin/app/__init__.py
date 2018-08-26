@@ -4,11 +4,13 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
+from flask_uploads import UploadSet, IMAGES, configure_uploads
+import os 
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-
-
+uploaded_photos = UploadSet()
+base_path = os.path.dirname(os.path.abspath(__file__))
 def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
@@ -46,4 +48,9 @@ def create_app(selenium=False):
     register_blueprints(app)
     configure_database(app)
     configure_logs(app)
+    app.config['UPLOADS_DEFAULT_DEST'] = os.path.dirname(os.path.abspath(__file__))
+    #app.config['UPLOADS_DEFAULT_URL'] = 'http://127.0.0.1:8000/uploads_images'
+    app.config['UPLOADED_MYPIC_ALLOW'] = IMAGES
+    uploaded_photos = UploadSet()
+    configure_uploads(app, uploaded_photos)
     return app

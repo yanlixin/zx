@@ -9,7 +9,7 @@
             <label class="col-sm-2 control-label"><span style="color: red">*&nbsp;</span>名称</label>
     
             <div class="col-sm-4">
-                <input type="hidden" name="txt-id" id="txt-id" value="{{school.id}}" />
+                <input type="hidden" name="txt-id" id="txt-id" value="{{school.id or 0}}" />
                 <input type="text" id="txt-name" name="txt-name" class="form-control" placeholder="请输入名称" value="{{school.name}}" />
             </div>
             <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>类别</label>
@@ -185,12 +185,12 @@
         var cityid=0;
         var provid=0;
         catList.unshift({"id":0,"text":"select"});
-        $("#catid").select2({"data": catList}).val({{school.catid}}).trigger("change");;
+        $("#catid").select2({"data": catList}).val({{school.catid or 0}}).trigger("change");;
         gradeList.unshift({"id":0,"text":"select"});
-        $("#gradeid").select2({"data": gradeList}).val({{school.gradeid}}).trigger("change");;
+        $("#gradeid").select2({"data": gradeList}).val({{school.gradeid or 0}}).trigger("change");;
        
         provList.unshift({"id":0,"text":"select","provid":-1})
-        $("#provid").select2({"data": provList}).val({{school.provid}}).trigger("change");
+        $("#provid").select2({"data": provList}).val({{school.provid or 0}}).trigger("change");
         
         $("#cityid").select2({
             
@@ -217,7 +217,7 @@
                 "data": data,
                 "selectedValue": '',
                 //"allowClear": true
-            }).val({{school.cityid}}).trigger("change");
+            }).val({{school.cityid or 0}}).trigger("change");
         });
         $('#cityid').on('select2:select', function (e) {
             var data = e.params.data;
@@ -232,7 +232,7 @@
                 "data": data,
                 "selectedValue": '',
                 //"allowClear": true
-            }).val({{school.districtid}})
+            }).val({{school.districtid or 0}})
         });
         
         var $win = getSubWinBody('school_create');
