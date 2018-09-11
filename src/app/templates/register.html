@@ -77,14 +77,12 @@
             <div class="form-group mb40  email_mobile_msg">
                 <label class="control-label required" for="sms_code">短信验证码</label>
                 <div class="controls row">
-                    <div class="col-xs-6" style="width: 154px;">
+                    <div class="col-xs-6">
                         <input type="text" class="form-control ident" id="sms_code" name="sms_code" placeholder="短信验证码"
                             required="required"  data-url="/edu_cloud/sms_check/sms_registration">
                     </div>
                     <div class="col-xs-6">
-                        <a href="#modal" data-toggle="modal" class="btn ident btn-primary btn-lg  form-control  js-sms-send disabled"
-                        data-url="/register/captcha/modal"
-                        data-sms-url="/edu_cloud/sms_send">
+                        <a href="javascript:void(0)" id="sms_send" onclick="send()" class="btn ident btn-primary btn-lg  form-control  js-sms-send" >
                             <span id="js-time-left"></span>
                             <span id="js-fetch-btn-text">获取短信验证码</span>
                         </a>
@@ -118,4 +116,48 @@
         </form>
     
     </div>
+<script>
+  var int =0;
+  var time=60;
+  function send(){
+    if ($("#sms_send").attr('disabled'))
+        return;
+    if ($("#register_mobile").val()=="") return;
+    var subData = {mobile: $("#register_mobile").val(), };
+    var url = '/register/sms_send';
+    $.post(url, subData, function (rtn) {
+        var rtnDto = JSON.parse(rtn);
+        if (!rtnDto.valid) {
+            var msg = "";
+            for (var i in rtnDto.msg) {
+                msg = msg + rtnDto.msg[i] + ";";
+            }
+            alert(msg);
+        } else if (rtnDto.result) {
+            alert(rtnDto.result);
+        } else {
+            alert(rtnDto.msg);
+            
+        }
+    }, "text");
+    time=60;
+    int=self.setInterval("clock()",1000);
+    console.log(int);
+  }
+  
+function clock()
+{
+  if (time >0) {
+    time= time -1;
+    $("#js-fetch-btn-text").text(time+'秒后重新获取');
+    $("#sms_send").attr('disabled',"true");
+  }else{
+    int=window.clearInterval(int)
+    $("#sms_send").removeAttr("disabled");
+    $("#js-fetch-btn-text").text('获取短信验证码');
+  }
+  
+}
+
+</script>
 {% endblock %}

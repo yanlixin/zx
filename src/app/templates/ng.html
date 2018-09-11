@@ -37,7 +37,7 @@
 		
 		{% for school in schoollist %}
 		<div class="bit-left">
-			<img src="assets/img/{{thumb}}" alt="">
+			<img src="/img?id={{school.id}}" alt="" onclick="window.location.href='detailed?id={{school.id}}'">
 			<div class="bit-right">
 				<p class="str">{{school.name}}</p><br>
 				<p>学费：{{school.tuition}}</p><br>

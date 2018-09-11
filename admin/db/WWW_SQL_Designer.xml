@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
-<!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
+<!-- Active URL: http://ondras.zarovi.cz/sql/demo/?keyword=default -->
 <sql>
 <datatypes db="sqlite">
 	<group label="Affinity">
@@ -10,7 +10,57 @@
 		<type label="Real" default="0" length="0" sql="REAL" quote="" color="rgb(238,238,170)"/>
 		<type label="None" default="" length="0" sql="NONE" quote="" color="rgb(200,255,200)"/>
 	</group>
-</datatypes><table x="136" y="92" name="Schools">
+</datatypes><table x="10" y="10" name="Cities">
+<row name="cityid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="provid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="Provinces" row="provid" />
+</row>
+<row name="cityname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>cityid</part>
+</key>
+</table>
+<table x="148" y="10" name="Provinces">
+<row name="provid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="provname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>provid</part>
+</key>
+</table>
+<table x="291" y="10" name="Districts">
+<row name="districtid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cityid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="Cities" row="cityid" />
+</row>
+<row name="districtname" null="1" autoincrement="0">
+<datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>districtid</part>
+</key>
+</table>
+<table x="449" y="10" name="Schools">
 <row name="schoolid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -141,57 +191,7 @@
 <part>schoolid</part>
 </key>
 </table>
-<table x="492" y="126" name="Cities">
-<row name="cityid" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="provid" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="Provinces" row="provid" />
-</row>
-<row name="cityname" null="1" autoincrement="0">
-<datatype>TEXT(64)</datatype>
-<default>NULL</default></row>
-<row name="sortindex" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>cityid</part>
-</key>
-</table>
-<table x="693" y="64" name="Provinces">
-<row name="provid" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="provname" null="1" autoincrement="0">
-<datatype>TEXT(64)</datatype>
-<default>NULL</default></row>
-<row name="sortindex" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>provid</part>
-</key>
-</table>
-<table x="690" y="260" name="Districts">
-<row name="districtid" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="cityid" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="Cities" row="cityid" />
-</row>
-<row name="districtname" null="1" autoincrement="0">
-<datatype>TEXT(64)</datatype>
-<default>NULL</default></row>
-<row name="sortindex" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>districtid</part>
-</key>
-</table>
-<table x="432" y="728" name="Users">
+<table x="702" y="10" name="Users">
 <row name="userid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -226,7 +226,7 @@
 <part>userid</part>
 </key>
 </table>
-<table x="431" y="439" name="Mangers">
+<table x="949" y="10" name="Mangers">
 <row name="managerid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -264,7 +264,7 @@
 <part>managerid</part>
 </key>
 </table>
-<table x="954" y="201" name="Categories">
+<table x="10" y="941" name="Categories">
 <row name="catid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -290,7 +290,7 @@
 <part>catid</part>
 </key>
 </table>
-<table x="825" y="520" name="Grades">
+<table x="217" y="941" name="Grades">
 <row name="gradeid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -314,6 +314,68 @@
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>gradeid</part>
+</key>
+</table>
+<table x="424" y="941" name="schoolgalleries">
+<row name="galleryid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="imagedesc" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="imagetitle" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="imagepath" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="isdefault" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="istopshow" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="isenable" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="recordstatus" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="createddate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="createdbymanagerid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>galleryid</part>
+</key>
+<comment>学校图片</comment>
+</table>
+<table x="710" y="319" name="SmsCode">
+<row name="smscodeid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="mobile" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="senddatetime" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="verifycode" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="hasverified" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="createdbydatetime" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>smscodeid</part>
 </key>
 </table>
 </sql>

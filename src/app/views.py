@@ -6,7 +6,7 @@ from sqlalchemy import func,or_
 #from flask_babel import _
 from app import app, db, lm,base_path
 from .forms import LoginForm,RegistrationForm
-from .models import User,School,Grade,Category,District
+from .models import User,School,Grade,Category,District,SmsCode
 import os
 @lm.user_loader
 def load_user(id):
@@ -48,11 +48,11 @@ def ng():
     id = request.args.get('id', -1, type=int)
     catid = request.args.get('catid', -1, type=int)
     pageIndex = request.args.get('pageindex', 1, type=int)
-    pageSize=2
+    pageSize=10
     data=[item.to_dict() for item in School.query.filter(or_(School.gradeid==id,-1==id)).filter(or_(School.catid==catid,-1==catid)).limit(pageSize).offset((pageIndex-1)*pageSize)]
     distList=[item.to_dict() for item in District.query.all()]
     count=db.session.query(func.count(School.id)).filter(or_(School.gradeid==id,-1==id)).filter(or_(School.catid==catid,-1==catid)).scalar()
-    pageCount=pageCount=count/pageSize
+    pageCount=count/pageSize
     if count%pageSize >0 :
         pageCount=count/pageSize+1
 
@@ -122,15 +122,17 @@ def register():
             return redirect(url_for('login'))
     return render_template('register.html', title='Register',
                            form=form)
-
-@app.route('/admin')
-def admin():
-    return render_template("admin.html",
-        school = {})
-
-@app.route('/users', methods=['GET'])
-def admin_shcoollist():
-    page = request.args.get('offset', 0, type=int)
-    per_page = min(request.args.get('limit', 10, type=int), 100)
-    data = User.to_collection_dict(User.query, page, per_page, 'api.get_users')
-    return jsonify(data)
+                
+@app.route('/register/sms_send', methods = ['GET', 'POST'])
+def sms_code():
+   
+    mobileNo = request.values.get('mobile', type=str,default=None)
+    if mobileNo==None or mobileNo=='':
+        return json.dumps({'valid':False,'result':'OK','msg':'请输入手机号码!' })
+    result='OK'
+    msg=''
+    if SmsCode.send(mobileNo)==False:
+        msg='请稍后再试'
+    else:
+        msg="发送成功"
+    return json.dumps({'valid':True,'result':result,'msg':msg })

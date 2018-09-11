@@ -1,6 +1,8 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
+import random
+from datetime import datetime,timedelta
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -220,3 +222,47 @@ class Category(db.Model):
         schools=[item.to_dict() for item in School.query.filter_by(catid=self.id)]
         data = {'id': self.id,'name': self.name,'text':self.name,'schools':schools}
         return data
+
+class SmsCode(db.Model):
+    __tablename__ = 'SmsCode'
+
+    id = db.Column("smscodeid",db.Integer, primary_key=True)
+    mobile = db.Column("mobile",db.String(120), unique=True)
+    senddatetime = db.Column("senddatetime",db.String(120))
+    verifycode = db.Column("verifycode",db.Integer)
+    hasverified = db.Column("hasverified",db.String(120))
+    createdbydatetime = db.Column("createdbydatetime",db.Integer)
+    def to_dict(self):
+        data = {'id': self.id,'mobile': self.mobile,'senddatetime':self.senddatetime,'verifycode':self.verifycode,'hasverified':self.hasverified}
+        return data
+
+    @staticmethod
+    def send(mobileNo):
+        sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.id.desc()).first()
+        if sms!=None:
+            delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')
+            print(delta.total_seconds())
+            if delta.total_seconds()<60:
+                return ""
+        code = ''
+        for num in range(1,5):
+            code = code + str(random.randint(0, 9))
+        now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        sms = SmsCode(mobile=mobileNo,verifycode=code,createdbydatetime=now)
+        print(code)
+
+        sms.senddatetime=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        db.session.add(sms)
+        db.session.commit()
+
+        return "OK"
+    
+    @staticmethod    
+    def verifyCode(mobileNo,code):
+        sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(desc(SmsCode.c.senddatetime)).first()
+        if sms!=None and sms.verifycode==code:
+            sms.update({'hasverified':True})
+            db.session.commit()
+            return True
+        return False

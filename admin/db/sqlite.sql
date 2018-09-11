@@ -121,3 +121,13 @@ CREATE TABLE 'schoolgalleries' (
 'createdbymanagerid' INTEGER DEFAULT NULL,
 'schoolid' INTEGER DEFAULT NULL
 );
+
+
+CREATE TABLE 'SmsCode' (
+'smscodeid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'mobile' TEXT DEFAULT NULL,
+'senddatetime' TEXT DEFAULT NULL,
+'verifycode' TEXT DEFAULT NULL,
+'hasverified' TEXT DEFAULT NULL,
+'createdbydatetime' TEXT DEFAULT NULL
+);
