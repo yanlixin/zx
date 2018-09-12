@@ -207,7 +207,7 @@ class Grade(db.Model):
     desc = db.Column("gradedesc",db.String(120))
     sortindex = db.Column("sortindex",db.Integer)
     def to_dict(self):
-        schools=[item.to_dict() for item in School.query.filter_by(gradeid=self.id)]
+        schools=[item.to_dict() for item in School.query.filter_by(gradeid=self.id).limit(6)]
         data = {'id': self.id,'name': self.name,'text':self.name,'schools':schools}
         return data
 
