@@ -118,10 +118,8 @@ CREATE TABLE 'schoolgalleries' (
 'sortindex' INTEGER DEFAULT NULL,
 'recordstatus' INTEGER DEFAULT NULL,
 'createddate' TEXT DEFAULT NULL,
-'createdbymanagerid' INTEGER DEFAULT NULL,
-'schoolid' INTEGER DEFAULT NULL
+'createdbymanagerid' INTEGER DEFAULT NULL
 );
-
 
 CREATE TABLE 'SmsCode' (
 'smscodeid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
@@ -130,4 +128,51 @@ CREATE TABLE 'SmsCode' (
 'verifycode' TEXT DEFAULT NULL,
 'hasverified' TEXT DEFAULT NULL,
 'createdbydatetime' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'Roles' (
+'roleid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'rolename' TEXT DEFAULT NULL,
+'roledesc' TEXT DEFAULT NULL,
+'IsSys' TEXT DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL,
+'recordstatus' TEXT DEFAULT NULL,
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL,
+'lastupdatedbydate' TEXT DEFAULT NULL,
+'lastupdatedbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'R_Users_Roles' (
+'ruserroleid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'managerid' INTEGER DEFAULT NULL REFERENCES 'Mangers' ('managerid'),
+'roleid' INTEGER DEFAULT NULL REFERENCES 'Roles' ('roleid'),
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' TEXT DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'lastupdatedbydate' TEXT DEFAULT NULL,
+'lastupdatedbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Permissions' (
+'permid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'permuuid' TEXT DEFAULT NULL,
+'permname' TEXT DEFAULT NULL,
+'permdesc' TEXT DEFAULT NULL,
+'permgroup' TEXT DEFAULT NULL,
+'IsSys' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL,
+'createdbydate' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'R_Permissions_Roles' (
+'rpermroleid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'roleid' INTEGER DEFAULT NULL REFERENCES 'Roles' ('roleid'),
+'permid' INTEGER DEFAULT NULL REFERENCES 'Permissions' ('permid'),
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'new table' (
+'id' TEXT DEFAULT NULL PRIMARY KEY AUTOINCREMENT
 );

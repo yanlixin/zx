@@ -1,11 +1,12 @@
 from app.config import DebugConfig
 from flask import Flask
-from flask_login import LoginManager
+from flask_login import LoginManager,current_user
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 import os 
+#from flask_script import Manager, Shell
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -17,7 +18,7 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
-    for module_name in ('base', 'forms', 'ui', 'home', 'tables', 'data', 'additional', 'base','zx'):
+    for module_name in ('base','sys', 'forms', 'ui', 'home', 'tables', 'data', 'additional', 'base','zx'):
         module = import_module('app.{}.routes'.format(module_name))
         app.register_blueprint(module.blueprint)
 

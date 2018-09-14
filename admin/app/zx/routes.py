@@ -2,7 +2,9 @@ from app.zx import blueprint
 from flask import render_template,request,make_response
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,Grade,Category,School,SchoolGallery,Province,City
+from app.base.models import User,District,Grade,Category,Province,City
+from app.zx.models import School,SchoolGallery
+from app.base.perms import permission_required,admin_required
 from app import db,uploaded_photos,base_path
 import logging
 import json
@@ -60,7 +62,7 @@ def category_jsondata():
     return json.dumps(table.json())
 
 
-@blueprint.route('/school/jsondata', methods=['GET', 'POST'])
+@blueprint.route('/manager/jsondata', methods=['GET', 'POST'])
 @login_required
 def school_jsondata():
     table = DataTable(request.args, School, School.query, [
