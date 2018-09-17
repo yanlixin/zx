@@ -10,7 +10,7 @@ from .forms import LoginForm, CreateAccountForm
 
 from app import db, login_manager
 from app.base import blueprint
-from app.base.models import User
+from app.base.sysmodels import User
 
 
 @blueprint.route('/')

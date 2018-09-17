@@ -1,6 +1,6 @@
 import sys,os,logging, json,uuid
 from sqlalchemy import and_,or_
-from flask import render_template,request,make_response
+from flask import render_template,request,make_response,jsonify
 from flask_login import login_required,current_user
 from wtforms.validators import ValidationError
 from datatables import DataTable
@@ -8,10 +8,10 @@ from datetime import datetime
 
 from app.sys import blueprint
 from app import db,uploaded_photos,base_path
-from app.base.sysmodels import Role,UserRole,Permission,PermissionRole
+from app.base.sysmodels import User,Role,UserRole,Permission,PermissionRole
 from app.base.perms import permission_required,admin_required
-from app.base.models import User,District,Grade,Category,Province,City
-from .forms import RoleForm,ManagerForm,ManagerRoleForm,PermissionForm
+from app.base.models import District,Grade,Category,Province,City
+from .forms import RoleForm,ManagerForm,ManagerRoleForm,PermissionForm,RolePermissionForm
 
 @blueprint.route('/<template>')
 @login_required
@@ -44,6 +44,7 @@ def manager_jsondata():
 
 @blueprint.route('/manager/edit', methods=['GET'])
 @login_required
+@admin_required
 def manager_edit():
     id = request.args.get('id', -1, type=int)
     manager = User.query.get(id)
@@ -57,6 +58,7 @@ def manager_edit():
 
 @blueprint.route('/manager/save', methods=['POST'])
 @login_required
+@admin_required
 def manager_save():
     form = ManagerForm(**request.form)
     result='OK'
@@ -93,6 +95,7 @@ def manager_save():
 
 @blueprint.route('/manager/delete', methods=['POST'])
 @login_required
+@admin_required
 def manager_del():
     id = request.args.get('id', -1, type=int)
     result='OK'
@@ -115,6 +118,7 @@ def role_list():
 
 @blueprint.route('/role/data', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def role_jsondata():
     table = DataTable(request.args, Role, Role.query, [
         "id",
@@ -128,6 +132,7 @@ def role_jsondata():
 
 @blueprint.route('/role/edit', methods=['GET'])
 @login_required
+@admin_required
 def role_edit():
     id = request.args.get('id', -1, type=int)
     role = Role.query.get(id)
@@ -141,6 +146,7 @@ def role_edit():
 
 @blueprint.route('/role/save', methods=['POST'])
 @login_required
+@admin_required
 def role_save():
     form = RoleForm(**request.form)
     result='OK'
@@ -165,6 +171,7 @@ def role_save():
 
 @blueprint.route('/role/delete', methods=['POST'])
 @login_required
+@admin_required
 def role_del():
     id = request.args.get('id', -1, type=int)
     result='OK'
@@ -177,6 +184,7 @@ def role_del():
 
 @blueprint.route('/managerrole/edit', methods=['GET'])
 @login_required
+@admin_required
 def managerrole_edit():
     id = request.args.get('id', -1, type=int)
     roles = Role.query.all()
@@ -202,6 +210,7 @@ def managerrole_edit():
         )
 @blueprint.route('/managerrole/save', methods=['POST'])
 @login_required
+@admin_required
 def manager_role_save():
     form = ManagerRoleForm(**request.form)
     result='OK'
@@ -212,7 +221,6 @@ def manager_role_save():
     else:
         id=form.id.data
         roleids=form.roleids.data
-        print(roleids)
         UserRole.write_data(id,roleids)
     return json.dumps({'valid':valid,'result':result,'msg':msg })
 
@@ -225,6 +233,7 @@ def perm_list():
 
 @blueprint.route('/perm/data', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def perm_jsondata():
     table = DataTable(request.args, Permission, Permission.query, [
         "id",
@@ -238,6 +247,7 @@ def perm_jsondata():
 
 @blueprint.route('/perm/edit', methods=['GET'])
 @login_required
+@admin_required
 def perm_edit():
     id = request.args.get('id', -1, type=int)
     obj = Permission.query.get(id)
@@ -250,6 +260,7 @@ def perm_edit():
         )
 @blueprint.route('/perm/save', methods=['POST'])
 @login_required
+@admin_required
 def perm_save():
     form = PermissionForm(**request.form)
     result='OK'
@@ -281,14 +292,14 @@ def role_perm_list():
     permission=Permission.select().all()
     rolePermission=PermissionRole.select().filter_by(roleid=roles.first().id).all()
 
-    form=ManagerRoleForm(id=id)
+    form=RolePermissionForm()
     list=[]
     groups=db.session.query(Permission.group).distinct()
-    print(groups.all()) 
+ 
     for perm in permission:
         obj ={'id':perm.id,'name':perm.name,'group':perm.group,'selected':False}
         for ur in rolePermission:
-            if ur.permid==obj.permid:
+            if ur.permid==obj['id']:
                 obj['selected']=True
                 break
         list.append(obj)
@@ -300,3 +311,31 @@ def role_perm_list():
             perms=list,
             groups=groups.all()
         )
+
+@blueprint.route('/roleperm/data', methods=['GET'])
+@login_required
+@admin_required
+def role_perm_jsondata():
+    id = request.args.get('id', -1, type=int)
+    rolePermission=[item.to_dict() for item in PermissionRole.select().filter_by(roleid=id)]
+    
+    return jsonify(rolePermission)
+    #json.dumps(rolePermission)
+
+
+@blueprint.route('/roleperm/save', methods=['POST'])
+@login_required
+@admin_required
+def role_perm_save():
+    form = RolePermissionForm(**request.form)
+    result='OK'
+    valid=True
+    msg=''
+    if not form.validate_on_submit():
+        return json.dumps({'valid':False,'result':result,'msg':form.errors })
+    else:
+        roleid=form.roleid.data
+        permids=form.permids.data
+        print(permids)
+        PermissionRole.write_data(roleid,permids)
+    return json.dumps({'valid':valid,'result':result,'msg':msg })

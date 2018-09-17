@@ -33,9 +33,14 @@
         <link href="{{ url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='vendors/jquery-ui/themes/base/jquery-ui.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
-      
+        <link href="{{ url_for('static', filename='vendors/ladda/dist/ladda-themeless.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendors/select2-bootstrap-theme/dist/select2-bootstrap.min.css') }}" rel="stylesheet">
+        
       {% endblock stylesheets %}
       <!-- Custom Theme Style -->
+      
       <link href="{{ url_for('static', filename='build/css/custom.css') }}" rel="stylesheet">
     {% endblock head %}
   </head>
@@ -118,9 +123,17 @@
         <script src="{{ url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js') }}"></script>
         <script src="{{ url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js') }}"></script>
         <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='build/js/Zt.dialog.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='vendors/ladda/dist/spin.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='build/js/Zt.Common.js') }}"></script>
         <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
-       
+        <script src="{{ url_for('static', filename='build/js/Zt.dialog.min.js') }}"></script>
+
       {% endblock %}
       <!-- Custom Theme Scripts -->
       <script src="{{ url_for('static', filename='build/js/custom.js') }}"></script>

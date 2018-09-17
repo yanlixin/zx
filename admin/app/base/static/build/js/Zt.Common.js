@@ -116,43 +116,7 @@ function jsonDateFormat(jsonDate, formart) {
     }
 }
 
-//发送异步请求，将结果输出到<div id="result"></div>中
-//最后一个参数可以是"html"也可以是"text"
-function gopage(query, obj) {
-    console.log(obj);
-    $(".nav").find("li").removeClass("active");
-    $(".nav").find("i").css("color","");
-    if (obj != null) {
-        $(obj).children("i").css("color", "#1ab394");
-        $(obj).parents("li").each(function (index, item) {
-            $(this).addClass("active");
-        })
-    } else {
-        $(".nav").find("ul").removeClass("in");
-    }
-    //清除datetime-picker在body留下的下拉框
-    $(".datetimepicker.datetimepicker-dropdown-bottom-right.dropdown-menu").remove();
 
-    $.post(query, function (data) {
-        $("#MainPageContainer").children().remove();
-        $("#MainPageContainer").html(data);
-    }, "text"
-    );
-    //屏蔽超级链接跳转
-    return false;
-}
-
-//跳转到一个已存在的菜单
-function goMenuPage(url) {
-    //页面跳转，添加充值信息后 立即跳转到批量充值列表
-    url = url.toLocaleLowerCase();
-    $("#side-menu").find("a").each(function (index, item) {
-        if ($(item).attr("onclick") != undefined && $(item).attr("onclick").toLocaleLowerCase().indexOf(url) > -1) {
-            $(item).click();
-            return;
-        }
-    });
-}
 
 /**
 * json对象转字符串形式
@@ -250,48 +214,30 @@ $.ajaxSetup({
 
 $.extend($.fn.dataTable.defaults, {
 
-    //"iDisplayLength": 15,
-    //"aLengthMenu": [[15, 20, 25, 50, 100], [15, 20, 25, 50, 100]],
-    //"sServerMethod": "POST",
-    //"bServerSide": true,
-    //"bFilter": false,
-    //"bInfo": true,
-    //"bProcessing": false,
-    //"sDom": "<'top'f>rt<'row'<'col-sm-4'li><'col-sm-8'p>>",
-    //"oLanguage": {
-    //    "sLengthMenu": "每页 _MENU_ 条",
-    //    "sZeroRecords": "没有数据",
-    //    "sSearch": "查找",
-    //    "oPaginate": {
-    //        "sFirst": "首页",
-    //        "sPrevious": "前一页",
-    //        "sNext": "后一页",
-    //        "sLast": "尾页"
-    //    },
-    //},
 
-    "iDisplayLength": 20,
-    "aLengthMenu": [[15, 20, 25, 50, 100], [15, 20, 25, 50, 100]],
-    "sServerMethod": "POST",
-    "bServerSide": true,
-    "bFilter": false,
-    info: true,
-    "bProcessing": true,
-    dom: "<'top'f>tr<'row'<'col-sm-4'li><'col-sm-8'p>>",
-    language: {
-        lengthMenu: "每页 _MENU_ 条",
-        processing: "数据加载中。。。",
-        info: ", 共 _TOTAL_ 条 ",
-        infoEmpty: "",
-        zeroRecords: "没有数据",
-        emptyTable: "没有数据",
-        loadingRecords: "",
-        search: "查找",
-        paginate: {
-            first: "首页",
-            previous: "前一页",
-            next: "后一页",
-            last: "尾页"
-        },
-    },
+
+    // "iDisplayLength": 20,
+    // "aLengthMenu": [[15, 20, 25, 50, 100], [15, 20, 25, 50, 100]],
+    // "sServerMethod": "POST",
+    // "bServerSide": true,
+    // "bFilter": false,
+    // info: true,
+    // "bProcessing": true,
+    // dom: "<'top'f>tr<'row'<'col-sm-4'li><'col-sm-8'p>>",
+    // language: {
+    //     lengthMenu: "每页 _MENU_ 条",
+    //     processing: "数据加载中。。。",
+    //     info: ", 共 _TOTAL_ 条 ",
+    //     infoEmpty: "",
+    //     zeroRecords: "没有数据",
+    //     emptyTable: "没有数据",
+    //     loadingRecords: "",
+    //     search: "查找",
+    //     paginate: {
+    //         first: "首页",
+    //         previous: "前一页",
+    //         next: "后一页",
+    //         last: "尾页"
+    //     },
+    // },
 });

@@ -27,3 +27,7 @@ class ManagerForm(FlaskForm):
 class ManagerRoleForm(FlaskForm):
     id = HiddenField('Id', id='txt_id',validators=[DataRequired(message='用户不能为空')])
     roleids=HiddenField('roleids', id='txt_roleids',validators=[DataRequired(message='角色不能为空')])
+
+class RolePermissionForm(FlaskForm):
+    roleid = HiddenField('roleid', id='txt_roleid',validators=[DataRequired(message='角色不能为空')])
+    permids = HiddenField('permids', id='txt_permids',validators=[DataRequired(message='权限不能为空')])

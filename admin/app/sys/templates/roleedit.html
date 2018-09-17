@@ -1,7 +1,4 @@
-<link href="{{ url_for('static', filename='vendors/ladda/dist/ladda-themeless.min.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='vendors/select2-bootstrap-theme/dist/select2-bootstrap.min.css') }}" rel="stylesheet">
+
 <div class="form-horizontal" autocomplete="off" data-form-id="edit-role" id="edit-role">
 
         <div class="form-group">
@@ -25,17 +22,9 @@
         
         
     </div>
-    <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='build/js/Zt.Common.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendors/ladda/dist/spin.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script>
     $(document).ready(function () {
        
-        var $win = getSubWinBody('edit-role');
         var winEvents = $win.data("winEvents");
         var winButtons = $win.data("buttons");
 

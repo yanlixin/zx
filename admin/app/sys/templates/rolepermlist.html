@@ -4,13 +4,14 @@
 
 {% block stylesheets %}
   {{ super() }}
-  
 {% endblock stylesheets %}
 
 {% block content %}
+
   <div class="right_col" role="main" data-panel-id='list-role-perm'>
     <div class="">
-      
+            {{ form.hidden_tag() }}
+            {{ form.roleid() }}
 
       <div class="clearfix"></div>
       <div class="row">
@@ -22,55 +23,36 @@
                     <table id="datatable-role" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                         <thead>
                             <tr>
+                            <th></th>    
                             <th>标识</th>
                             <th>名称</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {%for role in roles%}
-                            <tr>
-                            
-                            <td>{{role.id}}</td>
-                            <td>{{role.name}}</td>
-                            </tr>
-                            {%endfor%}
+
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-9" id="rolePower">
-                    
                  <div class="x_title">
-                        <h2>权限列表<small></small></h2>
+                        <h2>[<span id="role_name"></span>]权限列表<small></small></h2>
                     <div class="title_right">
-                    <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
+                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right top_search">
                         <div class="input-group">
                             &nbsp;
                             <span class="input-group-btn">
-                                    <div class="ibox-tools">
-                                            <button class="btn  btn-info btn-xs" data-click-name="checked">
-                                                <i class=" glyphicon glyphicon-check blue" />
-                                                全选
-                                            </button>
-                                            <button class="btn  btn-info btn-xs " data-click-name="unchecked">
-                                                <i class=" glyphicon glyphicon-unchecked blue" />
-                                                反选
-                                            </button>
-                                            <button class="btn  btn-info btn-xs " data-click-name="save">
-                                               
-                                                保存当前角色权限
-                                            </button>
-                                        </div>
-                                <button class="btn btn-default btn-xs" type="button" data-click-name="create"><i class="fa fa-plus"></i>新增</button>
+                                <button class="btn btn-default btn-xs" type="button" data-click-name="checked">全选</button>
+                                <button class="btn  btn-default btn-xs " type="button" data-click-name="unchecked">反选</button>
+                                <button class="btn  btn-default btn-xs " type="button" data-click-name="save">保存当前角色权限</button>
                             </span>
-                            
                         </div>
                     </div>
                     </div>
                 <div class="clearfix"></div>
                 </div>
                 <div class="table-bordered">
-                    <table id="simple-table" class="table table-striped table-bordered table-hover">
+                    <table id="datatable-perm" class="table table-striped table-bordered table-hover">
                         <tbody>
                             {% for group in groups%}
                                 <tr>
@@ -79,8 +61,8 @@
                                 <tr class="">
                                     <td style=" padding-left:20px">
                                         <span class="checkbox checkbox-success checkbox-inline" style="margin:5px 10px 5px 10px">
-                                            <input id="@gp-@gr-checkall" name="ZtOnline_checkall" onchange="change_item_states('{{group[0]}}', this)" type="checkbox">
-                                            <label for="@gp-@gr-checkall">
+                                            <input id="{{group[0]}}-power-checkall" name="{{group[0]}}-power-checkall" onchange="change_item_states('{{group[0]}}', this)" type="checkbox">
+                                            <label for="{{group[0]}}-power-checkall">
                                                 全选/取消全选
                                             </label>
                                         </span>
@@ -89,14 +71,14 @@
                                             {%if perm.group==group[0] %}
                                             <span class="checkbox checkbox-success checkbox-inline" style="margin:5px 10px 5px 10px">
                                                 {%if perm.selected %}
-                                                        <input type="checkbox" class="" name="{{group[0]}}-power" id="{{group[0]}}-power-{{perm.id}}" value="{{perm.id}}" checked="checked">
-                                                        <label for="{{group[0]}}-power-{{perm.id}}">
+                                                        <input type="checkbox" class="" name="{{group[0]}}-power-item" id="{{group[0]}}-power-item-{{perm.id}}" value="{{perm.id}}" checked="checked">
+                                                        <label for="{{group[0]}}-power-item-{{perm.id}}">
                                                             {{perm.name}}
                                                         </label>
                                                 {%else%}
                                                     
-                                                        <input type="checkbox" class="" name="{{group[0]}}-power" id="{{group[0]}}-power-{{perm.id}}" value="{{perm.id}}">
-                                                        <label for="{{group[0]}}-power-{{perm.id}}">
+                                                        <input type="checkbox" class="" name="{{group[0]}}-power-item" id="{{group[0]}}-power-item-{{perm.id}}" value="{{perm.id}}">
+                                                        <label for="{{group[0]}}-power-item-{{perm.id}}">
                                                                 {{perm.name}}
                                                         </label>
                                                     
@@ -123,73 +105,160 @@
 {% endblock content %}
 
 {% block javascripts %}
+
   {{ super() }}
   <!-- Datatables -->
   <script>
      $(document).ready(function () {
-        var $win = $("[data-panel-id='list-role']");
+        var $win = $("[data-panel-id='list-role-perm']");
         var $table = $("#datatable-role");
-
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
         $win.on("click", "button", function () {
             if ($(this).has("data-click-name")) {
                 var clickName = $(this).attr("data-click-name");
                 var clickValue = $(this).attr("data-click-value");
 
                 switch(clickName){
-                    case "create":
-                    case "edit":
-                        var url = clickName == "create" ? '/sys/role/edit?id=0' : '/sys/role/edit?id=' + clickValue;
-                        $("#dialog-role").ztdialog({
-                            'url': url,
-                            'title': clickName == "create"?"添加角色": "修改角色",
-                            'buttons': 'Save',
-                            'height': 450,
-                            'width': 650,
-                            'fnSaved': function () { $table.DataTable().draw(false); }
-                        });
-                        break;
-                    case "delete":
-                        ZTConfirm({
-                            "title": "删除",
-                            "text": "是否确认删除?",
-                            'parms': { id: clickValue },
-                            'confirmButtonText': '确定删除',
-                            'cancelButtonText': '取消删除',
-                            'fnConfirmCallback': function (parms) {
-                                var url = '/sys/role/delete?id=' + parms.id;
-                                $.post(url, function (rtn) {
-                                    var rtnDto = JSON.parse(rtn);
-                                    if (rtnDto.result) {
-                                        ZTAlert({
-                                            'title': '删除成功',
-                                            'text': '信息删除成功',
-                                            'type': 'success'
-                                        });
-                                        $table.DataTable().draw(false);
-                                    } else {
-                                        ZTAlert({
-                                            'title': '删除失败',
-                                            'text': rtnDto.msg,
-                                            'type': 'error'
-                                        });
-                                    }
-                                }, "text");
+                    case "checked":
+                        change_all_states("check");break;
+                    case "unchecked":
+                        change_all_states("uncheck");break;
+                    case "save":
+                        $('.ladda-button-save').attr("data-style", "expand-left")
+                        var l = $('.ladda-button-save').ladda();
+                        var powers = "";
+                        $("input[type='checkbox']:checkbox:checked").each(function () {
+                            if (this.name.indexOf("-power-item") != -1) {
+                                    powers += this.value + ",";
                             }
                         });
+                        var subData = {
+                            roleid: $("#txt_roleid").val(),
+                            permids: powers,
+                            csrf_token:$("#csrf_token").val(),
+                        };
+                        var url = '/sys/roleperm/save';
+                        l.ladda('start');
+                        $.post(url, subData, function (rtn) {
+                            var rtnDto = JSON.parse(rtn);
+                            console.log(!rtnDto.valid);
+                            if (!rtnDto.valid) {
+                                var msg = "";
+                                for (var i in rtnDto.msg) {
+                                    msg = msg + rtnDto.msg[i] + ";";
+                                }
+                                ZTAlert({
+                                    "title": "验证失败",
+                                    "text": msg
+                                });
+                                l.ladda('stop');
+                            } else if (rtnDto.result) {
+                                console.log(rtnDto.result);
+                                //winEvents.SavedAndClose();
+                            } else {
+                                ZTAlert({
+                                    "title": "保存失败",
+                                    "text": rtnDto.msg
+                                });
+                                l.ladda('stop');
+                            }
+
+                            //通知modal window Save状况
+                            //return rtnValue;
+                        }, "text");
                         break;
                 
                 }
             }
         });
-    
+        $('#datatable-role').DataTable( {
+            serverSide: true,
+            ajax: {
+                url: '/sys/role/data',
+                dataSrc: 'data'
+            }, 
+            columns: [
+              {
+                    "sWidth": "10px",
+                    "mData": "id",
+                    "bSortable": false,
+                    "mRender": function (data, type, full) {
+                        var sOut = '<input type="checkbox">';
+                        return sOut;
+                    }
+              },
+              {data: "id"},
+              { data: "name" },
+            ],
+            "destroy":true,//消除重定义出错
+            "bPaginate":false,//是否使用分页
+            "bFilter": false, //是否使用搜索
+            "sInfo":false,
+            "bAutoWidth":false,
+            "fnDrawCallback": function (settings) {
+                var api = this.api();
+                $("input[type='checkbox']",api.cell(0, 0).nodes()).each(function () {this.checked = true; });
+                load_perm(api.cell(0, 1).data(),api.cell(0, 2).data());
+            }
+        })
+        $('#datatable-role tbody').on('click', 'tr', function () {
+            $table.data("clickIndex", $table.DataTable().row(this).index());
+            $('#datatable-role tbody tr').each(function (index, item) {
+                $(this).removeAttr("style");
+                $("input[type='checkbox']",this).each(function () {this.checked = false;});
+            });
+            $(this).attr("style", "background:#f2fbff");
+            var nTds = $('td', this);
+            $("input[type='checkbox']",nTds).each(function () {this.checked = true; });
+
+            var roleId = $(nTds[1]).text();
+            var roleName = $(nTds[2]).text().trim();
+            load_perm(roleId,roleName);
+ 
+        });
     });
 
     function change_item_states(groupname, obj) {
         var s = obj.checked;
-        $("input[name='" + groupname + "-power']").each(function () {
+        $("input[name='" + groupname + "-power-item']").each(function () {
             this.checked = s;
         });
     }
 
+    function change_all_states(states) {
+        $("input[type='checkbox']").each(function () {
+            if (this.name.indexOf("-power") != -1) {
+                if (states=="check") {
+                    this.checked = true;
+                } else if (states == "uncheck") {
+                    this.checked = false;
+                }
+            }
+        });
+    }
+    function load_perm(id,name){
+        $("#txt_roleid").val(id);
+        $("#role_name").text(name);
+        $("input[type='checkbox']:checkbox:checked").each(function () {
+            if (this.name.indexOf("-power") != -1) {
+                this.checked = false;
+            }
+        });
+        var url = '/sys/roleperm/data?id='+id;
+        var perms=[];
+        $.get(url, function (data) {
+            $.each(data,function(i,item)
+            {
+                name='power-item-'+item.permid;
+                $("input[id$='"+name+"']").each(function(i,item){
+                    item.checked=true;
+                });
+            });
+        });
+
+
+    }
+  
   </script>
 {% endblock javascripts %}
