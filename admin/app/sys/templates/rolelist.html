@@ -128,8 +128,8 @@
                   data: "id"
               },
               { data: "name" },
-              { data: "desc" },
-              { data: "status_text" },
+              { data: "desc" ,"bSortable": false},
+              { data: "status_text" ,"bSortable": false},
               {
                     "sWidth": "55px",
                     "mData": "id",
@@ -137,8 +137,6 @@
                     "mRender": function (data, type, full) {
                         var sOut = '';
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit">修改</i></button>';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-user">用户</i></button>';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-lock">权限</i></button>';
                         sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove">删除</i></button>';
                         return sOut;
                     }

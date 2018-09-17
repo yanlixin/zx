@@ -2,16 +2,30 @@ from app import db, login_manager
 from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime 
 from datetime import datetime  
+from werkzeug.security import generate_password_hash,check_password_hash
+from .basemodels import BaseModel
 
-
-class User(db.Model, UserMixin):
+class User(db.Model, UserMixin,BaseModel):
     __tablename__ = 'managers'
 
     id = Column("managerid",Integer, primary_key=True)
-    username = Column("loginname",String(64), unique=True)
-    email = Column("email",String(64), unique=True)
+    displayname = Column("managername",String(64), unique=True)
+    loginname = Column("loginname",String(64), unique=True)
+    email = Column("email",String(64))
+    mobile = Column("mobile",String(64))
+    desc = Column("desc",String(512))
+    remark = Column("remark",String(512))
     password = Column("loginpwd",String(30))
-    createdbydate = Column("createdbydate",DateTime(), default=datetime.now)
+    ismaster=Column("ismaster",Integer)
+    status = Column("recordstatus",Integer)
+    createdbydate = Column("createdbydate",String(32))
+    createdbymanagerid = Column("createdbymanagerid",Integer)
+    lastupdatedbydate = Column("lastupdatedbydate",String(32))
+    lastupdatedbymanagerid = Column("lastupdatedbymanagerid",Integer)
+    @property
+    def username(self):
+        return self.loginname
+
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
             # depending on whether value is an iterable or not, we must
@@ -22,17 +36,28 @@ class User(db.Model, UserMixin):
                 value = value[0]
             setattr(self, property, value)
 
+    def to_dict(self):
+        data = {'id': self.id,'displayname': self.displayname,'loginname':self.loginname,'email':self.email,'mobile':self.mobile,'desc':self.desc,'remark':self.remark}
+        return data
+
     def __repr__(self):
         return str(self.username)
 
     def can(self, permissions):
         #return self.role is not None and (self.role.permissions & permissions) == permissions
-        return False
-   
-    def is_administrator(self):
+        if self.is_master:
+            return True
         return False
 
+    def is_master(self):
+        return self.ismaster==1
 
+    def gen_password(self,pwd):
+        self.password = generate_password_hash(pwd)
+        return self.password
+
+    def check_password(self, pwd):
+        return check_password_hash(self.password, pwd)
 
 @login_manager.user_loader
 def user_loader(id):

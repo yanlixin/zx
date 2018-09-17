@@ -8,7 +8,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-  <div class="right_col" role="main" data-panel-id='list-manager'>
+  <div class="right_col" role="main" data-panel-id='list-perm'>
     <div class="">
       
 
@@ -19,7 +19,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
             <div class="x_title">
-              <h2>用户管理<small></small></h2>
+              <h2>权限管理<small></small></h2>
               <div class="title_right">
                   <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
@@ -34,16 +34,14 @@
             </div>
             <div class="x_content">
              
-              <table id="datatable-manager" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+              <table id="datatable-perm" class="table table-bordered" cellspacing="0" width="100%">
                 <thead>
                   <tr>
                     <th>标识</th>
-                    <th>姓名</th>
-                    <th>登录名称</th>
-                    <th>邮件</th>
-                    <th>电话</th>
+                    <th>名称</th>
+                    <th>UUID</th>
                     <th>描述</th>
-                    <th>状态</th>
+                    <th>分组</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -58,7 +56,7 @@
       </div>
     </div>
   </div>
-  <div class="hide" id="dialog-manager"></div>
+  <div class="hide" id="dialog-perm"></div>
 {% endblock content %}
 
 {% block javascripts %}
@@ -66,8 +64,9 @@
   <!-- Datatables -->
   <script>
      $(document).ready(function () {
-        var $win = $("[data-panel-id='list-manager']");
-        var $table = $("#datatable-manager");
+        var groupColumn = 4;
+        var $win = $("[data-panel-id='list-perm']");
+        var $table = $("#datatable-perm");
 
         $win.on("click", "button", function () {
             if ($(this).has("data-click-name")) {
@@ -77,24 +76,13 @@
                 switch(clickName){
                     case "create":
                     case "edit":
-                        var url = clickName == "create" ? '/sys/manager/edit?id=0' : '/sys/manager/edit?id=' + clickValue;
-                        $("#dialog-manager").ztdialog({
+                        var url = clickName == "create" ? '/sys/perm/edit?id=0' : '/sys/perm/edit?id=' + clickValue;
+                        $("#dialog-perm").ztdialog({
                             'url': url,
-                            'title': clickName == "create"?"添加用户": "修改用户",
+                            'title': clickName == "create"?"添加权限": "修改权限",
                             'buttons': 'Save',
                             'height': 450,
                             'width': 650,
-                            'fnSaved': function () { $table.DataTable().draw(false); }
-                        });
-                        break;
-                    case "role":
-                        var url = clickName == "create" ? '/sys/managerrole/edit?id=0' : '/sys/managerrole/edit?id=' + clickValue;
-                        $("#dialog-manager").ztdialog({
-                            'url': url,
-                            'title': clickName == "create"?"添加角色": "修改角色",
-                            'buttons': 'Save',
-                            'height': 550,
-                            'width': 750,
                             'fnSaved': function () { $table.DataTable().draw(false); }
                         });
                         break;
@@ -106,7 +94,7 @@
                             'confirmButtonText': '确定删除',
                             'cancelButtonText': '取消删除',
                             'fnConfirmCallback': function (parms) {
-                                var url = '/sys/manager/delete?id=' + parms.id;
+                                var url = '/sys/perm/delete?id=' + parms.id;
                                 $.post(url, function (rtn) {
                                     var rtnDto = JSON.parse(rtn);
                                     if (rtnDto.result) {
@@ -131,40 +119,56 @@
                 }
             }
         });
-    $('#datatable-manager').DataTable( {
+    $('#datatable-perm').DataTable( {
+        "columnDefs": [
+            { "visible": false, "targets": groupColumn }
+        ],
+        "order": [[ groupColumn, 'asc' ]],
+        "displayLength": 25,
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="5">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        },
       serverSide: true,
       ajax: {
-        url: '/sys/manager/data',
+        url: '/sys/perm/data',
         dataSrc: 'data'
-    }, 
+        }, 
       columns: [
               {
                   data: "id"
               },
-              { data: "displayname" },
-              { data: "loginname" },
-              { data: "email" },
-              { data: "mobile" },
-              { data: "desc" },
-              { data: "status_text" ,"bSortable": false},
+              { data: "name" },
+              { data: "uuid" },
+              { data: "desc" ,"bSortable": false},
+              { data: "group" ,"bSortable": false},
               {
-                    "sWidth": "55px",
+                    "sWidth": "155px",
                     "mData": "id",
                     "bSortable": false,
                     "mRender": function (data, type, full) {
                         var sOut = '';
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit">修改</i></button>';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="role" data-click-value="' + data + '"><i class="fa fa-users">角色</i></button>';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="fa fa-key">密码</i></button>';
                         sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove">删除</i></button>';
                         return sOut;
                     }
                 }
           ]
     });
-    $('#datatable-manager tbody').on('click', 'tr', function () {
+    $('#datatable-perm tbody').on('click', 'tr', function () {
             $table.data("clickIndex", $table.DataTable().row(this).index());
-            $('#datatable-manager tbody tr').each(function (index, item) {
+            $('#datatable-perm tbody tr').each(function (index, item) {
                 $(this).removeAttr("style");
             });
             $(this).attr("style", "background:#f2fbff");

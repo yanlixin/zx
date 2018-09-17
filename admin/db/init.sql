@@ -1,5 +1,5 @@
 
-
+insert into Managers("managername","loginname","remark","loginpwd","salt","ismaster") values("master","master",'密码:111111',"pbkdf2:sha256:50000$rm07FeSe$013b1fac18f5da7354632805be8d978a45035628f8b3213ace35be782900c8d2","",1)
 
 insert into Grades("gradename","gradedesc","sortindex","recordstatus","createdbydate","createdbymanagerid") values("幼儿园","幼儿园",10000,0,0,0);
 insert into Grades("gradename","gradedesc","sortindex","recordstatus","createdbydate","createdbymanagerid") values("小学","小学",10100,0,0,0);

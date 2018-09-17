@@ -1,0 +1,115 @@
+<link href="{{ url_for('static', filename='vendors/ladda/dist/ladda-themeless.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/select2-bootstrap-theme/dist/select2-bootstrap.min.css') }}" rel="stylesheet">
+<div class="form-horizontal" autocomplete="off" data-form-id="edit-manager" id="edit-manager">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>用户名称</label>
+            <div class="col-sm-7">
+                {{ form.hidden_tag() }}
+                {{ form.displayname(class="form-control",placeholder="请输入用户名称") }}
+            </div>
+           
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>登录名称</label>
+            <div class="col-sm-7">
+                {{ form.loginname(class="form-control",placeholder="请输入登录名称") }}
+            </div>
+            
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>密码</label>
+            <div class="col-sm-7">
+                {{ form.password(class="form-control",placeholder="请输入密码") }}
+            </div>
+        </div>  
+        <div class="form-group">
+            <label class="col-sm-3 control-label">邮件</label>
+            <div class="col-sm-7">
+                {{ form.email(class="form-control",placeholder="请输入邮件") }}
+            </div>
+            
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">手机</label>
+            <div class="col-sm-7">
+                {{ form.mobile(class="form-control",placeholder="请输入手机") }}
+            </div>
+            
+        </div>
+              
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注</label>
+    
+            <div class="col-sm-7">
+                {{ form.desc(class="form-control",placeholder="请输入备注") }}
+            </div>
+    
+        </div>
+        
+        
+    </div>
+    <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.Common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/spin.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
+    <script>
+    $(document).ready(function () {
+       
+        var $win = getSubWinBody('edit-manager');
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
+
+        winButtons.save.click = function () {
+            $('.ladda-button-save').attr("data-style", "expand-left")
+            var l = $('.ladda-button-save').ladda();
+
+            var subData = {
+                id: $("#txt_id").val(),
+                displayname: $("#txt_displayname").val(),
+                loginname: $("#txt_loginname").val(),
+                email: $("#txt_email").val(),
+                mobile: $("#txt_mobile").val(),
+                password: $("#txt_password").val(),
+                //sortIndex: $("#txt-sort-index").val(),
+                desc: $("#txt_desc").val(),
+                csrf_token:$("#csrf_token").val(),
+            };
+            var url = '/sys/manager/save';
+            l.ladda('start');
+            $.post(url, subData, function (rtn) {
+                var rtnDto = JSON.parse(rtn);
+                console.log(!rtnDto.valid);
+                if (!rtnDto.valid) {
+                    var msg = "";
+                    for (var i in rtnDto.msg) {
+                        msg = msg + rtnDto.msg[i] + ";";
+                    }
+                    ZTAlert({
+                        "title": "验证失败",
+                        "text": msg
+                    });
+                    l.ladda('stop');
+                } else if (rtnDto.result) {
+                    winEvents.SavedAndClose();
+                } else {
+                    ZTAlert({
+                        "title": "保存失败",
+                        "text": rtnDto.msg
+                    });
+                    l.ladda('stop');
+                }
+
+                //通知modal window Save状况
+                //return rtnValue;
+            }, "text");
+        }
+    });
+    </script>

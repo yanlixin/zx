@@ -3,47 +3,13 @@ from app import db
 
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime 
 from datetime import datetime  
-
+from .basemodels import BaseModel
 class Permission:
     FOLLOW = 0x01 #关注其他用户
     COMMENT = 0x02 #评论
     WHITE_ARTICLES = 0x04 #写文章
     MODERATE_COMMENTS = 0x08 #管理评论
     ADMINISTER = 0x80 #管理员权限
-
-class BaseModel():
-    id=0
-    status =0
-    createdbydate = datetime.now()
-    createdbymanagerid = 0
-    lastupdatedbydate = datetime.now()
-    lastupdatedbymanagerid = 0
-    csrf_token=""
-
-    @property
-    def status_text( self ):
-        print('a')
-        print(self.status)
-        dict = {"0" : "正常", "1" : "已删除", "2" : "已禁用", "3" : "已提交"}
-        return dict.get(self.status)
-
-    def mark_del(self,mangerId):
-        self.status=1
-        self.lastupdatedbydate=datetime.now()
-        self.lastupdatedbymanagerid=mangerId
-        data = {'id': self.id,'status': self.status,'lastupdatedbydate':self.lastupdatedbydate,'lastupdatedbymanagerid':self.lastupdatedbymanagerid}
-        return data
-
-    def mark_update(self,mangerId):
-        self.lastupdatedbydate=datetime.now()
-        self.lastupdatedbymanagerid=mangerId
-
-    def mark_add(self,mangerId):
-        self.status=0
-        self.createdbydate=datetime.now()
-        self.createdbymanagerid=mangerId
-        self.lastupdatedbydate=datetime.now()
-        self.lastupdatedbymanagerid=mangerId
 
 class Role(db.Model,BaseModel):
     __tablename__ = 'Roles'
@@ -59,16 +25,19 @@ class Role(db.Model,BaseModel):
     lastupdatedbymanagerid = Column("lastupdatedbymanagerid",Integer)
    
     def to_dict(self):
+        
         data = {'id': self.id,'name': self.name,'desc':self.desc}
         return data
-
+    @staticmethod
+    def select():
+        return db.session.query(Role).filter(Role.status==0)
  
-class UserRole(db.Model):
+class UserRole(db.Model,BaseModel):
     __tablename__ = 'R_Users_Roles'
     id = Column("ruserroleid",Integer, primary_key=True)
     managerid = Column("managerid",String(120), unique=True)
     roleid = Column("roleid",String(120))
-    recordstatus = Column("recordstatus",Integer)
+    status = Column("recordstatus",Integer)
     createdbydate = Column("createdbydate",String(32))
     createdbymanagerid = Column("createdbymanagerid",Integer)
     lastupdatedbydate = Column("lastupdatedbydate",String(32))
@@ -76,23 +45,41 @@ class UserRole(db.Model):
     def to_dict(self):
         data = {'id': self.id}
         return data
+    @staticmethod
+    def write_data(managerid,roleids):
+        db.session.query(UserRole).filter(UserRole.managerid==managerid)\
+        .filter(UserRole.status==0).filter(~UserRole.roleid.in_([roleids]))\
+        .update(UserRole().mark_del(),synchronize_session='fetch')
+        db.session.commit()
 
-class Permissions(db.Model):
+        rolelist=roleids.split(",")
+        for roleid in rolelist:
+            userRole=UserRole(managerid=managerid,roleid=roleid)
+            userRole.mark_add()
+            db.session.add(userRole)
+        db.session.commit()
+
+    @staticmethod
+    def select():
+        return db.session.query(UserRole).filter(UserRole.status==0)
+
+class Permission(db.Model):
     __tablename__ = 'Permissions'
     id = Column("permid",Integer, primary_key=True)
-    permuuid = Column("permuuid",String(120), unique=True)
+    uuid = Column("permuuid",String(120), unique=True)
     name = Column("permname",String(120), unique=True)
-    desc = Column("roledesc",String(120))
+    desc = Column("permdesc",String(120))
+    group = Column("permgroup",String(120))
     issys = Column("IsSys",String(120))
-    sortindex = Column("sortindex",Integer)
-    recordstatus = Column("recordstatus",Integer)
     createdbydate = Column("createdbydate",String(32))
     createdbymanagerid = Column("createdbymanagerid",Integer)
-    lastupdatedbydate = Column("lastupdatedbydate",String(32))
-    lastupdatedbymanagerid = Column("lastupdatedbymanagerid",Integer)
     def to_dict(self):
-        data = {'id': self.id,'name': self.name,'text':self.name,'desc':self.desc}
+        data = {'id': self.id,'name': self.name,'desc':self.desc,'group':self.group}
         return data
+
+    @staticmethod
+    def select():
+        return db.session.query(Permission)
 
 class PermissionRole(db.Model):
     __tablename__ = 'R_Permissions_Roles'
@@ -104,3 +91,7 @@ class PermissionRole(db.Model):
     def to_dict(self):
         data = {'id': self.id}
         return data
+
+    @staticmethod
+    def select():
+        return db.session.query(PermissionRole)

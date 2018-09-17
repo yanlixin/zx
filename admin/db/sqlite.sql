@@ -73,13 +73,17 @@ CREATE TABLE 'Users' (
 'lasteupdatedbymanagerid' INTEGER DEFAULT NULL
 );
 
-CREATE TABLE 'Mangers' (
+CREATE TABLE 'Managers' (
 'managerid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'managername' TEXT(63) DEFAULT NULL,
 'loginname' TEXT(64) DEFAULT NULL,
 'loginpwd' TEXT(512) DEFAULT NULL,
+'salt' TEXT DEFAULT NULL,
 'mobile' TEXT(32) DEFAULT NULL,
 'email' TEXT(64) DEFAULT NULL,
+'desc' TEXT DEFAULT NULL,
+'remark' TEXT DEFAULT NULL,
+'ismaster' INTEGER DEFAULT NULL,
 'recordstatus' INTEGER DEFAULT NULL,
 'createdbydate' TEXT DEFAULT NULL,
 'createdbymanagerid' INTEGER DEFAULT NULL,
@@ -136,7 +140,7 @@ CREATE TABLE 'Roles' (
 'roledesc' TEXT DEFAULT NULL,
 'IsSys' TEXT DEFAULT NULL,
 'sortindex' INTEGER DEFAULT NULL,
-'recordstatus' TEXT DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
 'createdbydate' TEXT DEFAULT NULL,
 'createdbymanagerid' INTEGER DEFAULT NULL,
 'lastupdatedbydate' TEXT DEFAULT NULL,
@@ -145,7 +149,7 @@ CREATE TABLE 'Roles' (
 
 CREATE TABLE 'R_Users_Roles' (
 'ruserroleid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
-'managerid' INTEGER DEFAULT NULL REFERENCES 'Mangers' ('managerid'),
+'managerid' INTEGER DEFAULT NULL REFERENCES 'Managers' ('managerid'),
 'roleid' INTEGER DEFAULT NULL REFERENCES 'Roles' ('roleid'),
 'createdbydate' TEXT DEFAULT NULL,
 'createdbymanagerid' TEXT DEFAULT NULL,

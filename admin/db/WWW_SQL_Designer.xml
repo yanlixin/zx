@@ -226,7 +226,7 @@
 <part>userid</part>
 </key>
 </table>
-<table x="1051" y="33" name="Mangers">
+<table x="1051" y="33" name="Managers">
 <row name="managerid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -239,11 +239,23 @@
 <row name="loginpwd" null="1" autoincrement="0">
 <datatype>TEXT(512)</datatype>
 <default>NULL</default></row>
+<row name="salt" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
 <row name="mobile" null="1" autoincrement="0">
 <datatype>TEXT(32)</datatype>
 <default>NULL</default></row>
 <row name="email" null="1" autoincrement="0">
 <datatype>TEXT(64)</datatype>
+<default>NULL</default></row>
+<row name="desc" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="remark" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="ismaster" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="recordstatus" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -419,7 +431,7 @@
 <default>NULL</default></row>
 <row name="managerid" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="Mangers" row="managerid" />
+<default>NULL</default><relation table="Managers" row="managerid" />
 </row>
 <row name="roleid" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>

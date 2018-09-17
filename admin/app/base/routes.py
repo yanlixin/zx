@@ -44,17 +44,20 @@ def login():
     if 'login' in request.form:
         username = str(request.form['username'])
         password = str(request.form['password'])
-        user = User.query.filter_by(username=username).first()
-        if user and password == user.password:
+        print(username)
+        user = User.query.filter_by(loginname=username).first()
+        if user:
+            print(user.check_password(password))
+        if user and  user.check_password(password):#password == user.password:#user.check_password(password):
             login_user(user)
             return redirect(url_for('base_blueprint.route_default'))
-        return render_template('errors/page_403.html')
-    elif 'create_account' in request.form:
-        login_form = LoginForm(request.form)
-        user = User(**request.form)
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for('base_blueprint.login'))
+        #return render_template('errors/page_403.html')
+    # elif 'create_account' in request.form:
+    #     login_form = LoginForm(request.form)
+    #     user = User(**request.form)
+    #     db.session.add(user)
+    #     db.session.commit()
+    #     return redirect(url_for('base_blueprint.login'))
     if not current_user.is_authenticated:
         return render_template(
             'login/login.html',
