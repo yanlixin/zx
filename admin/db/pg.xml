@@ -41,346 +41,35 @@
 		<type label="Inet CIDR Addr" length="0" sql="CIDR" quote="'"/>
 		<type label="Geometry" length="0" sql="GEOMETRY" quote="'"/>
 	</group>
-</datatypes><table x="606" y="535" name="PM_Projects">
-<row name="ProjectID" null="0" autoincrement="1">
+</datatypes><table x="683" y="56" name="Users">
+<row name="UserID" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="ProjectNo" null="1" autoincrement="0">
+<row name="UserName" null="0" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-<default>NULL</default></row>
-<row name="ProjectName" null="0" autoincrement="0">
+<default>'NULL'</default></row>
+<row name="LoginName" null="0" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>'NULL'</default></row>
+<row name="LoginPwd" null="0" autoincrement="0">
 <datatype>VARCHAR(512)</datatype>
 <default>'NULL'</default></row>
-<row name="ProjectDesc" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
+<row name="Salt" null="1" autoincrement="0">
+<datatype>VARCHAR(120)</datatype>
 <default>NULL</default></row>
-<row name="Remark" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="Memo" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="ScheduledStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ScheduledEndDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ActualStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ActualEndDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>ProjectID</part>
-</key>
-</table>
-<table x="368" y="30" name="PM_Tasks">
-<row name="TaskID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
-</row>
-<row name="TaskPID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>0</default></row>
-<row name="TaskNo" null="0" autoincrement="0">
-<datatype>VARCHAR(64)</datatype>
-<default>'NULL'</default></row>
-<row name="TaskName" null="0" autoincrement="0">
-<datatype>VARCHAR(128)</datatype>
-<default>'NULL'</default></row>
-<row name="TaskDesc" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="Memo" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="ScheduledStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ScheduledEndDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ActualStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="EndStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="IsCritical" null="1" autoincrement="0">
-<datatype>BOOLEAN</datatype>
-<default>NULL</default></row>
-<row name="IsModifiable" null="1" autoincrement="0">
-<datatype>BOOLEAN</datatype>
-<default>NULL</default></row>
-<row name="Weight" null="1" autoincrement="0">
-<datatype>DECIMAL(6,4)</datatype>
-<default>NULL</default></row>
-<row name="ProgressPercentage" null="1" autoincrement="0">
-<datatype>DECIMAL(6,4)</datatype>
-<default>NULL</default></row>
-<row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>TaskID</part>
-</key>
-<comment>WBS 一级:测绘,评估,拆迁,政府,审计,二级:标段,三级:村\户</comment>
-</table>
-<table x="1112" y="137" name="PM_TeamMembers">
-<row name="TeamMemberID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
-</row>
-<row name="UserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>TeamMemberID</part>
-</key>
-</table>
-<table x="1012" y="417" name="PM_Deliverables">
-<row name="DeliverableID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ProjetcID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
-</row>
-<row name="DeliverableName" null="1" autoincrement="0">
-<datatype>VARCHAR(128)</datatype>
-<default>NULL</default></row>
-<row name="DeliverableQty" null="1" autoincrement="0">
-<datatype>DECIMAL(8,2)</datatype>
-<default>NULL</default></row>
-<row name="ScheduledDeliveryDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ScheduledStardDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ScheduledEndDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ActualStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ActualEndDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="IsModifiable" null="1" autoincrement="0">
-<datatype>BOOLEAN</datatype>
-<default>NULL</default></row>
-<row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>DeliverableID</part>
-</key>
-</table>
-<table x="905" y="894" name="PM_Documents">
-<row name="DocID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
-</row>
-<row name="Title" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="Desc" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="Memo" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="Summary" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
-<default>NULL</default></row>
-<row name="CategoryID" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="FileTypeID" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="LastedVersion" null="1" autoincrement="0">
+<row name="Mobile" null="1" autoincrement="0">
 <datatype>VARCHAR(32)</datatype>
 <default>NULL</default></row>
-<row name="Preview" null="1" autoincrement="0">
-<datatype>VARBIT</datatype>
-<default>NULL</default></row>
-<row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>DocID</part>
-</key>
-</table>
-<table x="267" y="879" name="PM_Activities">
-<row name="ActivatID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
-</row>
-<row name="TaskID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Tasks" row="TaskID" />
-</row>
-<row name="ActivateNo" null="0" autoincrement="0">
-<datatype>VARCHAR(64)</datatype>
-<default>'NULL'</default></row>
-<row name="ActivateName" null="0" autoincrement="0">
+<row name="EMail" null="1" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
-<default>'NULL'</default></row>
-<row name="ActivateDesc" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
-<row name="Memo" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
+<row name="UserDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(512)</datatype>
 <default>NULL</default></row>
-<row name="ScheduleStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
+<row name="Remark" null="1" autoincrement="0">
+<datatype>VARCHAR(512)</datatype>
 <default>NULL</default></row>
-<row name="ScheduleEndDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ActualStartDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="ActualEndDate" null="1" autoincrement="0">
-<datatype>DATE</datatype>
-<default>NULL</default></row>
-<row name="IsModeifiable" null="1" autoincrement="0">
-<datatype>BOOLEAN</datatype>
-<default>NULL</default></row>
-<row name="Weight" null="1" autoincrement="0">
-<datatype>DECIMAL(6,4)</datatype>
-<default>NULL</default></row>
-<row name="ProgressPercentage" null="1" autoincrement="0">
-<datatype>DECIMAL(6,4)</datatype>
-<default>NULL</default></row>
-<row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>ActivatID</part>
-</key>
-</table>
-<table x="88" y="304" name="PM_TaskTeamMembers">
-<row name="TaskTeamMemeberID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="TaskID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Tasks" row="TaskID" />
-</row>
-<row name="TeamMemberID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="IsManager" null="1" autoincrement="0">
+<row name="IsMaster" null="1" autoincrement="0">
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
@@ -399,145 +88,24 @@
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>TaskTeamMemeberID</part>
+<part>UserID</part>
 </key>
 </table>
-<table x="591" y="933" name="PM_ActivityTeamMembers">
-<row name="ActivityTeamMemberID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ActivatID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Activities" row="ActivatID" />
-</row>
-<row name="TeamMemberID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="IsManager" null="1" autoincrement="0">
-<datatype>BOOLEAN</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>ActivityTeamMemberID</part>
-</key>
-</table>
-<table x="1400" y="408" name="PM_DevliverableTeamMembers">
-<row name="DevliverableTeamMemberID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="DeliverableID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Deliverables" row="DeliverableID" />
-</row>
-<row name="TeamMemberID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>DevliverableTeamMemberID</part>
-</key>
-</table>
-<table x="1231" y="848" name="PM_DocumentTeamMembers">
-<row name="DocTeamMemberID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="DocID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Documents" row="DocID" />
-</row>
-<row name="TeamMemberID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="IsManager" null="1" autoincrement="0">
-<datatype>BOOLEAN</datatype>
-<default>NULL</default></row>
-<row name="RecordStatus" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="CreatedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
-<default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>DocTeamMemberID</part>
-</key>
-</table>
-<table x="1235" y="1109" name="PM_R_Documents">
-<row name="R_DocID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="DocID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Documents" row="DocID" />
-</row>
-<row name="AssociateItemDefinitionID" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="AssociateItemID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>R_DocID</part>
-</key>
-</table>
-<table x="805" y="123" name="PM_Roles">
+<table x="689" y="409" name="Roles">
 <row name="RoleID" null="1" autoincrement="1">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
-</row>
-<row name="RoleName" null="1" autoincrement="0">
+<row name="RoelName" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
 <default>NULL</default></row>
 <row name="RoleDesc" null="1" autoincrement="0">
 <datatype>VARCHAR(512)</datatype>
 <default>NULL</default></row>
-<row name="Memo" null="1" autoincrement="0">
-<datatype>VARCHAR(1024)</datatype>
+<row name="IsSys" null="1" autoincrement="0">
+<datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
-<row name="Remark" null="1" autoincrement="0">
-<datatype>VARCHAR(512)</datatype>
-<default>NULL</default></row>
-<row name="Permission" null="1" autoincrement="0">
-<datatype>VARCHAR(128)</datatype>
+<row name="SortIndex" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
@@ -556,6 +124,88 @@
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>RoleID</part>
+</key>
+</table>
+<table x="1045" y="90" name="R_Users_Roles">
+<row name="RUserRoleID" null="1" autoincrement="1">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="UserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="Users" row="UserID" />
+</row>
+<row name="RoleID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="Roles" row="RoleID" />
+</row>
+<row name="RecordStatus" null="1" autoincrement="0">
+<datatype>SMALLINT</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="LastedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="LastedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>RUserRoleID</part>
+</key>
+</table>
+<table x="687" y="674" name="Permissions">
+<row name="PermID" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="PermKey" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>'NULL'</default></row>
+<row name="PermName" null="0" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>'NULL'</default></row>
+<row name="PermDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(512)</datatype>
+<default>NULL</default></row>
+<row name="PermGroup" null="0" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>'NULL'</default></row>
+<row name="IsSys" null="1" autoincrement="0">
+<datatype>BOOLEAN</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>PermID</part>
+</key>
+</table>
+<table x="1074" y="478" name="R_Permissions_Roles">
+<row name="RPemRoleID" null="1" autoincrement="1">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="RoleID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="Roles" row="RoleID" />
+</row>
+<row name="PermID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="Permissions" row="PermID" />
+</row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>RPemRoleID</part>
 </key>
 </table>
 </sql>
