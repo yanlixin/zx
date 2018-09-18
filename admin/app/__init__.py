@@ -47,7 +47,7 @@ def create_app(selenium=False):
         app.config['LOGIN_DISABLED'] = True
     register_extensions(app)
     register_blueprints(app)
-    configure_database(app)
+    #configure_database(app)
     configure_logs(app)
     app.config['UPLOADS_DEFAULT_DEST'] = os.path.dirname(os.path.abspath(__file__))
     #app.config['UPLOADS_DEFAULT_URL'] = 'http://127.0.0.1:8000/uploads_images'

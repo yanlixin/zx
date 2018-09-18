@@ -34,6 +34,7 @@
 	</group>
 
 	<group label="Miscellaneous" color="rgb(200,200,255)">
+		<type label="UUID" length="1" sql="UUID" quote="'"/>
 		<type label="XML" length="1" sql="XML" quote="'"/>
 		<type label="Bit" length="1" sql="BIT" quote="'"/>
 		<type label="Bit Varying" length="1" sql="VARBIT" re="BIT VARYING" quote="'"/>
@@ -41,7 +42,7 @@
 		<type label="Inet CIDR Addr" length="0" sql="CIDR" quote="'"/>
 		<type label="Geometry" length="0" sql="GEOMETRY" quote="'"/>
 	</group>
-</datatypes><table x="683" y="56" name="Users">
+</datatypes><table x="2109" y="83" name="Users">
 <row name="UserID" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
@@ -91,7 +92,7 @@
 <part>UserID</part>
 </key>
 </table>
-<table x="689" y="409" name="Roles">
+<table x="1786" y="657" name="Roles">
 <row name="RoleID" null="1" autoincrement="1">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
@@ -126,7 +127,7 @@
 <part>RoleID</part>
 </key>
 </table>
-<table x="1045" y="90" name="R_Users_Roles">
+<table x="1816" y="62" name="R_Users_Roles">
 <row name="RUserRoleID" null="1" autoincrement="1">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
@@ -157,7 +158,7 @@
 <part>RUserRoleID</part>
 </key>
 </table>
-<table x="687" y="674" name="Permissions">
+<table x="2246" y="688" name="Permissions">
 <row name="PermID" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
@@ -186,7 +187,7 @@
 <part>PermID</part>
 </key>
 </table>
-<table x="1074" y="478" name="R_Permissions_Roles">
+<table x="2155" y="397" name="R_Permissions_Roles">
 <row name="RPemRoleID" null="1" autoincrement="1">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
