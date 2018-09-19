@@ -1,11 +1,12 @@
-DROP TABLE R_Permissions_Roles ;
-DROP TABLE Permissions ;
-DROP TABLE R_Users_Roles; 
-DROP TABLE Roles;
-DROP TABLE Users;
-
+/*
+DROP TABLE "R_Permissions_Roles" ;
+DROP TABLE "Permissions" ;
+DROP TABLE "R_Users_Roles"; 
+DROP TABLE "Roles";
+DROP TABLE "Users";
+*/
 CREATE TABLE "Users" (
-"UserID" UUID NOT NULL ,
+"UserID"  SERIAL NOT NULL ,
 "UserName" VARCHAR(64) NOT NULL ,
 "LoginName" VARCHAR(64) NOT NULL ,
 "LoginPwd" VARCHAR(512) NOT NULL ,
@@ -17,56 +18,56 @@ CREATE TABLE "Users" (
 "IsMaster" BOOLEAN ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
-"CreatedByUserID" UUID ,
+"CreatedByUserID" INTEGER ,
 "LastedDate" TIMESTAMP ,
-"LastedByUserID" UUID ,
+"LastedByUserID" INTEGER ,
 PRIMARY KEY ("UserID")
 );
 
 CREATE TABLE "Roles" (
-"RoleID" UUID NOT NULL ,
-"RoelName" VARCHAR(64) ,
+"RoleID"  SERIAL NOT NULL ,
+"RoleName" VARCHAR(64) ,
 "RoleDesc" VARCHAR(512) ,
 "IsSys" BOOLEAN ,
 "SortIndex" VARCHAR ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
-"CreatedByUserID" UUID ,
+"CreatedByUserID" INTEGER ,
 "LastedDate" TIMESTAMP ,
-"LastedByUserID" UUID ,
+"LastedByUserID" INTEGER ,
 PRIMARY KEY ("RoleID")
 );
 
 CREATE TABLE "R_Users_Roles" (
-"RUserRoleID" UUID NOT NULL ,
-"UserID" UUID ,
-"RoleID" UUID ,
+"RUserRoleID"  SERIAL NOT NULL ,
+"UserID" INTEGER ,
+"RoleID" INTEGER ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
-"CreatedByUserID" UUID ,
+"CreatedByUserID" INTEGER ,
 "LastedDate" TIMESTAMP ,
-"LastedByUserID" UUID ,
+"LastedByUserID" INTEGER ,
 PRIMARY KEY ("RUserRoleID")
 );
 
 CREATE TABLE "Permissions" (
-"PermID" UUID NOT NULL ,
+"PermID" SERIAL NOT NULL ,
 "PermKey" VARCHAR(128) NOT NULL DEFAULT 'NULL' ,
 "PermName" VARCHAR(64) NOT NULL DEFAULT 'NULL' ,
 "PermDesc" VARCHAR(512) ,
 "PermGroup" VARCHAR(64) NOT NULL DEFAULT 'NULL' ,
 "IsSys" BOOLEAN ,
-"CreatedByUserID" UUID ,
+"CreatedByUserID" INTEGER ,
 "CreatedDate" TIMESTAMP ,
 PRIMARY KEY ("PermID")
 );
 
 CREATE TABLE "R_Permissions_Roles" (
-"RPermRoleID" UUID NOT NULL ,
-"RoleID" UUID ,
-"PermID" UUID ,
+"RPermRoleID"  SERIAL NOT NULL ,
+"RoleID" INTEGER ,
+"PermID" INTEGER ,
 "CreatedDate" TIMESTAMP ,
-"CreatedByUserID" UUID ,
+"CreatedByUserID" INTEGER ,
 PRIMARY KEY ("RPermRoleID")
 );
 

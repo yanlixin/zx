@@ -1,0 +1,2 @@
+insert into "Users"("UserName","LoginName","Remark","LoginPwd","Salt","IsMaster") values('master','master','密码:111111','pbkdf2:sha256:50000$rm07FeSe$013b1fac18f5da7354632805be8d978a45035628f8b3213ace35be782900c8d2','',true);
+select * from "Users"

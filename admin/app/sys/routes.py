@@ -120,6 +120,7 @@ def role_list():
 @login_required
 @admin_required
 def role_jsondata():
+
     table = DataTable(request.args, Role, Role.query, [
         "id",
         "name",

@@ -1,0 +1,157 @@
+{% extends "base_site.html" %}
+
+{% block title %} Table Dynamic {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+  
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main" data-panel-id='list-project'>
+    <div class="">
+      
+
+      <div class="clearfix"></div>
+
+      <div class="row">
+        
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>项目管理<small></small></h2>
+              <div class="title_right">
+                  <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                     &nbsp;
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" data-click-name="create"><i class="fa fa-plus"></i>新增</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+             
+              <table id="datatable-project" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th>标识</th>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>描述</th>
+                    <th>状态</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hide" id="dialog-project"></div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ super() }}
+  <!-- Datatables -->
+  <script>
+     $(document).ready(function () {
+        var $win = $("[data-panel-id='list-project']");
+        var $table = $("#datatable-project");
+
+        $win.on("click", "button", function () {
+            if ($(this).has("data-click-name")) {
+                var clickName = $(this).attr("data-click-name");
+                var clickValue = $(this).attr("data-click-value");
+
+                switch(clickName){
+                    case "create":
+                    case "edit":
+                        var url = clickName == "create" ? '/pm/project/edit' : '/pm/project/edit?id=' + clickValue;
+                        $("#dialog-project").ztdialog({
+                            'url': url,
+                            'title': clickName == "create"?"添加项目": "修改项目",
+                            'buttons': 'Save',
+                            'height': 450,
+                            'width': 650,
+                            'fnSaved': function () { $table.DataTable().draw(false); }
+                        });
+                        break;
+                    case "delete":
+                        ZTConfirm({
+                            "title": "删除",
+                            "text": "是否确认删除?",
+                            'parms': { id: clickValue },
+                            'confirmButtonText': '确定删除',
+                            'cancelButtonText': '取消删除',
+                            'fnConfirmCallback': function (parms) {
+                                var url = '/pm/project/delete?id=' + parms.id;
+                                $.post(url, function (rtn) {
+                                    var rtnDto = JSON.parse(rtn);
+                                    if (rtnDto.result) {
+                                        ZTAlert({
+                                            'title': '删除成功',
+                                            'text': '信息删除成功',
+                                            'type': 'success'
+                                        });
+                                        $table.DataTable().draw(false);
+                                    } else {
+                                        ZTAlert({
+                                            'title': '删除失败',
+                                            'text': rtnDto.msg,
+                                            'type': 'error'
+                                        });
+                                    }
+                                }, "text");
+                            }
+                        });
+                        break;
+                
+                }
+            }
+        });
+    $('#datatable-project').DataTable( {
+      serverSide: true,
+      ajax: {
+        url: '/pm/project/data',
+        dataSrc: 'data'
+    }, 
+      columns: [
+              {
+                  data: "id"
+              },
+              { data: "no" },
+              { data: "name" },
+              { data: "desc" ,"bSortable": false},
+              { data: "status_text" ,"bSortable": false},
+              {
+                    "sWidth": "55px",
+                    "mData": "id",
+                    "bSortable": false,
+                    "mRender": function (data, type, full) {
+                        var sOut = '';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit">修改</i></button>';
+                        sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove">删除</i></button>';
+                        return sOut;
+                    }
+                }
+          ]
+    });
+    $('#datatable-project tbody').on('click', 'tr', function () {
+            $table.data("clickIndex", $table.DataTable().row(this).index());
+            $('#datatable-project tbody tr').each(function (index, item) {
+                $(this).removeAttr("style");
+            });
+            $(this).attr("style", "background:#f2fbff");
+        });
+    });
+  </script>
+{% endblock javascripts %}

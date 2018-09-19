@@ -44,20 +44,20 @@
 	</group>
 </datatypes><table x="2109" y="83" name="Users">
 <row name="UserID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<datatype>INTEGER</datatype>
+</row>
 <row name="UserName" null="0" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-<default>'NULL'</default></row>
+</row>
 <row name="LoginName" null="0" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-<default>'NULL'</default></row>
+</row>
 <row name="LoginPwd" null="0" autoincrement="0">
 <datatype>VARCHAR(512)</datatype>
-<default>'NULL'</default></row>
+</row>
 <row name="Salt" null="1" autoincrement="0">
 <datatype>VARCHAR(120)</datatype>
-<default>NULL</default></row>
+</row>
 <row name="Mobile" null="1" autoincrement="0">
 <datatype>VARCHAR(32)</datatype>
 <default>NULL</default></row>
@@ -80,23 +80,23 @@
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="LastedDate" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>UserID</part>
 </key>
 </table>
 <table x="1786" y="657" name="Roles">
-<row name="RoleID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="RoelName" null="1" autoincrement="0">
+<row name="RoleID" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+</row>
+<row name="RoleName" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
 <default>NULL</default></row>
 <row name="RoleDesc" null="1" autoincrement="0">
@@ -115,28 +115,28 @@
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="LastedDate" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>RoleID</part>
 </key>
 </table>
 <table x="1816" y="62" name="R_Users_Roles">
-<row name="RUserRoleID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="RUserRoleID" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+</row>
 <row name="UserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default><relation table="Users" row="UserID" />
 </row>
 <row name="RoleID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default><relation table="Roles" row="RoleID" />
 </row>
 <row name="RecordStatus" null="1" autoincrement="0">
@@ -146,13 +146,13 @@
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="LastedDate" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>RUserRoleID</part>
@@ -160,8 +160,8 @@
 </table>
 <table x="2246" y="688" name="Permissions">
 <row name="PermID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<datatype>INTEGER</datatype>
+</row>
 <row name="PermKey" null="0" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
 <default>'NULL'</default></row>
@@ -178,7 +178,7 @@
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
 <row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="CreatedDate" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
@@ -187,26 +187,26 @@
 <part>PermID</part>
 </key>
 </table>
-<table x="2155" y="397" name="R_Permissions_Roles">
-<row name="RPemRoleID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<table x="2200" y="445" name="R_Permissions_Roles">
+<row name="RPermRoleID" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+</row>
 <row name="RoleID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default><relation table="Roles" row="RoleID" />
 </row>
 <row name="PermID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default><relation table="Permissions" row="PermID" />
 </row>
 <row name="CreatedDate" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="CreatedByUserID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>UUID</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>RPemRoleID</part>
+<part>RPermRoleID</part>
 </key>
 </table>
 </sql>

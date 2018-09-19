@@ -34,6 +34,8 @@
 	</group>
 
 	<group label="Miscellaneous" color="rgb(200,200,255)">
+        <type label="UUID" length="1" sql="UUID" quote="'"/>
+		<type label="JSONB" length="1" sql="JSONB" quote="'"/>
 		<type label="XML" length="1" sql="XML" quote="'"/>
 		<type label="Bit" length="1" sql="BIT" quote="'"/>
 		<type label="Bit Varying" length="1" sql="VARBIT" re="BIT VARYING" quote="'"/>
@@ -42,15 +44,18 @@
 		<type label="Geometry" length="0" sql="GEOMETRY" quote="'"/>
 	</group>
 </datatypes><table x="606" y="535" name="PM_Projects">
-<row name="ProjectID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="ProjectID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="ProjectNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-<default>NULL</default></row>
+</row>
 <row name="ProjectName" null="0" autoincrement="0">
 <datatype>VARCHAR(512)</datatype>
-<default>'NULL'</default></row>
+</row>
+<row name="ProjectFullName" null="0" autoincrement="0">
+<datatype>VARCHAR(512)</datatype>
+</row>
 <row name="ProjectDesc" null="1" autoincrement="0">
 <datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
@@ -73,7 +78,7 @@
 <datatype>DATE</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
+<datatype>JSONB</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
@@ -95,22 +100,22 @@
 </key>
 </table>
 <table x="368" y="30" name="PM_Tasks">
-<row name="TaskID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
+<row name="TaskID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
 </row>
-<row name="TaskPID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>0</default></row>
-<row name="TaskNo" null="0" autoincrement="0">
+<row name="ProjectID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_Projects" row="ProjectID" />
+</row>
+<row name="TaskPID" null="1" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="TaskNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-<default>'NULL'</default></row>
+</row>
 <row name="TaskName" null="0" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
-<default>'NULL'</default></row>
+</row>
 <row name="TaskDesc" null="1" autoincrement="0">
 <datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
@@ -142,7 +147,7 @@
 <datatype>DECIMAL(6,4)</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
+<datatype>JSONB</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
@@ -165,15 +170,18 @@
 <comment>WBS 一级:测绘,评估,拆迁,政府,审计,二级:标段,三级:村\户</comment>
 </table>
 <table x="1112" y="137" name="PM_TeamMembers">
-<row name="TeamMemberID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="TeamMemberID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
+<datatype>UUID</datatype>
+<relation table="PM_Projects" row="ProjectID" />
 </row>
 <row name="UserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="LoginName" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
@@ -195,12 +203,12 @@
 </key>
 </table>
 <table x="1012" y="417" name="PM_Deliverables">
-<row name="DeliverableID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="DeliverableID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="ProjetcID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
+<datatype>UUID</datatype>
+<relation table="PM_Projects" row="ProjectID" />
 </row>
 <row name="DeliverableName" null="1" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
@@ -227,7 +235,7 @@
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
+<datatype>JSONB</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
@@ -249,12 +257,12 @@
 </key>
 </table>
 <table x="905" y="894" name="PM_Documents">
-<row name="DocID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="DocID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
+<datatype>UUID</datatype>
+<relation table="PM_Projects" row="ProjectID" />
 </row>
 <row name="Title" null="1" autoincrement="0">
 <datatype>VARCHAR(1024)</datatype>
@@ -281,7 +289,7 @@
 <datatype>VARBIT</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
+<datatype>JSONB</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
@@ -303,23 +311,23 @@
 </key>
 </table>
 <table x="267" y="879" name="PM_Activities">
-<row name="ActivatID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="ActivatID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
+<datatype>UUID</datatype>
+<relation table="PM_Projects" row="ProjectID" />
 </row>
 <row name="TaskID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Tasks" row="TaskID" />
+<datatype>UUID</datatype>
+<relation table="PM_Tasks" row="TaskID" />
 </row>
-<row name="ActivateNo" null="0" autoincrement="0">
+<row name="ActivateNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-<default>'NULL'</default></row>
+<default>NULL</default></row>
 <row name="ActivateName" null="0" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
-<default>'NULL'</default></row>
+</row>
 <row name="ActivateDesc" null="1" autoincrement="0">
 <datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
@@ -348,7 +356,7 @@
 <datatype>DECIMAL(6,4)</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
-<datatype>XML</datatype>
+<datatype>JSONB</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
@@ -371,14 +379,14 @@
 </table>
 <table x="88" y="304" name="PM_TaskTeamMembers">
 <row name="TaskTeamMemeberID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="TaskID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Tasks" row="TaskID" />
+<datatype>UUID</datatype>
+</row>
+<row name="TaskID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_Tasks" row="TaskID" />
 </row>
 <row name="TeamMemberID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>UUID</datatype>
 <default>NULL</default></row>
 <row name="IsManager" null="1" autoincrement="0">
 <datatype>BOOLEAN</datatype>
@@ -403,12 +411,12 @@
 </key>
 </table>
 <table x="591" y="933" name="PM_ActivityTeamMembers">
-<row name="ActivityTeamMemberID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
-<row name="ActivatID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Activities" row="ActivatID" />
+<row name="ActivityTeamMemberID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="ActivatID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_Activities" row="ActivatID" />
 </row>
 <row name="TeamMemberID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
@@ -436,12 +444,12 @@
 </key>
 </table>
 <table x="1400" y="408" name="PM_DevliverableTeamMembers">
-<row name="DevliverableTeamMemberID" null="0" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="DevliverableTeamMemberID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="DeliverableID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Deliverables" row="DeliverableID" />
+<datatype>UUID</datatype>
+<relation table="PM_Deliverables" row="DeliverableID" />
 </row>
 <row name="TeamMemberID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
@@ -466,16 +474,16 @@
 </key>
 </table>
 <table x="1231" y="848" name="PM_DocumentTeamMembers">
-<row name="DocTeamMemberID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="DocTeamMemberID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="DocID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Documents" row="DocID" />
+<datatype>UUID</datatype>
+<relation table="PM_Documents" row="DocID" />
 </row>
 <row name="TeamMemberID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<datatype>UUID</datatype>
+</row>
 <row name="IsManager" null="1" autoincrement="0">
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
@@ -499,11 +507,11 @@
 </key>
 </table>
 <table x="1235" y="1109" name="PM_R_Documents">
-<row name="R_DocID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="R_DocID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="DocID" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>UUID</datatype>
 <default>NULL</default><relation table="PM_Documents" row="DocID" />
 </row>
 <row name="AssociateItemDefinitionID" null="1" autoincrement="0">
@@ -517,16 +525,16 @@
 </key>
 </table>
 <table x="805" y="123" name="PM_Roles">
-<row name="RoleID" null="1" autoincrement="1">
-<datatype>BIGINT</datatype>
-<default>NULL</default></row>
+<row name="RoleID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
 <row name="ProjectID" null="0" autoincrement="0">
-<datatype>BIGINT</datatype>
-<default>NULL</default><relation table="PM_Projects" row="ProjectID" />
+<datatype>UUID</datatype>
+<relation table="PM_Projects" row="ProjectID" />
 </row>
 <row name="RoleName" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-<default>NULL</default></row>
+</row>
 <row name="RoleDesc" null="1" autoincrement="0">
 <datatype>VARCHAR(512)</datatype>
 <default>NULL</default></row>
