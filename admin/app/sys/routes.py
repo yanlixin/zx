@@ -279,8 +279,8 @@ def perm_save():
             obj.id=None
             obj.uuid=str(uuid.uuid1())
 
-            obj.createdbydate=datetime.now()
-            obj.createdbymanagerid=current_user.id
+            obj.createddate=datetime.now()
+            obj.createdbyuserid=current_user.id
             db.session.add(obj)
         db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })

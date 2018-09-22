@@ -36,6 +36,8 @@
 	<group label="Miscellaneous" color="rgb(200,200,255)">
         <type label="UUID" length="1" sql="UUID" quote="'"/>
 		<type label="JSONB" length="1" sql="JSONB" quote="'"/>
+		<type label="BYTEA" length="1" sql="BYTEA" quote="'"/>
+		<type label="OID" length="1" sql="OID" quote="'"/>
 		<type label="XML" length="1" sql="XML" quote="'"/>
 		<type label="Bit" length="1" sql="BIT" quote="'"/>
 		<type label="Bit Varying" length="1" sql="VARBIT" re="BIT VARYING" quote="'"/>
@@ -43,13 +45,13 @@
 		<type label="Inet CIDR Addr" length="0" sql="CIDR" quote="'"/>
 		<type label="Geometry" length="0" sql="GEOMETRY" quote="'"/>
 	</group>
-</datatypes><table x="606" y="535" name="PM_Projects">
+</datatypes><table x="606" y="463" name="PM_Projects">
 <row name="ProjectID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
 <row name="ProjectNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-</row>
+<default>NULL</default></row>
 <row name="ProjectName" null="0" autoincrement="0">
 <datatype>VARCHAR(512)</datatype>
 </row>
@@ -76,6 +78,12 @@
 <default>NULL</default></row>
 <row name="ActualEndDate" null="1" autoincrement="0">
 <datatype>DATE</datatype>
+<default>NULL</default></row>
+<row name="Client" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
+<default>NULL</default></row>
+<row name="ProjectManger" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
 <datatype>JSONB</datatype>
@@ -109,10 +117,10 @@
 </row>
 <row name="TaskPID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
-</row>
+<default>NULL</default></row>
 <row name="TaskNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-</row>
+<default>NULL</default></row>
 <row name="TaskName" null="0" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
 </row>
@@ -183,6 +191,9 @@
 <row name="LoginName" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
 <default>NULL</default></row>
+<row name="IsManager" null="1" autoincrement="0">
+<datatype>BOOLEAN</datatype>
+<default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
 <datatype>SMALLINT</datatype>
 <default>NULL</default></row>
@@ -198,6 +209,9 @@
 <row name="LastedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
+<row name="Desc" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>TeamMemberID</part>
 </key>
@@ -206,15 +220,21 @@
 <row name="DeliverableID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
-<row name="ProjetcID" null="0" autoincrement="0">
+<row name="ProjectID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 <relation table="PM_Projects" row="ProjectID" />
 </row>
+<row name="DeliverableNo" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>NULL</default></row>
 <row name="DeliverableName" null="1" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
 <default>NULL</default></row>
 <row name="DeliverableQty" null="1" autoincrement="0">
 <datatype>DECIMAL(8,2)</datatype>
+<default>NULL</default></row>
+<row name="DeliverableDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
 <row name="ScheduledDeliveryDate" null="1" autoincrement="0">
 <datatype>DATE</datatype>
@@ -233,6 +253,12 @@
 <default>NULL</default></row>
 <row name="IsModifiable" null="1" autoincrement="0">
 <datatype>BOOLEAN</datatype>
+<default>NULL</default></row>
+<row name="Memo" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
+<default>NULL</default></row>
+<row name="Remark" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
 <datatype>JSONB</datatype>
@@ -256,7 +282,7 @@
 <part>DeliverableID</part>
 </key>
 </table>
-<table x="905" y="894" name="PM_Documents">
+<table x="922" y="1185" name="PM_Docs">
 <row name="DocID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -264,7 +290,20 @@
 <datatype>UUID</datatype>
 <relation table="PM_Projects" row="ProjectID" />
 </row>
+<row name="DocCatID" null="1" autoincrement="0">
+<datatype>UUID</datatype>
+<default>NULL</default><relation table="PM_DocCategories" row="DocCatID" />
+</row>
+<row name="DocNo" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>NULL</default></row>
 <row name="Title" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
+<default>NULL</default></row>
+<row name="FullName" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
+<default>NULL</default></row>
+<row name="Alias" null="1" autoincrement="0">
 <datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
 <row name="Desc" null="1" autoincrement="0">
@@ -276,17 +315,17 @@
 <row name="Summary" null="1" autoincrement="0">
 <datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
-<row name="CategoryID" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
-<default>NULL</default></row>
-<row name="FileTypeID" null="1" autoincrement="0">
-<datatype>SMALLINT</datatype>
+<row name="FileType" null="1" autoincrement="0">
+<datatype>VARCHAR(16)</datatype>
 <default>NULL</default></row>
 <row name="LastedVersion" null="1" autoincrement="0">
 <datatype>VARCHAR(32)</datatype>
 <default>NULL</default></row>
 <row name="Preview" null="1" autoincrement="0">
-<datatype>VARBIT</datatype>
+<datatype>BYTEA</datatype>
+<default>NULL</default></row>
+<row name="FileData" null="1" autoincrement="0">
+<datatype>BYTEA</datatype>
 <default>NULL</default></row>
 <row name="ExtraData" null="1" autoincrement="0">
 <datatype>JSONB</datatype>
@@ -320,7 +359,7 @@
 </row>
 <row name="TaskID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
-<relation table="PM_Tasks" row="TaskID" />
+<default>NULL</default><relation table="PM_Tasks" row="TaskID" />
 </row>
 <row name="ActivateNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
@@ -449,7 +488,7 @@
 </row>
 <row name="DeliverableID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
-<relation table="PM_Deliverables" row="DeliverableID" />
+<default>NULL</default><relation table="PM_Deliverables" row="DeliverableID" />
 </row>
 <row name="TeamMemberID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
@@ -473,17 +512,17 @@
 <part>DevliverableTeamMemberID</part>
 </key>
 </table>
-<table x="1231" y="848" name="PM_DocumentTeamMembers">
+<table x="1316" y="1425" name="PM_DocTeamMembers">
 <row name="DocTeamMemberID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
 <row name="DocID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
-<relation table="PM_Documents" row="DocID" />
+<default>NULL</default><relation table="PM_Docs" row="DocID" />
 </row>
 <row name="TeamMemberID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
-</row>
+<default>NULL</default></row>
 <row name="IsManager" null="1" autoincrement="0">
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
@@ -506,13 +545,13 @@
 <part>DocTeamMemberID</part>
 </key>
 </table>
-<table x="1235" y="1109" name="PM_R_Documents">
+<table x="1328" y="1260" name="PM_R_Docs">
 <row name="R_DocID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
 <row name="DocID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
-<default>NULL</default><relation table="PM_Documents" row="DocID" />
+<default>NULL</default><relation table="PM_Docs" row="DocID" />
 </row>
 <row name="AssociateItemDefinitionID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -534,7 +573,7 @@
 </row>
 <row name="RoleName" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
-</row>
+<default>NULL</default></row>
 <row name="RoleDesc" null="1" autoincrement="0">
 <datatype>VARCHAR(512)</datatype>
 <default>NULL</default></row>
@@ -564,6 +603,48 @@
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>RoleID</part>
+</key>
+</table>
+<table x="923" y="892" name="PM_DocCategories">
+<row name="DocCatID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="ProjectID" null="1" autoincrement="0">
+<datatype>UUID</datatype>
+<default>NULL</default><comment>对否关联项目为可选项</comment>
+</row>
+<row name="CatName" null="0" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+</row>
+<row name="CatDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
+<default>NULL</default></row>
+<row name="ExtraData" null="1" autoincrement="0">
+<datatype>JSONB</datatype>
+<default>NULL</default></row>
+<row name="Preview" null="1" autoincrement="0">
+<datatype>OID</datatype>
+<default>NULL</default></row>
+<row name="IsRequired" null="0" autoincrement="0">
+<datatype>BOOLEAN</datatype>
+</row>
+<row name="RecordStatus" null="1" autoincrement="0">
+<datatype>SMALLINT</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="LastedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="LastedByUserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="CratedByUserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>DocCatID</part>
 </key>
 </table>
 </sql>

@@ -4,11 +4,11 @@
 
 {% block stylesheets %}
   {{ super() }}
-  
+  <link href="{{ url_for('static', filename='vendors/dropzone/dist/min/dropzone.min.css') }}" rel="stylesheet">
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="right_col" role="main" data-panel-id='list-project'>
+<div class="right_col" role="main" data-panel-id='list-doc'>
     <div class="">
       
 
@@ -19,7 +19,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
             <div class="x_title">
-              <h2>项目管理<small></small></h2>
+              <h2>项目文档管理<small></small></h2>
               <div class="title_right">
                   <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
@@ -34,13 +34,14 @@
             </div>
             <div class="x_content">
              
-              <table id="datatable-project" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
+              <table id="datatable-doc" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
                 <thead>
                   <tr>
+                    <th>编号</th>
                     <th>名称</th>
-                    <th>成员</th>
-                    <th>全称</th>
-                    <th>进度</th>
+                    <th>别名</th>
+                    <th>类型</th>
+                    <th>版本</th>
                     <th>状态</th>
                     <th></th>
                   </tr>
@@ -56,16 +57,17 @@
       </div>
     </div>
   </div>
-  <div class="hide" id="dialog-project"></div>
+  <div class="hide" id="dialog-doc"></div>
 {% endblock content %}
 
 {% block javascripts %}
   {{ super() }}
+  <script src="{{ url_for('static', filename='vendors/dropzone/dist/min/dropzone.min.js') }}"></script>
   <!-- Datatables -->
   <script>
      $(document).ready(function () {
-        var $win = $("[data-panel-id='list-project']");
-        var $table = $("#datatable-project");
+        var $win = $("[data-panel-id='list-doc']");
+        var $table = $("#datatable-doc");
 
         $win.on("click", "button", function () {
             if ($(this).has("data-click-name")) {
@@ -74,9 +76,11 @@
 
                 switch(clickName){
                     case "create":
+                        window.location.href='/pm/doc/new?projectid={{projid}}';
+                        break;
                     case "edit":
-                        var url = clickName == "create" ? '/pm/project/edit' : '/pm/project/edit?id=' + clickValue;
-                        $("#dialog-project").ztdialog({
+                        var url = clickName == "create" ? '/pm/doc/new' : '/pm/doc/edit?id=' + clickValue;
+                        $("#dialog-doc").ztdialog({
                             'url': url,
                             'title': clickName == "create"?"添加项目": "修改项目",
                             'buttons': 'Save',
@@ -86,7 +90,7 @@
                         });
                         break;
                     case "view":
-                        window.location.href='/pm/project/view?id='+clickValue;
+                        window.location.href='/pm/doc/view?id='+clickValue;
                         break;
                     case "delete":
                         ZTConfirm({
@@ -96,7 +100,7 @@
                             'confirmButtonText': '确定删除',
                             'cancelButtonText': '取消删除',
                             'fnConfirmCallback': function (parms) {
-                                var url = '/pm/project/delete?id=' + parms.id;
+                                var url = '/pm/doc/delete?id=' + parms.id;
                                 $.post(url, function (rtn) {
                                     var rtnDto = JSON.parse(rtn);
                                     if (rtnDto.result) {
@@ -121,50 +125,20 @@
                 }
             }
         });
-    $('#datatable-project').DataTable( {
+    $('#datatable-doc').DataTable( {
       serverSide: true,
       ajax: {
-        url: '/pm/project/data',
+        url: '/pm/doc/data',
         dataSrc: 'data'
       }, 
-      columnDefs: [
-            {
-                targets: [ 3 ],
-                className: 'project_progress'
-            }
-        ],
       columns: [
               {
-                  data: "id" ,"sWidth": "20%","mRender": function (data, type, full) {
-                    
-                        var sOut = '';
-                        sOut+='<a>['+full.no+']'+full.name+'</a>'
-                        sOut+='<br />'
-                        sOut+='<small>创建 '+data.createddate+'</small>'
-                        return sOut;
-                    }
+                  data: "id" ,"sWidth": "20%"
               },  
-              { data: "no","mRender":function (data, type, full) {
-                    
-                    var sOut = '<ul class="list-inline">';
-                      sOut+='<li><img src="images/user.png" class="avatar" alt="李明"></li>'
-                      sOut+='<li><img src="images/user.png" class="avatar" alt="王宁"></li>'
-                      sOut+='<li><img src="images/user.png" class="avatar" alt="Avatar"></li>'
-                      sOut+='<li><img src="images/user.png" class="avatar" alt="Avatar"></li>'
-                      sOut+='<li><img src="images/user.png" class="avatar" alt="Avatar"></li>'
-                      sOut+='</ul>'
-                    return sOut;
-                } },
-              { data: "fullname" },
-              { data: "desc" ,"bSortable": false,"mRender":function (data, type, full) {
-                    
-                    var sOut = '';
-                    sOut+='<div class="progress progress_sm">';
-                    sOut+='<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="57" aria-valuenow="56" style="width: 57%;"></div>';
-                    sOut+='</div>'
-                    sOut+='<small>57% Complete</small>';
-                    return sOut;
-                }},
+              { data: "title" },
+              { data: "alias" },
+              { data: "filetype" },
+              { data: "lastedversion" ,"bSortable": false},
               { data: "status_text"  ,"bSortable": false,"mRender":function (data, type, full) {
                     var sOut = '<button type="button" class="btn btn-success btn-xs">'+data+'</button>';
                     return sOut;
@@ -184,13 +158,13 @@
                 }
           ]
     });
-    $('#datatable-project tbody').on('click', 'tr', function () {
+    $('#datatable-doc tbody').on('click', 'tr', function () {
             $table.data("clickIndex", $table.DataTable().row(this).index());
-            $('#datatable-project tbody tr').each(function (index, item) {
+            $('#datatable-doc tbody tr').each(function (index, item) {
                 $(this).removeAttr("style");
             });
             $(this).attr("style", "background:#f2fbff");
-        });
     });
+});
   </script>
 {% endblock javascripts %}

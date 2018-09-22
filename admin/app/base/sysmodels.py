@@ -24,10 +24,10 @@ class User(db.Model, UserMixin,BaseModel):
     password = Column("LoginPwd",String(30))
     ismaster=Column("IsMaster",db.Boolean)
     status = Column("RecordStatus",SmallInteger)
-    createdbydate = Column("CreatedDate",DateTime)
-    createdbymanagerid = Column("CreatedByUserID",Integer)
-    lastupdatedbydate = Column("LastedDate",DateTime)
-    lastupdatedbymanagerid = Column("LastedByUserID",Integer)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+    lasteddate = Column("LastedDate",DateTime)
+    lastedbyuserid = Column("LastedByUserID",Integer)
     @property
     def username(self):
         return self.loginname
@@ -77,10 +77,10 @@ class Role(db.Model,BaseModel):
     issys = Column("IsSys",Boolean)
     sortindex = Column("SortIndex",String(16))
     status = Column("RecordStatus",SmallInteger)
-    createdbydate = Column("CreatedDate",DateTime)
-    createdbymanagerid = Column("CreatedByUserID",Integer)
-    lastupdatedbydate = Column("LastedDate",DateTime)
-    lastupdatedbymanagerid = Column("LastedByUserID",Integer)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+    lasteddate = Column("LastedDate",DateTime)
+    lastedbyuserid = Column("LastedByUserID",Integer)
    
     def to_dict(self):
         
@@ -96,10 +96,10 @@ class UserRole(db.Model,BaseModel):
     managerid = Column("UserID",String(120), ForeignKey('Users.UserID'))
     roleid = Column("RoleID",Integer,ForeignKey('Roles.RoleID'))
     status = Column("RecordStatus",SmallInteger)
-    createdbydate = Column("CreatedDate",DateTime)
-    createdbymanagerid = Column("CreatedByUserID",Integer)
-    lastupdatedbydate = Column("LastedDate",DateTime)
-    lastupdatedbymanagerid = Column("LastedByUserID",Integer)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+    lasteddate = Column("LastedDate",DateTime)
+    lastedbyuserid = Column("LastedByUserID",Integer)
     def to_dict(self):
         data = {'id': self.id}
         return data
@@ -130,8 +130,8 @@ class Permission(db.Model):
     desc = Column("PermDesc",String(120))
     group = Column("PermGroup",String(120))
     issys = Column("IsSys",Boolean)
-    createdbydate = Column("CreatedDate",DateTime)
-    createdbymanagerid = Column("CreatedByUserID",Integer)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
     def to_dict(self):
         data = {'id': self.id,'name': self.name,'desc':self.desc,'group':self.group}
         return data
@@ -145,8 +145,8 @@ class PermissionRole(db.Model):
     id = Column("RPermRoleID",Integer, primary_key=True)
     permid = Column("PermID",Integer,ForeignKey('Permissions.PermID'))
     roleid = Column("RoleID",Integer, ForeignKey('Roles.RoleID'))
-    createdbydate = Column("CreatedDate",DateTime)
-    createdbymanagerid = Column("CreatedByUserID",Integer)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
     def to_dict(self):
         data = {'id': self.id,"permid":self.permid,"roleid":self.roleid}
         return data

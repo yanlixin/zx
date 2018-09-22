@@ -10,3 +10,9 @@ class ProjectForm(FlaskForm):
     fullname = TextField('FullName', id='txt_fullname' ,validators=[DataRequired(message='全称不能为空')])
     desc = TextAreaField('Desc', id='txt_desc')
     
+
+class DocForm(FlaskForm):
+    id = HiddenField('Id', id='txt_id')
+    name = TextField('Name', id='txt_name' ,validators=[DataRequired(message='名称不能为空')])
+    desc = TextAreaField('Desc', id='txt_desc')
+    

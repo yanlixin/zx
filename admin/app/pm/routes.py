@@ -9,8 +9,9 @@ from datetime import datetime
 
 
 from app import db,uploaded_photos,base_path
-from .models import UUID_DEF,Project
+from .models import UUID_DEF,Project,Deliverable,TeamMember,Doc
 from .forms import ProjectForm
+from .route_docs import *
 
 @blueprint.route('/<template>')
 @login_required
@@ -29,6 +30,7 @@ def project_jsondata():
         "id",
         "no",
         "name",
+        "fullname",
         "desc",
         "status_text"
     ])
@@ -50,7 +52,20 @@ def project_edit():
             'projectedit.html',
             form=form,
         )
-    
+
+@blueprint.route('/project/view', methods=['GET'])
+@login_required
+def project_view():
+    id = request.args.get('id', UUID_DEF)
+    obj = Project.query.get(id)
+    if obj==None:
+        obj = Project(id=UUID_DEF)
+    form={"id":obj.id,"name":obj.name,"desc":obj.desc,"fullname":obj.fullname}
+    return render_template(
+            'projectview.html',
+            proj=form,
+        )
+
 @blueprint.route('/project/save', methods=['POST'])
 @login_required
 def project_save():
@@ -84,3 +99,91 @@ def project_save():
             o.update(obj.to_dict() )
         db.session.commit()
     return json.dumps({'valid':valid,'result':result,'msg':msg })
+
+
+
+@blueprint.route('/deliverable/data', methods=['GET', 'POST'])
+@login_required
+def deliverable_jsondata():
+    table = DataTable(request.args, Deliverable, Deliverable.query, [
+        "id",
+        "name",
+        "desc",
+        "status_text"
+    ])
+    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
+    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+    table.searchable(lambda qs, sq: qs.filter(or_( Deliverable.name.contains(sq), Deliverable.desc.contains(sq))))
+    return json.dumps(table.json(),)
+    #return jsonify(table)
+
+@blueprint.route('/wbs/data', methods=['GET', 'POST'])
+@login_required
+def wbs_jsondata():
+    json=[
+        {
+        "id": 1,
+        "pid": 0,
+        "status": 1,
+        "name": "系统管理",
+        "permissionValue": "open:system:get"
+        },
+        {
+        "id": 2,
+        "pid": 0,
+        "status": 1,
+        "name": "字典管理",
+        "permissionValue": "open:dict:get"
+        },
+        {
+        "id": 20,
+        "pid": 1,
+        "status": 1,
+        "name": "新增系统",
+        "permissionValue": "open:system:add"
+        },
+        {
+        "id": 21,
+        "pid": 1,
+        "status": 1,
+        "name": "编辑系统",
+        "permissionValue": "open:system:edit"
+        },
+        {
+        "id": 22,
+        "pid": 1,
+        "status": 1,
+        "name": "删除系统",
+        "permissionValue": "open:system:delete"
+        },
+        {
+        "id": 33,
+        "pid": 2,
+        "status": 1,
+        "name": "系统环境",
+        "permissionValue": "open:env:get"
+        },
+        {
+        "id": 333,
+        "pid": 33,
+        "status": 1,
+        "name": "新增环境",
+        "permissionValue": "open:env:add"
+        },
+        {
+        "id": 3333,
+        "pid": 33,
+        "status": 1,
+        "name": "编辑环境",
+        "permissionValue": "open:env:edit"
+        },
+        {
+        "id": 233332,
+        "pid": 33,
+        "status": 0,
+        "name": "删除环境",
+        "permissionValue": "open:env:delete"
+        }
+    ]
+   #return json.dumps(table.json(),)
+    return jsonify(json)

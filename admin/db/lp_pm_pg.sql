@@ -1,15 +1,16 @@
-drop table "PM_Roles";
-drop table "PM_R_Documents";
-drop table "PM_DocumentTeamMembers" ;
+/*drop table "PM_Roles";
+drop table "PM_R_Docs";
+drop table "PM_DocTeamMembers" ;
 drop table "PM_DevliverableTeamMembers" ;
 drop table "PM_ActivityTeamMembers";
 drop table "PM_TaskTeamMembers";
 drop table "PM_Activities";
-drop table "PM_Documents";
+drop table "PM_Docs";
+drop table "PM_DocCategories";
 drop table "PM_Deliverables";
 drop table "PM_TeamMembers";
 drop table "PM_Tasks";
-drop table "PM_Projects";
+*/
 
 CREATE TABLE "PM_Projects" (
 "ProjectID" UUID NOT NULL ,
@@ -23,6 +24,8 @@ CREATE TABLE "PM_Projects" (
 "ScheduledEndDate" DATE ,
 "ActualStartDate" DATE ,
 "ActualEndDate" DATE ,
+"Client" VARCHAR(1024) ,
+"ProjectManger" VARCHAR(1024) ,
 "ExtraData" JSONB ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
@@ -63,25 +66,31 @@ CREATE TABLE "PM_TeamMembers" (
 "ProjectID" UUID NOT NULL ,
 "UserID" BIGINT ,
 "LoginName" VARCHAR(64) ,
+"IsManager" BOOLEAN ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
 "CreatedByUserID" BIGINT ,
 "LastedDate" TIMESTAMP ,
 "LastedByUserID" BIGINT ,
+"Desc" VARCHAR(1024) ,
 PRIMARY KEY ("TeamMemberID")
 );
 
 CREATE TABLE "PM_Deliverables" (
 "DeliverableID" UUID NOT NULL ,
-"ProjetcID" UUID NOT NULL ,
+"ProjectID" UUID NOT NULL ,
+"DeliverableNo" VARCHAR(64) ,
 "DeliverableName" VARCHAR(128) ,
 "DeliverableQty" DECIMAL(8,2) ,
+"DeliverableDesc" VARCHAR(1024) ,
 "ScheduledDeliveryDate" DATE ,
 "ScheduledStardDate" DATE ,
 "ScheduledEndDate" DATE ,
 "ActualStartDate" DATE ,
 "ActualEndDate" DATE ,
 "IsModifiable" BOOLEAN ,
+"Memo" VARCHAR(1024) ,
+"Remark" VARCHAR(1024) ,
 "ExtraData" JSONB ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
@@ -91,17 +100,21 @@ CREATE TABLE "PM_Deliverables" (
 PRIMARY KEY ("DeliverableID")
 );
 
-CREATE TABLE "PM_Documents" (
+CREATE TABLE "PM_Docs" (
 "DocID" UUID NOT NULL ,
 "ProjectID" UUID NOT NULL ,
+"DocCatID" UUID ,
+"DocNo" VARCHAR(64) ,
 "Title" VARCHAR(1024) ,
+"FullName" VARCHAR(1024) ,
+"Alias" VARCHAR(1024) ,
 "Desc" VARCHAR(1024) ,
 "Memo" VARCHAR(1024) ,
 "Summary" VARCHAR(1024) ,
-"CategoryID" SMALLINT ,
-"FileTypeID" SMALLINT ,
+"FileType" VARCHAR(16) ,
 "LastedVersion" VARCHAR(32) ,
-"Preview" VARBIT ,
+"Preview" BYTEA ,
+"FileData" BYTEA ,
 "ExtraData" JSONB ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
@@ -173,7 +186,7 @@ CREATE TABLE "PM_DevliverableTeamMembers" (
 PRIMARY KEY ("DevliverableTeamMemberID")
 );
 
-CREATE TABLE "PM_DocumentTeamMembers" (
+CREATE TABLE "PM_DocTeamMembers" (
 "DocTeamMemberID" UUID NOT NULL ,
 "DocID" UUID ,
 "TeamMemberID" UUID ,
@@ -186,7 +199,7 @@ CREATE TABLE "PM_DocumentTeamMembers" (
 PRIMARY KEY ("DocTeamMemberID")
 );
 
-CREATE TABLE "PM_R_Documents" (
+CREATE TABLE "PM_R_Docs" (
 "R_DocID" UUID NOT NULL ,
 "DocID" UUID ,
 "AssociateItemDefinitionID" INTEGER ,
@@ -210,15 +223,33 @@ CREATE TABLE "PM_Roles" (
 PRIMARY KEY ("RoleID")
 );
 
+CREATE TABLE "PM_DocCategories" (
+"DocCatID" UUID NOT NULL ,
+"ProjectID" UUID /* 对否关联项目为可选项 */,
+"CatName" VARCHAR(64) NOT NULL ,
+"CatDesc" VARCHAR(1024) ,
+"ExtraData" JSONB ,
+"Preview" OID ,
+"IsRequired" BOOLEAN NOT NULL ,
+"RecordStatus" SMALLINT ,
+"CreatedDate" TIMESTAMP ,
+"LastedDate" TIMESTAMP ,
+"LastedByUserID" INTEGER ,
+"CratedByUserID" INTEGER ,
+PRIMARY KEY ("DocCatID")
+);
+COMMENT ON COLUMN "PM_DocCategories"."ProjectID" IS '对否关联项目为可选项';
+
 ALTER TABLE "PM_Tasks" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
 ALTER TABLE "PM_TeamMembers" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
-ALTER TABLE "PM_Deliverables" ADD FOREIGN KEY ("ProjetcID") REFERENCES "PM_Projects" ("ProjectID");
-ALTER TABLE "PM_Documents" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
+ALTER TABLE "PM_Deliverables" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
+ALTER TABLE "PM_Docs" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
+ALTER TABLE "PM_Docs" ADD FOREIGN KEY ("DocCatID") REFERENCES "PM_DocCategories" ("DocCatID");
 ALTER TABLE "PM_Activities" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
 ALTER TABLE "PM_Activities" ADD FOREIGN KEY ("TaskID") REFERENCES "PM_Tasks" ("TaskID");
 ALTER TABLE "PM_TaskTeamMembers" ADD FOREIGN KEY ("TaskID") REFERENCES "PM_Tasks" ("TaskID");
 ALTER TABLE "PM_ActivityTeamMembers" ADD FOREIGN KEY ("ActivatID") REFERENCES "PM_Activities" ("ActivatID");
 ALTER TABLE "PM_DevliverableTeamMembers" ADD FOREIGN KEY ("DeliverableID") REFERENCES "PM_Deliverables" ("DeliverableID");
-ALTER TABLE "PM_DocumentTeamMembers" ADD FOREIGN KEY ("DocID") REFERENCES "PM_Documents" ("DocID");
-ALTER TABLE "PM_R_Documents" ADD FOREIGN KEY ("DocID") REFERENCES "PM_Documents" ("DocID");
+ALTER TABLE "PM_DocTeamMembers" ADD FOREIGN KEY ("DocID") REFERENCES "PM_Docs" ("DocID");
+ALTER TABLE "PM_R_Docs" ADD FOREIGN KEY ("DocID") REFERENCES "PM_Docs" ("DocID");
 ALTER TABLE "PM_Roles" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");

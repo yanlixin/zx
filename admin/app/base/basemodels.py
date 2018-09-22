@@ -3,10 +3,10 @@ from datetime import datetime
 class BaseModel():
     id=0
     status =0
-    createdbydate = datetime.now()
-    createdbymanagerid = 0
-    lastupdatedbydate = datetime.now()
-    lastupdatedbymanagerid = 0
+    createddate = datetime.now()
+    createdbyuserid = 0
+    lasteddate = datetime.now()
+    lastedbyuserid = 0
     csrf_token=""
 
     @property
@@ -17,19 +17,19 @@ class BaseModel():
 
     def mark_del(self):
         self.status=1
-        self.lastupdatedbydate=datetime.now()
-        self.lastupdatedbymanagerid=current_user.id
-        data = {'status': self.status,'lastupdatedbydate':self.lastupdatedbydate,'lastupdatedbymanagerid':self.lastupdatedbymanagerid}
+        self.lasteddate=datetime.now()
+        self.lastedbyuserid=current_user.id
+        data = {'status': self.status,'lasteddate':self.lasteddate,'lastedbyuserid':self.lastedbyuserid}
         return data
 
     def mark_update(self):
-        self.lastupdatedbydate=datetime.now()
-        self.lastupdatedbymanagerid=current_user.id
+        self.lasteddate=datetime.now()
+        self.lastedbyuserid=current_user.id
 
     def mark_add(self):
         self.status=0
-        self.createdbydate=datetime.now()
-        self.createdbymanagerid=current_user.id
-        self.lastupdatedbydate=datetime.now()
-        self.lastupdatedbymanagerid=current_user.id
+        self.createddate=datetime.now()
+        self.createdbyuserid=current_user.id
+        self.lasteddate=datetime.now()
+        self.lastedbyuserid=current_user.id
 

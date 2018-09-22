@@ -1,0 +1,87 @@
+<div class="form-horizontal" autocomplete="off" data-form-id="new-doc" id="new-doc">
+
+        <form action="/pm/file/post" id="my-dropzone" class="dropzone">
+                   
+                     
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='vendors/dropzone/dist/min/dropzone.min.js') }}"></script>
+    <script>
+    $(document).ready(function () {
+        $("#dropz").dropzone({
+        url: "handle-upload.php",
+        maxFiles: 10,
+        maxFilesize: 512,
+        acceptedFiles: ".js,.obj,.dae"
+    });
+        Dropzone.options.myDropzone = {
+        autoProcessQueue: false,
+
+        init: function() {
+            var submitButton = document.querySelector("#submit-all")
+            myDropzone = this; // closure
+
+            submitButton.addEventListener("click", function() {
+            myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+            });
+
+            // You might want to show the submit button only when 
+            // files are dropped here:
+            this.on("addedfile", function() {
+            // Show submit button here and/or inform user to click it.
+            });
+            document.querySelector("#clear-dropzone").addEventListener("click", function() {
+                // Using "_this" here, because "this" doesn't point to the dropzone anymore
+                myDropzone.removeAllFiles();
+                // If you want to cancel uploads as well, you
+                // could also call _this.removeAllFiles(true);
+            });
+        }
+    };
+        var $win = getSubWinBody('new-doc');
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
+        winButtons.save.click = function () {
+            $('.ladda-button-save').attr("data-style", "expand-left")
+            var l = $('.ladda-button-save').ladda();
+
+            var subData = {
+                id: $("#txt_id").val(),
+                no: $("#txt_no").val(),
+                name: $("#txt_name").val(),
+                fullname: $("#txt_fullname").val(),
+                desc: $("#txt_desc").val(),
+                csrf_token:$("#csrf_token").val(),
+            };
+            var url = '/pm/project/save';
+            l.ladda('start');
+            $.post(url, subData, function (rtn) {
+                var rtnDto = JSON.parse(rtn);
+                console.log(!rtnDto.valid);
+                if (!rtnDto.valid) {
+                    var msg = "";
+                    for (var i in rtnDto.msg) {
+                        msg = msg + rtnDto.msg[i] + ";";
+                    }
+                    ZTAlert({
+                        "title": "验证失败",
+                        "text": msg
+                    });
+                    l.ladda('stop');
+                } else if (rtnDto.result) {
+                    winEvents.SavedAndClose();
+                } else {
+                    ZTAlert({
+                        "title": "保存失败",
+                        "text": rtnDto.msg
+                    });
+                    l.ladda('stop');
+                }
+
+                //通知modal window Save状况
+                //return rtnValue;
+            }, "text");
+        }
+    });
+    </script>
+ 

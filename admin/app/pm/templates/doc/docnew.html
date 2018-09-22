@@ -1,0 +1,163 @@
+{% extends "base_site.html" %}
+
+{% block title %} Table Dynamic {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+  <link href="{{ url_for('static', filename='vendors/dropzone/dist/min/dropzone.min.css') }}" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main" data-panel-id='list-doc'>
+    <div class="">
+      
+
+      <div class="clearfix"></div>
+
+      <div class="row">
+        
+          <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>拖拽上传文件</h2>
+                  
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Settings 1</a>
+                        </li>
+                        <li><a href="#">Settings 2</a>
+                        </li>
+                        </ul>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                
+                <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    
+                   
+                            
+                           
+                         
+                          <div class="x_content">
+                  <form action="/pm/file/post?projectid={{projid}}" id="my-dropzone" class="dropzone">
+                   
+                     
+                  </form>
+                  <div class="modal-footer"><button type="button" class="btn ladda-button ladda-button-save btn-warning" id="btn-clear"">全部清除</button><button type="button" class="btn ladda-button ladda-button-save btn-primary" id="btn-submit"">全部提交</button><button type="button" class="btn">返回</button></div>
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  </div>
+                </div>
+              </div>
+            </div>
+      </div>
+    </div>
+  </div>
+  <div class="hide" id="dialog-doc"></div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='vendors/dropzone/dist/min/dropzone.min.js') }}"></script>
+  <!-- Datatables -->
+  <script>
+     $(document).ready(function () {
+        Dropzone.options.myDropzone = {
+            autoProcessQueue: false,
+            parallelUploads:10,
+            //addRemoveLinks: true,
+            dictDefaultMessage:"将要上传文件拖拽到此",
+            dictRemoveLinks: "x",
+            dictCancelUpload: "x",
+            maxFiles:10,
+            init: function() {
+                var submitButton = document.querySelector("#btn-submit")
+                myDropzone = this; // closure
+
+                submitButton.addEventListener("click", function() {
+                    myDropzone.processQueue(); // Tell Dropzone to process all queued files.
+                });
+
+                // You might want to show the submit button only when 
+                // files are dropped here:
+                this.on("addedfile", function() {
+                // Show submit button here and/or inform user to click it.
+                });
+                document.querySelector("#btn-clear").addEventListener("click", function() {
+                    // Using "_this" here, because "this" doesn't point to the dropzone anymore
+                    myDropzone.removeAllFiles();
+                    // If you want to cancel uploads as well, you
+                    // could also call _this.removeAllFiles(true);
+                });
+            }
+        };
+        var $win = $("[data-panel-id='list-doc']");
+        
+        $win.on("click", "button", function () {
+            if ($(this).has("data-click-name")) {
+                var clickName = $(this).attr("data-click-name");
+                var clickValue = $(this).attr("data-click-value");
+
+                switch(clickName){
+                    case "create":
+                    case "edit":
+                        var url = clickName == "create" ? '/pm/doc/edit' : '/pm/doc/edit?id=' + clickValue;
+                        $("#dialog-doc").ztdialog({
+                            'url': url,
+                            'title': clickName == "create"?"添加项目": "修改项目",
+                            'buttons': 'Save',
+                            'height': 450,
+                            'width': 650,
+                            'fnSaved': function () { $table.DataTable().draw(false); }
+                        });
+                        break;
+                    case "view":
+                        window.location.href='/pm/doc/view?id='+clickValue;
+                        break;
+                    case "delete":
+                        ZTConfirm({
+                            "title": "删除",
+                            "text": "是否确认删除?",
+                            'parms': { id: clickValue },
+                            'confirmButtonText': '确定删除',
+                            'cancelButtonText': '取消删除',
+                            'fnConfirmCallback': function (parms) {
+                                var url = '/pm/doc/delete?id=' + parms.id;
+                                $.post(url, function (rtn) {
+                                    var rtnDto = JSON.parse(rtn);
+                                    if (rtnDto.result) {
+                                        ZTAlert({
+                                            'title': '删除成功',
+                                            'text': '信息删除成功',
+                                            'type': 'success'
+                                        });
+                                        $table.DataTable().draw(false);
+                                    } else {
+                                        ZTAlert({
+                                            'title': '删除失败',
+                                            'text': rtnDto.msg,
+                                            'type': 'error'
+                                        });
+                                    }
+                                }, "text");
+                            }
+                        });
+                        break;
+                
+                }
+            }
+        });
+    // Dropzone class:
+    });
+
+  </script>
+{% endblock javascripts %}

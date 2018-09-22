@@ -11,7 +11,7 @@ class User(db.Model):
     nickname = db.Column(db.String(64), index = True, unique = False)
     email = db.Column(db.String(120), index = True, unique = True)
     phone = db.Column(db.String(20), index = True, unique = False)
-    createdbydate = db.Column(db.String(20), index = True, unique = False)
+    createddate = db.Column(db.String(20), index = True, unique = False)
     
     @property
     def is_authenticated(self):

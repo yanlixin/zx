@@ -1,0 +1,328 @@
+{% extends "base_site.html" %}
+
+{% block title %} Table Dynamic {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-treegrid/0.2.0/css/jquery.treegrid.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css" />
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="right_col" role="main" data-panel-id='list-project'>
+
+    <div class="">
+        <div class="page-title">
+        <div class="title_left">
+            <h3>项目详情 <small> design</small></h3>
+        </div>
+
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="button">Go!</button>
+                </span>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+            <div class="x_title">
+                <h2>{{proj.fullname}}</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">交付物</a> </li>
+                    <li><a href="#">WBS</a></li>
+                    <li><a href="/pm/doc/list?projectid={{proj.id}}">文档</a></li>
+                    </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+
+                <div class="col-md-9 col-sm-9 col-xs-12">
+
+                <ul class="stats-overview">
+                    <li>
+                    <span class="name"> 总报告 </span>
+                    <span class="value text-success"> 2300 </span>
+                    </li>
+                    <li>
+                    <span class="name"> 已审核 </span>
+                    <span class="value text-success"> 2000 </span>
+                    </li>
+                    <li class="hidden-phone">
+                    <span class="name"> 待审核 </span>
+                    <span class="value text-success"> 20 </span>
+                    </li>
+                </ul>
+                <br />
+
+                <div id="mainb" style="height:350px;">
+                <table class="table" id="datatable-deliverable">
+                <thead>
+                    <tr>
+                    <th> #</th>
+                    <th>交付物名称</th>
+                    <th>交付日期</th>
+                    <th>状态</th>
+                    </tr>
+                </thead>
+                </table>
+                </div>
+
+                <div>
+
+                    <h4>WBS</h4>
+                    <table id="datatable-wbs"></table>
+                </div>
+
+
+                </div>
+
+                <!-- start project-detail sidebar -->
+                <div class="col-md-3 col-sm-3 col-xs-12">
+
+                <section class="panel">
+
+                    <div class="x_title">
+                    <h2>项目描述</h2>
+                    <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                    <h3 class="green"><i class="fa fa-paint-brush"></i> {{proj.name}}</h3>
+
+                    <p>{{proj.desc}}</p>
+                    <br />
+
+                    <div class="project_detail">
+
+                        <p class="title">客户</p>
+                        <p>Deveint Inc</p>
+                        <p class="title">项目经理</p>
+                        <p>Tony Chicken</p>
+                    </div>
+
+                    <br />
+                    <h5>项目文档</h5>
+                    <ul class="list-unstyled project_files">
+                        <li><a href=""><i class="fa fa-file-word-o"></i> Functional-requirements.docx</a>
+                        </li>
+                        <li><a href=""><i class="fa fa-file-pdf-o"></i> UAT.pdf</a>
+                        </li>
+                        <li><a href=""><i class="fa fa-mail-forward"></i> Email-from-flatbal.mln</a>
+                        </li>
+                        <li><a href=""><i class="fa fa-picture-o"></i> Logo.png</a>
+                        </li>
+                        <li><a href=""><i class="fa fa-file-word-o"></i> Contract-10_12_2014.docx</a>
+                        </li>
+                    </ul>
+                    <br />
+
+                    <div class="text-center mtop20">
+                        <a href="#" class="btn btn-sm btn-primary">Add files</a>
+                        <a href="#" class="btn btn-sm btn-warning">Report contact</a>
+                    </div>
+                    </div>
+
+                </section>
+
+                </div>
+                <!-- end project-detail sidebar -->
+
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+  <div class="hide" id="dialog-project"></div>
+{% endblock content %}
+
+{% block javascripts %}
+
+  {{ super() }}
+  <!-- Datatables -->
+  <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
+  <script src="https://cdn.bootcss.com/jquery-treegrid/0.2.0/js/jquery.treegrid.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/treegrid/bootstrap-table-treegrid.min.js"></script>
+  <script>
+     $(document).ready(function () {
+        var $win = $("[data-panel-id='list-project']");
+        var $table = $("#datatable-deliverable");
+        var $table_wbs = $("#datatable-wbs");
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
+        $win.on("click", "button", function () {
+            if ($(this).has("data-click-name")) {
+                var clickName = $(this).attr("data-click-name");
+                var clickValue = $(this).attr("data-click-value");
+
+                switch(clickName){
+                    case "checked":
+                        change_all_states("check");break;
+                    case "unchecked":
+                        change_all_states("uncheck");break;
+                    case "save":
+                        $('.ladda-button-save').attr("data-style", "expand-left")
+                        var l = $('.ladda-button-save').ladda();
+                        var powers = "";
+                        $("input[type='checkbox']:checkbox:checked").each(function () {
+                            if (this.name.indexOf("-power-item") != -1) {
+                                    powers += this.value + ",";
+                            }
+                        });
+                        var subData = {
+                            roleid: $("#txt_roleid").val(),
+                            permids: powers,
+                            csrf_token:$("#csrf_token").val(),
+                        };
+                        var url = '/sys/roleperm/save';
+                        l.ladda('start');
+                        $.post(url, subData, function (rtn) {
+                            var rtnDto = JSON.parse(rtn);
+                            console.log(!rtnDto.valid);
+                            if (!rtnDto.valid) {
+                                var msg = "";
+                                for (var i in rtnDto.msg) {
+                                    msg = msg + rtnDto.msg[i] + ";";
+                                }
+                                ZTAlert({
+                                    "title": "验证失败",
+                                    "text": msg
+                                });
+                                l.ladda('stop');
+                            } else if (rtnDto.result) {
+                                console.log(rtnDto.result);
+                                //winEvents.SavedAndClose();
+                            } else {
+                                ZTAlert({
+                                    "title": "保存失败",
+                                    "text": rtnDto.msg
+                                });
+                                l.ladda('stop');
+                            }
+
+                            //通知modal window Save状况
+                            //return rtnValue;
+                        }, "text");
+                        break;
+
+                }
+            }
+        });
+        $('#datatable-deliverable').DataTable( {
+
+            serverSide: true,
+            ajax: {
+                url: '/pm/deliverable/data',
+                dataSrc: 'data'
+            },
+            columns: [
+              {data: "id"},
+              {data: "name" },
+              {data: "schddeliverydate"},
+              {data: "status_text","bSortable": false},
+            ],
+        })
+        $('#datatable-deliverable tbody').on('click', 'tr', function () {
+            $table.data("clickIndex", $table.DataTable().row(this).index());
+            $('#datatable-deliverable tbody tr').each(function (index, item) {
+                $(this).removeAttr("style");
+            });
+            $(this).attr("style", "background:#f2fbff");
+        });
+        //http://issues.wenzhixin.net.cn/bootstrap-table/json/treegrid.json?order=asc
+        $table_wbs.bootstrapTable({
+            url: '/pm/wbs/data',
+            height: $(window).height(),
+            striped: true,
+            sidePagination: 'server',
+            idField: 'id',
+            columns: [
+                {
+                field: 'ck',
+                checkbox: true
+                },
+                {
+                field: 'name',
+                title: '名称'
+                },
+                // {field: 'id', title: '编号', sortable: true, align: 'center'},
+                // {field: 'pid', title: '所属上级'},
+                {
+                field: 'status',
+                title: '状态',
+                sortable: true,
+                align: 'center',
+                formatter: 'statusFormatter'
+                },
+                {
+                field: 'permissionValue',
+                title: '权限值'
+                }
+            ],
+            // bootstrap-table-tree-column.js 插件配置
+            // treeShowField: 'name',
+            // parentIdField: 'pid'
+            // bootstrap-table-tree-column.js 插件配置
+            // bootstrap-table-treegrid.js 插件配置
+            treeShowField: 'name',
+            parentIdField: 'pid',
+            onLoadSuccess: function(data) {
+                console.log('load');
+                // jquery.treegrid.js
+                $table_wbs.treegrid({
+                // initialState: 'collapsed',
+                treeColumn: 1,
+                // expanderExpandedClass: 'glyphicon glyphicon-minus',
+                // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                onChange: function() {
+                    $table_wbs.bootstrapTable('resetWidth');
+                }
+                });
+            }
+            // bootstrap-table-treetreegrid.js 插件配置
+        });
+    });
+      // 格式化类型
+  function typeFormatter(value, row, index) {
+    if (value === 'menu') {
+      return '菜单';
+    }
+    if (value === 'button') {
+      return '按钮';
+    }
+    if (value === 'api') {
+      return '接口';
+    }
+    return '-';
+  }
+  // 格式化状态
+  function statusFormatter(value, row, index) {
+    if (value === 1) {
+      return '<span class="label label-success">正常</span>';
+    } else {
+      return '<span class="label label-default">锁定</span>';
+    }
+  }
+  </script>
+{% endblock javascripts %}
