@@ -226,6 +226,7 @@ PRIMARY KEY ("RoleID")
 CREATE TABLE "PM_DocCategories" (
 "DocCatID" UUID NOT NULL ,
 "ProjectID" UUID /* 对否关联项目为可选项 */,
+"CatNo" VARCHAR(64) ,
 "CatName" VARCHAR(64) NOT NULL ,
 "CatDesc" VARCHAR(1024) ,
 "ExtraData" JSONB ,
@@ -233,9 +234,9 @@ CREATE TABLE "PM_DocCategories" (
 "IsRequired" BOOLEAN NOT NULL ,
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
+"CreatedByUserID" INTEGER ,
 "LastedDate" TIMESTAMP ,
 "LastedByUserID" INTEGER ,
-"CratedByUserID" INTEGER ,
 PRIMARY KEY ("DocCatID")
 );
 COMMENT ON COLUMN "PM_DocCategories"."ProjectID" IS '对否关联项目为可选项';

@@ -133,9 +133,9 @@ class DocCat(db.Model,BaseModel):
     __tablename__ = 'PM_DocCategories'
     id = Column("DocCatID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
     projid=Column("ProjectID",pg.UUID(as_uuid=True))
-    name = Column("Name",String(64))
-    desc = Column("Desc",String(1024))
-    memo = Column("Memo",String(1024))
+    no = Column("CatNo",String(64))
+    name = Column("CatName",String(64))
+    desc = Column("CatDesc",String(1024))
     isrequired = Column("IsRequired",pg.BOOLEAN)
     
     preview = Column("Preview",pg.OID)
@@ -162,6 +162,7 @@ class Doc(db.Model,BaseModel):
     catid=Column("DocCatID",pg.UUID(as_uuid=True))
     no = Column("DocNo",String(64))
     title = Column("Title",String(64))
+    fullname = Column("FullName",String(64))
     alias = Column("Alias",String(64))
     filetype = Column("FileType",String(64))
     desc = Column("Desc",String(1024))
@@ -179,7 +180,7 @@ class Doc(db.Model,BaseModel):
    
     def to_dict(self):
         
-        data = {'id': str(self.id),'no':self.no,'title': self.title,'desc':self.desc}
+        data = {'id': str(self.id),'no':self.no,'title': self.title,'desc':self.desc,'catid':self.catid,'fullname':self.fullname,'alias':self.alias}
         return data
 
     @staticmethod

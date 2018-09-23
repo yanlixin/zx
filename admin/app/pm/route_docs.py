@@ -9,8 +9,79 @@ from datetime import datetime
 
 
 from app import db,uploaded_photos,base_path
-from .models import UUID_DEF,Doc,loimport
-from .forms import DocForm
+from app.base.sysmodels import User
+from .models import UUID_DEF,Doc,DocCat
+from .forms import DocForm,DocCatForm
+
+@blueprint.route('/doccat/list', methods=['GET'])
+@login_required
+def doc_cat_list():
+    projid = request.args.get('projectid', UUID_DEF)
+    return render_template('doc/doccatlist.html',projid=projid)
+
+@blueprint.route('/doccat/data', methods=['GET', 'POST'])
+@login_required
+def doc_cat_jsondata():
+    table = DataTable(request.args, DocCat, DocCat.query, [
+        "id",
+        "no",
+        "name",
+        "desc",
+        "isrequired",
+        "status_text"
+    ])
+    table.searchable(lambda qs, sq: qs.filter(or_(DocCat.no.contains(sq) , DocCat.name.contains(sq), DocCat.desc.contains(sq))))
+    return json.dumps(table.json(),)
+
+@blueprint.route('/doccat/edit', methods=['GET'])
+@login_required
+def doc_cat_edit():
+    id = request.args.get('id', UUID_DEF)
+    obj = DocCat.query.get(id)
+    if obj==None:
+        obj = DocCat(id=UUID_DEF)
+        obj.projid=request.args.get('projid')
+    form=DocCatForm(obj=obj)
+    return render_template(
+            'doc/doccatedit.html',
+            form=form,
+        )
+
+@blueprint.route('/doccat/save', methods=['POST'])
+@login_required
+def doc_cat_save():
+    form = DocCatForm(**request.form)
+    result='OK'
+    valid=True
+    msg=''
+    if not form.validate_on_submit():
+        return json.dumps({'valid':False,'result':result,'msg':form.errors })
+    else:
+        obj = DocCat()
+        form.populate_obj(obj)
+        obj.extradata={
+    "description": "Super Poodle",
+    "sale_price": 179.99,
+    "animal_info": {
+        "weight": 25,
+        "fur_color": "white",
+        "eye_color": "green"
+    }
+}
+        if obj.id==UUID_DEF:
+            obj.id=None
+            obj.mark_add()
+            db.session.add(obj)
+        else:
+            obj.id=obj.id
+            obj.mark_update()
+            o=db.session.query(DocCat).filter_by(id=obj.id)
+            o.update(obj.to_dict() )
+        db.session.commit()
+    return json.dumps({'valid':valid,'result':result,'msg':msg })
+
+
+
 
 @blueprint.route('/doc/list', methods=['GET'])
 @login_required
@@ -35,7 +106,6 @@ def doc_jsondata():
     #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
     table.searchable(lambda qs, sq: qs.filter(or_(doc.no.contains(sq) , doc.name.contains(sq), doc.desc.contains(sq))))
     return json.dumps(table.json(),)
-    #return jsonify(table)
 
 @blueprint.route('/doc/new', methods=['GET'])
 @login_required
@@ -53,10 +123,12 @@ def doc_new():
 @login_required
 def doc_edit():
     id = request.args.get('id', UUID_DEF)
-    obj = doc.query.get(id)
+    obj = Doc.query.get(id)
     if obj==None:
-        obj = doc(id=UUID_DEF)
-    form=docForm(obj=obj)
+        obj = Doc(id=UUID_DEF)
+    form=DocForm(obj=obj)
+    form.catid.choices = [(g.id, g.name) for g in DocCat.query.order_by('CatName')]
+
     return render_template(
             'doc/docedit.html',
             form=form,
@@ -110,6 +182,8 @@ def doc_save():
     result='OK'
     valid=True
     msg=''
+    form.catid.choices = [(str(g.id), g.name) for g in DocCat.query.order_by('CatName')]
+    print(form['catid'])
     if not form.validate_on_submit():
         return json.dumps({'valid':False,'result':result,'msg':form.errors })
     else:
