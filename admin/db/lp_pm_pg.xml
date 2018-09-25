@@ -368,7 +368,7 @@
 <datatype>UUID</datatype>
 <default>NULL</default><relation table="PM_Tasks" row="TaskID" />
 </row>
-<row name="ActivityCodeID" null="0" autoincrement="0">
+<row name="ActivityCodeID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
 <relation table="PM_ActivityCodes" row="ActivityCodeID" />
 </row>
@@ -425,10 +425,10 @@
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <row name="LastedDate" null="1" autoincrement="0">
-<datatype>BIGINT</datatype>
+<datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <row name="LastedByUserID" null="1" autoincrement="0">
-<datatype>TIMESTAMP</datatype>
+<datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>ActivityID</part>
@@ -732,6 +732,9 @@
 <default>NULL</default></row>
 <row name="LastedByUserID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="RecordStatus" null="1" autoincrement="0">
+<datatype>SMALLINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>PhaseID</part>

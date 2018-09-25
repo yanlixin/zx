@@ -10,7 +10,7 @@ from datetime import datetime
 
 from app import db,uploaded_photos,base_path
 from app.base.sysmodels import User
-from .models import UUID_DEF,Task,Activity,DocCat
+from .models import UUID_DEF,Task,Activity,DocCat,Phase,ActivityCode
 from .forms import TaskForm,ActivityForm
 
 @blueprint.route('/wbs/task/list', methods=['GET'])
@@ -98,11 +98,52 @@ def act_edit():
     if obj==None:
         obj = Activity(id=UUID_DEF,projid=projid,taskid=taskid)
     form=ActivityForm(obj=obj)
-    form.phaseid.choices = [(UUID_DEF,'--select--')]
-    list=[(str(g.id), g.name) for g in Task.query.order_by('TaskName')]
+    form.phaseid.choices = [('','--select--')]
+    list=[(str(g.id), g.name) for g in Phase.select()]
     if list != None and len(list)>0:
-        form.pid.choices=form.pid.choices+list
+        form.phaseid.choices=form.phaseid.choices+list
+    
+    form.actcodeid.choices = [('','--select--')]
+    list=[(str(g.id), g.name) for g in ActivityCode.select()]
+    if list != None and len(list)>0:
+        form.actcodeid.choices=form.actcodeid.choices+list
     return render_template(
             'wbs/actedit.html',
             form=form,
         )
+
+@blueprint.route('/wbs/act/save', methods=['POST'])
+@login_required
+def act_save():
+    form = ActivityForm(**request.form)
+    form.phaseid.choices = [('','--select--')]
+    list=[(str(g.id), g.name) for g in Phase.select()]
+    if list != None and len(list)>0:
+        form.phaseid.choices=form.phaseid.choices+list
+    
+    form.actcodeid.choices = [('','--select--')]
+    list=[(str(g.id), g.name) for g in ActivityCode.select()]
+    if list != None and len(list)>0:
+        form.actcodeid.choices=form.actcodeid.choices+list
+
+    result='OK'
+    valid=True
+    msg=''
+    if not form.validate_on_submit():
+        return json.dumps({'valid':False,'result':result,'msg':form.errors })
+    else:
+        obj = Activity()
+        form.populate_obj(obj)
+        if obj.id==UUID_DEF:
+            obj.id=None
+            obj.mark_add()
+            db.session.add(obj)
+        else:
+            obj.id=obj.id
+            if obj.pid==UUID_DEF:
+                obj.pid=None
+            obj.mark_update()
+            o=db.session.query(Activity).filter_by(id=obj.id)
+            o.update(obj.to_dict() )
+        db.session.commit()
+    return json.dumps({'valid':valid,'result':result,'msg':msg })

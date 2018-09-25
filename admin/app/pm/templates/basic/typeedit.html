@@ -1,0 +1,71 @@
+
+<div class="form-horizontal" autocomplete="off" data-form-id="edit-projtype" id="edit-projtype">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>名称</label>
+            <div class="col-sm-9">
+                {{ form.hidden_tag() }}
+                {{ form.name(class="form-control",placeholder="请输入名称") }}
+            </div>
+           
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注</label>
+    
+            <div class="col-sm-9">
+                {{ form.desc(class="form-control",placeholder="请输入备注") }}
+            </div>
+    
+        </div>
+        
+        
+    </div>
+    <script>
+    $(document).ready(function () {
+        var $win = getSubWinBody('edit-projtype');
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
+
+        winButtons.save.click = function () {
+            $('.ladda-button-save').attr("data-style", "expand-left")
+            var l = $('.ladda-button-save').ladda();
+
+            var subData = {
+                id: $("#txt_id").val(),
+                name: $("#txt_name").val(),
+                desc: $("#txt_desc").val(),
+                csrf_token:$("#csrf_token").val(),
+            };
+            var url = '/pm/basic/type/save';
+            l.ladda('start');
+            $.post(url, subData, function (rtn) {
+                var rtnDto = JSON.parse(rtn);
+                console.log(!rtnDto.valid);
+                if (!rtnDto.valid) {
+                    var msg = "";
+                    for (var i in rtnDto.msg) {
+                        msg = msg + rtnDto.msg[i] + ";";
+                    }
+                    ZTAlert({
+                        "title": "验证失败",
+                        "text": msg
+                    });
+                    l.ladda('stop');
+                } else if (rtnDto.result) {
+                    winEvents.SavedAndClose();
+                } else {
+                    ZTAlert({
+                        "title": "保存失败",
+                        "text": rtnDto.msg
+                    });
+                    l.ladda('stop');
+                }
+
+                //通知modal window Save状况
+                //return rtnValue;
+            }, "text");
+        }
+    });
+    </script>

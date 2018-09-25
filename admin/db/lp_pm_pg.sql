@@ -130,7 +130,7 @@ CREATE TABLE "PM_Activities" (
 "ActivityID" UUID NOT NULL ,
 "ProjectID" UUID NOT NULL ,
 "TaskID" UUID ,
-"ActivityCodeID" UUID NOT NULL ,
+"ActivityCodeID" UUID ,
 "PhaseID" UUID NOT NULL ,
 "ActivityNo" VARCHAR(64) ,
 "ActivityName" VARCHAR(128) NOT NULL ,
@@ -148,8 +148,8 @@ CREATE TABLE "PM_Activities" (
 "RecordStatus" SMALLINT ,
 "CreatedDate" TIMESTAMP ,
 "CreatedByUserID" BIGINT ,
-"LastedDate" BIGINT ,
-"LastedByUserID" TIMESTAMP ,
+"LastedDate" TIMESTAMP ,
+"LastedByUserID" BIGINT ,
 PRIMARY KEY ("ActivityID")
 );
 
@@ -270,6 +270,7 @@ CREATE TABLE "PM_Phases" (
 "CreatedByUserID" INTEGER ,
 "LastedDate" TIMESTAMP ,
 "LastedByUserID" INTEGER ,
+"RecordStatus" SMALLINT ,
 PRIMARY KEY ("PhaseID")
 );
 

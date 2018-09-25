@@ -26,6 +26,7 @@ class ActivityForm(FlaskForm):
     projid = HiddenField('ProjectId', id='txt_projid')
     taskid = HiddenField('TaskId' ,id='txt_taskid')
     phaseid = SelectField('PhaseID' ,id='txt_phaseid', coerce=str,validators=[DataRequired(message='项目阶段不能为空')])
+    actcodeid = SelectField('ActivityCodeID' ,id='txt_actcodeid', coerce=str,validators=[DataRequired(message='活动编码不能为空')])
     no = TextField('ActivityNo', id='txt_no' ,validators=[DataRequired(message='编号不能为空')])
     name = TextField('ActivityName', id='txt_name' ,validators=[DataRequired(message='名称不能为空')])
     desc = TextAreaField('ActivityDesc', id='txt_desc' )
@@ -54,4 +55,20 @@ class DocCatForm(FlaskForm):
     isrequired = BooleanField('IsRequired', id='txt_IsRequired')
     desc = TextAreaField('Desc', id='txt_desc')
 
-    
+class TypeForm(FlaskForm):
+    id = HiddenField('Id', id='txt_id')
+    name = TextField('Name', id='txt_name' ,validators=[DataRequired(message='名称不能为空')])
+    desc = TextAreaField('Desc', id='txt_desc')
+
+class PhaseForm(FlaskForm):
+    id = HiddenField('Id', id='txt_id')
+    name = TextField('Name', id='txt_name' ,validators=[DataRequired(message='名称不能为空')])
+    desc = TextAreaField('Desc', id='txt_desc')
+    projtypeid = SelectField('ProjectTypeID' ,id='txt_projtypeid', coerce=str,validators=[DataRequired(message='项目类型不能为空')])
+
+class ActivityCodeForm(FlaskForm):
+    id = HiddenField('Id', id='txt_id')
+    no = TextField('No', id='txt_no' ,validators=[DataRequired(message='编号不能为空')])
+    name = TextField('Name', id='txt_name' ,validators=[DataRequired(message='名称不能为空')])
+    desc = TextAreaField('Desc', id='txt_desc')
+    projtypeid = SelectField('ProjectTypeID' ,id='txt_projtypeid', coerce=str,validators=[DataRequired(message='项目类型不能为空')])

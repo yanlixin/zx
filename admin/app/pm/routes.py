@@ -13,6 +13,7 @@ from .models import UUID_DEF,Project,Deliverable,TeamMember,Doc
 from .forms import ProjectForm
 from .doc_routes import *
 from .wbs_routes import *
+from .basic_routes import *
 
 @blueprint.route('/<template>')
 @login_required

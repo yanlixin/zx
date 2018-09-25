@@ -85,7 +85,7 @@ class Activity(db.Model,BaseModel):
     __tablename__ = 'PM_Activities'
     id = Column("ActivityID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
     projid=Column("ProjectID",pg.UUID(as_uuid=True))
-    pid=Column("TaskID",pg.UUID(as_uuid=True))
+    taskid=Column("TaskID",pg.UUID(as_uuid=True))
     actcodeid=Column("ActivityCodeID",pg.UUID(as_uuid=True))
     phaseid=Column("PhaseID",pg.UUID(as_uuid=True))
     name = Column("ActivityName",String(128))
@@ -217,3 +217,64 @@ class Doc(db.Model,BaseModel):
     def select():
         return db.session.query(Doc).filter(Doc.status==0)   
 
+class Phase(db.Model,BaseModel):
+    __tablename__ = 'PM_Phases'
+    id = Column("PhaseID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
+    projtypeid=Column("ProjectTypeID",pg.UUID(as_uuid=True))
+    
+    name = Column("PhaseName",String(128))
+    no = Column("PhaseNo",String(64))
+    desc = Column("PhaseDesc",String(1024))
+    status = Column("RecordStatus",SmallInteger)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+    lasteddate = Column("LastedDate",DateTime)
+    lastedbyuserid = Column("LastedByUserID",Integer)
+   
+    def to_dict(self):
+        data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc}
+        return data
+
+    @staticmethod
+    def select():
+        return db.session.query(Phase).filter(Phase.status==0)
+    
+class ActivityCode(db.Model,BaseModel):
+    __tablename__ = 'PM_ActivityCodes'
+    id = Column("ActivityCodeID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
+    projtypeid=Column("ProjectTypeID",pg.UUID(as_uuid=True))
+    
+    name = Column("ActivityCodeName",String(128))
+    no = Column("ActivityCode",String(64))
+    desc = Column("ActivityCodeDesc",String(1024))
+    status = Column("RecordStatus",SmallInteger)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+    lasteddate = Column("LastedDate",DateTime)
+    lastedbyuserid = Column("LastedByUserID",Integer)
+   
+    def to_dict(self):
+        data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc}
+        return data
+
+    @staticmethod
+    def select():
+        return db.session.query(ActivityCode).filter(ActivityCode.status==0)
+    
+class ProjectType(db.Model,BaseModel):
+    __tablename__ = 'PM_ProjectTypes'
+    id = Column("ProjectTypeID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
+    
+    name = Column("ProjectTypeName",String(128))
+    desc = Column("ProjectTypeDesc",String(64))
+    status = Column("RecordStatus",SmallInteger)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+   
+    def to_dict(self):
+        data = {'id': str(self.id),'name': self.name,'desc':self.desc}
+        return data
+
+    @staticmethod
+    def select():
+        return db.session.query(ProjectType).filter(ProjectType.status==0)
