@@ -11,7 +11,8 @@ from datetime import datetime
 from app import db,uploaded_photos,base_path
 from .models import UUID_DEF,Project,Deliverable,TeamMember,Doc
 from .forms import ProjectForm
-from .route_docs import *
+from .doc_routes import *
+from .wbs_routes import *
 
 @blueprint.route('/<template>')
 @login_required

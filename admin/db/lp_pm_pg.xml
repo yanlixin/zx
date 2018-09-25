@@ -45,9 +45,13 @@
 		<type label="Inet CIDR Addr" length="0" sql="CIDR" quote="'"/>
 		<type label="Geometry" length="0" sql="GEOMETRY" quote="'"/>
 	</group>
-</datatypes><table x="606" y="463" name="PM_Projects">
+</datatypes><table x="652" y="468" name="PM_Projects">
 <row name="ProjectID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
+</row>
+<row name="ProjectTypeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_ProjectTypes" row="ProjectTypeID" />
 </row>
 <row name="ProjectNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
@@ -146,6 +150,9 @@
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
 <row name="IsModifiable" null="1" autoincrement="0">
+<datatype>BOOLEAN</datatype>
+<default>NULL</default></row>
+<row name="IsEndNode" null="1" autoincrement="0">
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
 <row name="Weight" null="1" autoincrement="0">
@@ -282,7 +289,7 @@
 <part>DeliverableID</part>
 </key>
 </table>
-<table x="922" y="1185" name="PM_Docs">
+<table x="930" y="1252" name="PM_Docs">
 <row name="DocID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -349,8 +356,8 @@
 <part>DocID</part>
 </key>
 </table>
-<table x="267" y="879" name="PM_Activities">
-<row name="ActivatID" null="0" autoincrement="0">
+<table x="384" y="977" name="PM_Activities">
+<row name="ActivityID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
 <row name="ProjectID" null="0" autoincrement="0">
@@ -361,13 +368,21 @@
 <datatype>UUID</datatype>
 <default>NULL</default><relation table="PM_Tasks" row="TaskID" />
 </row>
-<row name="ActivateNo" null="1" autoincrement="0">
+<row name="ActivityCodeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_ActivityCodes" row="ActivityCodeID" />
+</row>
+<row name="PhaseID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_Phases" row="PhaseID" />
+</row>
+<row name="ActivityNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
 <default>NULL</default></row>
-<row name="ActivateName" null="0" autoincrement="0">
+<row name="ActivityName" null="0" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
 </row>
-<row name="ActivateDesc" null="1" autoincrement="0">
+<row name="ActivityDesc" null="1" autoincrement="0">
 <datatype>VARCHAR(1024)</datatype>
 <default>NULL</default></row>
 <row name="Memo" null="1" autoincrement="0">
@@ -386,6 +401,9 @@
 <datatype>DATE</datatype>
 <default>NULL</default></row>
 <row name="IsModeifiable" null="1" autoincrement="0">
+<datatype>BOOLEAN</datatype>
+<default>NULL</default></row>
+<row name="HasDeliverables" null="1" autoincrement="0">
 <datatype>BOOLEAN</datatype>
 <default>NULL</default></row>
 <row name="Weight" null="1" autoincrement="0">
@@ -413,7 +431,7 @@
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>ActivatID</part>
+<part>ActivityID</part>
 </key>
 </table>
 <table x="88" y="304" name="PM_TaskTeamMembers">
@@ -449,13 +467,13 @@
 <part>TaskTeamMemeberID</part>
 </key>
 </table>
-<table x="591" y="933" name="PM_ActivityTeamMembers">
+<table x="566" y="1541" name="PM_ActivityTeamMembers">
 <row name="ActivityTeamMemberID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
-<row name="ActivatID" null="0" autoincrement="0">
+<row name="ActivityID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
-<relation table="PM_Activities" row="ActivatID" />
+<relation table="PM_Activities" row="ActivityID" />
 </row>
 <row name="TeamMemberID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
@@ -648,6 +666,98 @@
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>DocCatID</part>
+</key>
+</table>
+<table x="96.5" y="565" name="PM_ActivityCodes">
+<row name="ActivityCodeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="ProjectTypeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_ProjectTypes" row="ProjectTypeID" />
+</row>
+<row name="ActivityCode" null="1" autoincrement="0">
+<datatype>VARCHAR(32)</datatype>
+<default>NULL</default></row>
+<row name="ActivityCodeName" null="1" autoincrement="0">
+<datatype>VARCHAR(32)</datatype>
+<default>NULL</default></row>
+<row name="ActivityCodeDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(256)</datatype>
+<default>NULL</default></row>
+<row name="RecordStatus" null="1" autoincrement="0">
+<datatype>SMALLINT</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="LastedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="LastedByUserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ActivityCodeID</part>
+</key>
+</table>
+<table x="44.5" y="1002" name="PM_Phases">
+<row name="PhaseID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="ProjectTypeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_ProjectTypes" row="ProjectTypeID" />
+</row>
+<row name="PhaseNo" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>NULL</default></row>
+<row name="PhaseName" null="1" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>NULL</default></row>
+<row name="PhaseDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(256)</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="LastedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="LastedByUserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>PhaseID</part>
+</key>
+</table>
+<table x="361.5" y="552.5" name="PM_ProjectTypes">
+<row name="ProjectTypeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="ProjectTypeName" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>NULL</default></row>
+<row name="ProjectTypeDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(1024)</datatype>
+<default>NULL</default></row>
+<row name="RecordStatus" null="1" autoincrement="0">
+<datatype>SMALLINT</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ProjectTypeID</part>
 </key>
 </table>
 </sql>

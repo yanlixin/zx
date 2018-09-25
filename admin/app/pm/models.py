@@ -60,10 +60,11 @@ class Task(db.Model,BaseModel):
     id = Column("TaskID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
     projid=Column("ProjectID",pg.UUID(as_uuid=True))
     pid=Column("TaskPID",pg.UUID(as_uuid=True))
-    name = Column("TaskName",String(512))
-    no = Column("TaskNo",String(512))
+    name = Column("TaskName",String(128))
+    no = Column("TaskNo",String(64))
     desc = Column("TaskDesc",String(1024))
     memo = Column("Memo",String(1024))
+    isendnode = Column("IsEndNode",pg.BOOLEAN)
     extradata = Column("ExtraData",pg.JSONB)
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
@@ -73,12 +74,41 @@ class Task(db.Model,BaseModel):
    
     def to_dict(self):
         
-        data = {'id': str(self.id),'name': self.name,'desc':self.desc}
+        data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc,'pid':self.pid,'memo':self.memo,'isendnode':self.isendnode}
         return data
 
     @staticmethod
     def select():
-        return db.session.query(Deliverable).filter(Deliverable.status==0)
+        return db.session.query(Task).filter(Task.status==0)
+
+class Activity(db.Model,BaseModel):
+    __tablename__ = 'PM_Activities'
+    id = Column("ActivityID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
+    projid=Column("ProjectID",pg.UUID(as_uuid=True))
+    pid=Column("TaskID",pg.UUID(as_uuid=True))
+    actcodeid=Column("ActivityCodeID",pg.UUID(as_uuid=True))
+    phaseid=Column("PhaseID",pg.UUID(as_uuid=True))
+    name = Column("ActivityName",String(128))
+    no = Column("ActivityNo",String(64))
+    desc = Column("ActivityDesc",String(1024))
+    memo = Column("Memo",String(1024))
+    hasdeliverables = Column("HasDeliverables",pg.BOOLEAN)
+    extradata = Column("ExtraData",pg.JSONB)
+    status = Column("RecordStatus",SmallInteger)
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+    lasteddate = Column("LastedDate",DateTime)
+    lastedbyuserid = Column("LastedByUserID",Integer)
+   
+    def to_dict(self):
+        data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc,'pid':self.pid,'memo':self.memo,'phaseid':self.phaseid,'hasdeliverables':self.hasdeliverables}
+        return data
+
+    @staticmethod
+    def select():
+        return db.session.query(Activity).filter(Activity.status==0)
+
+
 
 class Deliverable(db.Model,BaseModel):
     __tablename__ = 'PM_Deliverables'
@@ -186,3 +216,4 @@ class Doc(db.Model,BaseModel):
     @staticmethod
     def select():
         return db.session.query(Doc).filter(Doc.status==0)   
+

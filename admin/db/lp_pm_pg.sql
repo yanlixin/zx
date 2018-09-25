@@ -14,6 +14,7 @@ drop table "PM_Tasks";
 
 CREATE TABLE "PM_Projects" (
 "ProjectID" UUID NOT NULL ,
+"ProjectTypeID" UUID NOT NULL ,
 "ProjectNo" VARCHAR(64) ,
 "ProjectName" VARCHAR(512) NOT NULL ,
 "ProjectFullName" VARCHAR(512) NOT NULL ,
@@ -49,6 +50,7 @@ CREATE TABLE "PM_Tasks" (
 "EndStartDate" DATE ,
 "IsCritical" BOOLEAN ,
 "IsModifiable" BOOLEAN ,
+"IsEndNode" BOOLEAN ,
 "Weight" DECIMAL(6,4) ,
 "ProgressPercentage" DECIMAL(6,4) ,
 "ExtraData" JSONB ,
@@ -125,18 +127,21 @@ PRIMARY KEY ("DocID")
 );
 
 CREATE TABLE "PM_Activities" (
-"ActivatID" UUID NOT NULL ,
+"ActivityID" UUID NOT NULL ,
 "ProjectID" UUID NOT NULL ,
 "TaskID" UUID ,
-"ActivateNo" VARCHAR(64) ,
-"ActivateName" VARCHAR(128) NOT NULL ,
-"ActivateDesc" VARCHAR(1024) ,
+"ActivityCodeID" UUID NOT NULL ,
+"PhaseID" UUID NOT NULL ,
+"ActivityNo" VARCHAR(64) ,
+"ActivityName" VARCHAR(128) NOT NULL ,
+"ActivityDesc" VARCHAR(1024) ,
 "Memo" VARCHAR(1024) ,
 "ScheduleStartDate" DATE ,
 "ScheduleEndDate" DATE ,
 "ActualStartDate" DATE ,
 "ActualEndDate" DATE ,
 "IsModeifiable" BOOLEAN ,
+"HasDeliverables" BOOLEAN ,
 "Weight" DECIMAL(6,4) ,
 "ProgressPercentage" DECIMAL(6,4) ,
 "ExtraData" JSONB ,
@@ -145,7 +150,7 @@ CREATE TABLE "PM_Activities" (
 "CreatedByUserID" BIGINT ,
 "LastedDate" BIGINT ,
 "LastedByUserID" TIMESTAMP ,
-PRIMARY KEY ("ActivatID")
+PRIMARY KEY ("ActivityID")
 );
 
 CREATE TABLE "PM_TaskTeamMembers" (
@@ -163,7 +168,7 @@ PRIMARY KEY ("TaskTeamMemeberID")
 
 CREATE TABLE "PM_ActivityTeamMembers" (
 "ActivityTeamMemberID" UUID NOT NULL ,
-"ActivatID" UUID NOT NULL ,
+"ActivityID" UUID NOT NULL ,
 "TeamMemberID" BIGINT ,
 "IsManager" BOOLEAN ,
 "RecordStatus" SMALLINT ,
@@ -241,6 +246,44 @@ PRIMARY KEY ("DocCatID")
 );
 COMMENT ON COLUMN "PM_DocCategories"."ProjectID" IS '对否关联项目为可选项';
 
+CREATE TABLE "PM_ActivityCodes" (
+"ActivityCodeID" UUID NOT NULL ,
+"ProjectTypeID" UUID NOT NULL ,
+"ActivityCode" VARCHAR(32) ,
+"ActivityCodeName" VARCHAR(32) ,
+"ActivityCodeDesc" VARCHAR(256) ,
+"RecordStatus" SMALLINT ,
+"CreatedDate" TIMESTAMP ,
+"CreatedByUserID" INTEGER ,
+"LastedDate" TIMESTAMP ,
+"LastedByUserID" INTEGER ,
+PRIMARY KEY ("ActivityCodeID")
+);
+
+CREATE TABLE "PM_Phases" (
+"PhaseID" UUID NOT NULL ,
+"ProjectTypeID" UUID NOT NULL ,
+"PhaseNo" VARCHAR(64) ,
+"PhaseName" VARCHAR(128) ,
+"PhaseDesc" VARCHAR(256) ,
+"CreatedDate" TIMESTAMP ,
+"CreatedByUserID" INTEGER ,
+"LastedDate" TIMESTAMP ,
+"LastedByUserID" INTEGER ,
+PRIMARY KEY ("PhaseID")
+);
+
+CREATE TABLE "PM_ProjectTypes" (
+"ProjectTypeID" UUID NOT NULL ,
+"ProjectTypeName" VARCHAR(64) ,
+"ProjectTypeDesc" VARCHAR(1024) ,
+"RecordStatus" SMALLINT ,
+"CreatedDate" TIMESTAMP ,
+"CreatedByUserID" INTEGER ,
+PRIMARY KEY ("ProjectTypeID")
+);
+
+ALTER TABLE "PM_Projects" ADD FOREIGN KEY ("ProjectTypeID") REFERENCES "PM_ProjectTypes" ("ProjectTypeID");
 ALTER TABLE "PM_Tasks" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
 ALTER TABLE "PM_TeamMembers" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
 ALTER TABLE "PM_Deliverables" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
@@ -248,9 +291,13 @@ ALTER TABLE "PM_Docs" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("P
 ALTER TABLE "PM_Docs" ADD FOREIGN KEY ("DocCatID") REFERENCES "PM_DocCategories" ("DocCatID");
 ALTER TABLE "PM_Activities" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
 ALTER TABLE "PM_Activities" ADD FOREIGN KEY ("TaskID") REFERENCES "PM_Tasks" ("TaskID");
+ALTER TABLE "PM_Activities" ADD FOREIGN KEY ("ActivityCodeID") REFERENCES "PM_ActivityCodes" ("ActivityCodeID");
+ALTER TABLE "PM_Activities" ADD FOREIGN KEY ("PhaseID") REFERENCES "PM_Phases" ("PhaseID");
 ALTER TABLE "PM_TaskTeamMembers" ADD FOREIGN KEY ("TaskID") REFERENCES "PM_Tasks" ("TaskID");
-ALTER TABLE "PM_ActivityTeamMembers" ADD FOREIGN KEY ("ActivatID") REFERENCES "PM_Activities" ("ActivatID");
+ALTER TABLE "PM_ActivityTeamMembers" ADD FOREIGN KEY ("ActivityID") REFERENCES "PM_Activities" ("ActivityID");
 ALTER TABLE "PM_DevliverableTeamMembers" ADD FOREIGN KEY ("DeliverableID") REFERENCES "PM_Deliverables" ("DeliverableID");
 ALTER TABLE "PM_DocTeamMembers" ADD FOREIGN KEY ("DocID") REFERENCES "PM_Docs" ("DocID");
 ALTER TABLE "PM_R_Docs" ADD FOREIGN KEY ("DocID") REFERENCES "PM_Docs" ("DocID");
 ALTER TABLE "PM_Roles" ADD FOREIGN KEY ("ProjectID") REFERENCES "PM_Projects" ("ProjectID");
+ALTER TABLE "PM_ActivityCodes" ADD FOREIGN KEY ("ProjectTypeID") REFERENCES "PM_ProjectTypes" ("ProjectTypeID");
+ALTER TABLE "PM_Phases" ADD FOREIGN KEY ("ProjectTypeID") REFERENCES "PM_ProjectTypes" ("ProjectTypeID");

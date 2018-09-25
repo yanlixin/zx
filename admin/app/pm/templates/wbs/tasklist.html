@@ -1,0 +1,223 @@
+{% extends "base_site.html" %}
+
+{% block title %} Table Dynamic {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-treegrid/0.2.0/css/jquery.treegrid.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css" />
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main" data-panel-id='list-task'>
+    <div class="">
+      
+
+      <div class="clearfix"></div>
+
+      <div class="row">
+        
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>项目任务<small></small></h2>
+              <div class="title_right">
+                  <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+                     &nbsp;
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" data-click-name="create"><i class="fa fa-plus"></i>新增</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+             
+              <table id="datatable-task" class="table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
+               
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hide" id="dialog-task"></div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ super() }}
+  <script src="https://cdn.bootcss.com/jquery-treegrid/0.2.0/js/jquery.treegrid.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/treegrid/bootstrap-table-treegrid.min.js"></script>
+  <!-- Datatables -->
+  <script>
+     $(document).ready(function () {
+        var $win = $("[data-panel-id='list-task']");
+        var $table = $("#datatable-task");
+
+        $win.on("click", "button", function () {
+            if ($(this).has("data-click-name")) {
+                var clickName = $(this).attr("data-click-name");
+                var clickValue = $(this).attr("data-click-value");
+
+                switch(clickName){
+                    case "create":
+                    case "edit":
+                        var url = clickName == "create" ? '/pm/wbs/task/edit?projid={{projid}}' : '/pm/wbs/task/edit?id=' + clickValue;
+                        $("#dialog-task").ztdialog({
+                            'url': url,
+                            'title': clickName == "create"?"添加任务": "修改任务",
+                            'buttons': 'Save',
+                            'height': 450,
+                            'width': 650,
+                            'fnSaved': function () { 
+                                //$table.DataTable().draw(false); 
+                            }
+                        });
+                        break;
+                    case "task":
+                        var url = '/pm/wbs/task/edit?projid={{projid}}&pid='  + clickValue;
+                        $("#dialog-task").ztdialog({
+                            'url': url,
+                            'title': "添加任务",
+                            'buttons': 'Save',
+                            'height': 450,
+                            'width': 650,
+                            'fnSaved': function () { 
+                                //$table.DataTable().draw(false); 
+                            }
+                        });
+                        break;
+                    case "act":
+                        var url = '/pm/wbs/act/edit?projid={{projid}}&taskid=' + clickValue;
+                        $("#dialog-task").ztdialog({
+                            'url': url,
+                            'title': "添加活动",
+                            'buttons': 'Save',
+                            'height': 450,
+                            'width': 650,
+                            'fnSaved': function () { 
+                                //$table.DataTable().draw(false); 
+                            }
+                        });
+                        break;
+                    case "view":
+                        window.location.href='/pm/task/view?id='+clickValue;
+                        break;
+                    case "delete":
+                        ZTConfirm({
+                            "title": "删除",
+                            "text": "是否确认删除?",
+                            'parms': { id: clickValue },
+                            'confirmButtonText': '确定删除',
+                            'cancelButtonText': '取消删除',
+                            'fnConfirmCallback': function (parms) {
+                                var url = '/pm/wbs/task/delete?id=' + parms.id;
+                                $.post(url, function (rtn) {
+                                    var rtnDto = JSON.parse(rtn);
+                                    if (rtnDto.result) {
+                                        ZTAlert({
+                                            'title': '删除成功',
+                                            'text': '信息删除成功',
+                                            'type': 'success'
+                                        });
+                                        //$table.DataTable().draw(false);
+                                    } else {
+                                        ZTAlert({
+                                            'title': '删除失败',
+                                            'text': rtnDto.msg,
+                                            'type': 'error'
+                                        });
+                                    }
+                                }, "text");
+                            }
+                        });
+                        break;
+                
+                }
+            }
+        });
+    $table.bootstrapTable({
+      serverSide: true,
+      url: '/pm/wbs/task/data?projectid={{projid}}',
+      height: $(window).height(),
+      striped: true,
+      sidePagination: 'server',
+      idField: 'id',
+      columns: [
+        {
+          field: 'ck',
+          checkbox: true
+        },
+        {
+          field: 'no',
+          title: '编号'
+        },
+        {
+          field: 'name',
+          title: '名称'
+        },
+        {
+          field: 'desc',
+          title: '描述'
+        },
+        // {field: 'id', title: '编号', sortable: true, align: 'center'},
+        // {field: 'pid', title: '所属上级'},
+        {
+          field: 'status',
+          title: '状态',
+          sortable: true,
+          align: 'center',
+          //formatter: 'statusFormatter'
+        },
+        {
+          field: 'id',
+          title: '',
+          width:'20%',
+          formatter: 'buttonFormatter'
+        }
+      ],
+      treeShowField: 'no',
+      parentIdField: 'pid',
+      onLoadSuccess: function(data) {
+        console.log('load');
+        // jquery.treegrid.js
+        $table.treegrid({
+          // initialState: 'collapsed',
+          treeColumn: 1,
+          // expanderExpandedClass: 'glyphicon glyphicon-minus',
+          // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+          onChange: function() {
+            $table.bootstrapTable('resetWidth');
+          }
+        });
+      }
+    });
+
+});
+  // 格式化类型
+  function buttonFormatter(value, row, index) {
+    var sOut = '';
+    if(row.isendnode)
+        sOut += '<button class="btn btn-default btn-xs"data-click-name="act" data-click-value="' + value + '"><i class="fa fa-plus"></i>活动</button>';
+    else
+        sOut += '<button class="btn btn-default btn-xs"data-click-name="task" data-click-value="' + value + '"><i class="fa fa-plus"></i>任务</button>';
+    sOut += '<button class="btn btn-primary btn-xs"data-click-name="view" data-click-value="' + value + '"><i class="fa fa-folder">详情</i></button>';
+    sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + value + '"><i class="fa fa-pencil">修改</i></button>';
+    sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + value + '"><i class="fa fa-trash-o">删除</i></button>';
+    return sOut;
+
+  }
+  // 格式化状态
+  function statusFormatter(value, row, index) {
+    if (value === 1) {
+      return '<span class="label label-success">正常</span>';
+    } else {
+      return '<span class="label label-default">锁定</span>';
+    }
+  }
+  </script>
+{% endblock javascripts %}
