@@ -62,14 +62,21 @@
             if ($(this).has("data-click-name")) {
                 var clickName = $(this).attr("data-click-name");
                 var clickValue = $(this).attr("data-click-value");
-
+                var clickData = $(this).attr("data-click-data"); 
+                console.log(clickData)
                 switch(clickName){
                     case "create":
                     case "edit":
                         var url = clickName == "create" ? '/pm/wbs/task/edit?projid={{projid}}' : '/pm/wbs/task/edit?id=' + clickValue;
+                        var title= clickName == "create"?"添加任务": "修改任务";
+                        if (clickData=="A"){
+                            url = clickName == "create" ? '/pm/wbs/act/edit?projid={{projid}}&taskid=' + clickValue : '/pm/wbs/act/edit?id=' + clickValue;
+                            title= clickName == "create"?"添加活动": "修改活动";
+                        }
+                        
                         $("#dialog-task").ztdialog({
                             'url': url,
-                            'title': clickName == "create"?"添加任务": "修改任务",
+                            'title': title,
                             'buttons': 'Save',
                             'height': 450,
                             'width': 650,
@@ -96,6 +103,19 @@
                         $("#dialog-task").ztdialog({
                             'url': url,
                             'title': "添加活动",
+                            'buttons': 'Save',
+                            'height': 450,
+                            'width': 650,
+                            'fnSaved': function () { 
+                                //$table.DataTable().draw(false); 
+                            }
+                        });
+                        break;
+                      case "deli":
+                        var url = '/pm/wbs/deli/edit?projid={{projid}}&actid=' + clickValue;
+                        $("#dialog-task").ztdialog({
+                            'url': url,
+                            'title': "添加交付物",
                             'buttons': 'Save',
                             'height': 450,
                             'width': 650,
@@ -201,12 +221,17 @@
   // 格式化类型
   function buttonFormatter(value, row, index) {
     var sOut = '';
-    if(row.isendnode)
-        sOut += '<button class="btn btn-default btn-xs"data-click-name="act" data-click-value="' + value + '"><i class="fa fa-plus"></i>活动</button>';
-    else
-        sOut += '<button class="btn btn-default btn-xs"data-click-name="task" data-click-value="' + value + '"><i class="fa fa-plus"></i>任务</button>';
-    sOut += '<button class="btn btn-primary btn-xs"data-click-name="view" data-click-value="' + value + '"><i class="fa fa-folder">详情</i></button>';
-    sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + value + '"><i class="fa fa-pencil">修改</i></button>';
+    if(row.isendnode==true)
+        sOut += '<button class="btn btn-default btn-xs" data-click-name="act" data-click-value="' + value + '" data-click-data="' + row.type + '"><i class="fa fa-plus"></i>活动</button>';
+    else if(row.isendnode==false)
+        sOut += '<button class="btn btn-default btn-xs" data-click-name="task" data-click-value="' + value + '" data-click-data="' + row.type + '"><i class="fa fa-plus"></i>任务</button>';
+    
+    if(row.hasdeliverables==true)
+        sOut += '<button class="btn btn-default btn-xs" data-click-name="deli" data-click-value="' + value + '" data-click-data="' + row.type + '"><i class="fa fa-plus"></i>交付物</button>';
+
+        
+    sOut += '<button class="btn btn-primary btn-xs" data-click-name="view" data-click-value="' + value + '"><i class="fa fa-folder">详情</i></button>';
+    sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + value + '" data-click-data="' + row.type + '"><i class="fa fa-pencil">修改</i></button>';
     sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + value + '"><i class="fa fa-trash-o">删除</i></button>';
     return sOut;
 

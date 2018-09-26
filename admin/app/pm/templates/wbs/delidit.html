@@ -1,46 +1,33 @@
-<div class="form-horizontal" autocomplete="off" data-form-id="edit-project" id="edit-project">
+<div class="form-horizontal" autocomplete="off" data-form-id="edit-deli" id="edit-deli">
 
         <div class="form-group">
             <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>编号</label>
             <div class="col-sm-7">
                 {{ form.hidden_tag() }}
+                {{ form.projid() }}
+                {{ form.actid() }}
                 {{ form.no(class="form-control",placeholder="请输入编号") }}
             </div>
-           
         </div>
+        <div class="hr-line-dashed-10"></div>
         <div class="form-group">
             <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>名称</label>
             <div class="col-sm-7">
                 {{ form.name(class="form-control",placeholder="请输入名称") }}
             </div>
-            
-        </div>
+        </div>     
         <div class="hr-line-dashed-10"></div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">项目类型</label>
+            <label class="col-sm-3 control-label">描述</label>
             <div class="col-sm-7">
-                {{ form.projtypeid(class="form-control",placeholder="请输入项目类型") }}
+                {{ form.desc(class="form-control",placeholder="请输入描述") }}
             </div>
-        </div>  
-        <div class="form-group">
-            <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>全称</label>
-            <div class="col-sm-7">
-                {{ form.fullname(class="form-control",placeholder="请输入全称") }}
-            </div>
-            
         </div>       
-        <div class="hr-line-dashed-10"></div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">备注</label>
-            <div class="col-sm-7">
-                {{ form.desc(class="form-control",placeholder="请输入备注") }}
-            </div>
-        </div>
     </div>
     <script>
     $(document).ready(function () {
        
-        var $win = getSubWinBody('edit-project');
+        var $win = getSubWinBody('edit-deli');
         var winEvents = $win.data("winEvents");
         var winButtons = $win.data("buttons");
         winButtons.save.click = function () {
@@ -50,17 +37,16 @@
             var subData = {
                 id: $("#txt_id").val(),
                 no: $("#txt_no").val(),
+                projid: $("#txt_projid").val(),
+                actid: $("#txt_actid").val(),
                 name: $("#txt_name").val(),
-                fullname: $("#txt_fullname").val(),
-                projtypeid: $("#txt_projtypeid").val(),
                 desc: $("#txt_desc").val(),
                 csrf_token:$("#csrf_token").val(),
             };
-            var url = '/pm/project/save';
+            var url = '/pm/wbs/deli/save';
             l.ladda('start');
             $.post(url, subData, function (rtn) {
                 var rtnDto = JSON.parse(rtn);
-                console.log(!rtnDto.valid);
                 if (!rtnDto.valid) {
                     var msg = "";
                     for (var i in rtnDto.msg) {

@@ -33,6 +33,7 @@ def loimport(data):
 class Project(db.Model,BaseModel):
     __tablename__ = 'PM_Projects'
     id = Column("ProjectID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
+    projtypeid=Column("ProjectTypeID",pg.UUID(as_uuid=True))
     no = Column("ProjectNo",String(64), unique=True)
     name = Column("ProjectName",String(512), unique=True)
     fullname = Column("ProjectFullName",String(512), unique=True)
@@ -43,8 +44,8 @@ class Project(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
     def to_dict(self):
         
         data = {'id': str(self.id),'no':self.no,'name': self.name,'fullname':self.fullname,'desc':self.desc}
@@ -69,8 +70,8 @@ class Task(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
         
@@ -80,6 +81,23 @@ class Task(db.Model,BaseModel):
     @staticmethod
     def select():
         return db.session.query(Task).filter(Task.status==0)
+
+    @staticmethod
+    def tree(projid):
+        result=[]
+        tasks=db.session.query(Task).filter(Task.projid==projid)
+        for item in tasks:
+            obj={'id': str(item.id),'type':'T','no':item.no,'name': item.name,'desc':item.desc,'pid':str(item.pid),'isendnode':item.isendnode}
+            if item.pid ==None or str(item.pid)==UUID_DEF:
+                obj['pid']=0
+            result.append(obj)
+        
+        acts=db.session.query(Activity).filter(Activity.projid==projid)
+        for item in acts:
+            obj={'id': str(item.id),'type':'A','no':item.no,'name': item.name,'desc':item.desc,'pid':str(item.taskid),'hasdeliverables':item.hasdeliverables}
+            result.append(obj)
+        return result
+
 
 class Activity(db.Model,BaseModel):
     __tablename__ = 'PM_Activities'
@@ -97,11 +115,11 @@ class Activity(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
-        data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc,'pid':self.pid,'memo':self.memo,'phaseid':self.phaseid,'hasdeliverables':self.hasdeliverables}
+        data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc,'memo':self.memo,'phaseid':self.phaseid,'hasdeliverables':self.hasdeliverables}
         return data
 
     @staticmethod
@@ -123,8 +141,31 @@ class Deliverable(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
+   
+    def to_dict(self):
+        
+        data = {'id': str(self.id),'name': self.name,'desc':self.desc}
+        return data
+    @staticmethod
+    def gen_id():
+        return generate_uuid()
+
+    @staticmethod
+    def select():
+        return db.session.query(Deliverable).filter(Deliverable.status==0)
+
+class ActivityDeliverable(db.Model,BaseModel):
+    __tablename__ = 'PM_R_Activities_Deliverables'
+    id = Column("R_Activities_DeliverableID",pg.UUID(as_uuid=True), primary_key=True, default=generate_uuid)
+    projid=Column("ProjectID",pg.UUID(as_uuid=True))
+    actid=Column("ActivityID",pg.UUID(as_uuid=True))
+    deliid=Column("DeliverableID",pg.UUID(as_uuid=True))
+    createddate = Column("CreatedDate",DateTime)
+    createdbyuserid = Column("CreatedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
         
@@ -133,7 +174,7 @@ class Deliverable(db.Model,BaseModel):
 
     @staticmethod
     def select():
-        return db.session.query(Deliverable).filter(Deliverable.status==0)
+        return db.session.query(ActivityDeliverable)
 
 class TeamMember(db.Model,BaseModel):
     __tablename__ = 'PM_TeamMembers'
@@ -147,8 +188,8 @@ class TeamMember(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
         
@@ -173,8 +214,8 @@ class DocCat(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
         
@@ -205,8 +246,8 @@ class Doc(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
         
@@ -228,8 +269,8 @@ class Phase(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
         data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc}
@@ -250,8 +291,8 @@ class ActivityCode(db.Model,BaseModel):
     status = Column("RecordStatus",SmallInteger)
     createddate = Column("CreatedDate",DateTime)
     createdbyuserid = Column("CreatedByUserID",Integer)
-    lasteddate = Column("LastedDate",DateTime)
-    lastedbyuserid = Column("LastedByUserID",Integer)
+    lasteddate = Column("LastUpdated",DateTime)
+    lastedbyuserid = Column("LastUpdatedByUserID",Integer)
    
     def to_dict(self):
         data = {'id': str(self.id),'no':self.no,'name': self.name,'desc':self.desc}

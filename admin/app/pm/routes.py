@@ -50,6 +50,10 @@ def project_edit():
     if obj==None:
         obj = Project(id=UUID_DEF)
     form=ProjectForm(obj=obj)
+    form.projtypeid.choices = [('','--select--')]
+    list=[(str(g.id), g.name) for g in ProjectType.query.all()]
+    if list != None and len(list)>0:
+        form.projtypeid.choices=form.projtypeid.choices+list
     return render_template(
             'projectedit.html',
             form=form,
@@ -72,6 +76,10 @@ def project_view():
 @login_required
 def project_save():
     form = ProjectForm(**request.form)
+    form.projtypeid.choices = [('','--select--')]
+    list=[(str(g.id), g.name) for g in ProjectType.query.all()]
+    if list != None and len(list)>0:
+        form.projtypeid.choices=form.projtypeid.choices+list
     result='OK'
     valid=True
     msg=''

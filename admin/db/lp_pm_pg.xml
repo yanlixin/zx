@@ -45,7 +45,7 @@
 		<type label="Inet CIDR Addr" length="0" sql="CIDR" quote="'"/>
 		<type label="Geometry" length="0" sql="GEOMETRY" quote="'"/>
 	</group>
-</datatypes><table x="652" y="468" name="PM_Projects">
+</datatypes><table x="755" y="467" name="PM_Projects">
 <row name="ProjectID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -101,10 +101,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -173,10 +173,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -210,10 +210,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <row name="Desc" null="1" autoincrement="0">
@@ -223,13 +223,17 @@
 <part>TeamMemberID</part>
 </key>
 </table>
-<table x="1012" y="417" name="PM_Deliverables">
+<table x="1104" y="670" name="PM_Deliverables">
 <row name="DeliverableID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
 <row name="ProjectID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 <relation table="PM_Projects" row="ProjectID" />
+</row>
+<row name="DeliverableTypeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_DeliverableTypes" row="DeliverableTypeID" />
 </row>
 <row name="DeliverableNo" null="1" autoincrement="0">
 <datatype>VARCHAR(64)</datatype>
@@ -279,17 +283,17 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>DeliverableID</part>
 </key>
 </table>
-<table x="930" y="1252" name="PM_Docs">
+<table x="1147" y="1237" name="PM_Docs">
 <row name="DocID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -346,10 +350,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -370,7 +374,7 @@
 </row>
 <row name="ActivityCodeID" null="1" autoincrement="0">
 <datatype>UUID</datatype>
-<relation table="PM_ActivityCodes" row="ActivityCodeID" />
+<default>NULL</default><relation table="PM_ActivityCodes" row="ActivityCodeID" />
 </row>
 <row name="PhaseID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
@@ -424,10 +428,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -457,10 +461,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -490,17 +494,17 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>ActivityTeamMemberID</part>
 </key>
 </table>
-<table x="1400" y="408" name="PM_DevliverableTeamMembers">
+<table x="1635" y="611" name="PM_DevliverableTeamMembers">
 <row name="DevliverableTeamMemberID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -520,10 +524,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -553,10 +557,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -613,17 +617,17 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>RoleID</part>
 </key>
 </table>
-<table x="923" y="892" name="PM_DocCategories">
+<table x="1646" y="992" name="PM_DocCategories">
 <row name="DocCatID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -658,17 +662,17 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>DocCatID</part>
 </key>
 </table>
-<table x="96.5" y="565" name="PM_ActivityCodes">
+<table x="96" y="565" name="PM_ActivityCodes">
 <row name="ActivityCodeID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -694,17 +698,17 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>ActivityCodeID</part>
 </key>
 </table>
-<table x="44.5" y="1002" name="PM_Phases">
+<table x="44" y="1002" name="PM_Phases">
 <row name="PhaseID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -727,10 +731,10 @@
 <row name="CreatedByUserID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="LastedDate" null="1" autoincrement="0">
+<row name="LastUpdated" null="1" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 <default>NULL</default></row>
-<row name="LastedByUserID" null="1" autoincrement="0">
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="RecordStatus" null="1" autoincrement="0">
@@ -740,7 +744,7 @@
 <part>PhaseID</part>
 </key>
 </table>
-<table x="361.5" y="552.5" name="PM_ProjectTypes">
+<table x="361" y="552" name="PM_ProjectTypes">
 <row name="ProjectTypeID" null="0" autoincrement="0">
 <datatype>UUID</datatype>
 </row>
@@ -761,6 +765,97 @@
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>ProjectTypeID</part>
+</key>
+</table>
+<table x="765" y="1071" name="PM_R_Activities_Deliverables">
+<row name="R_Activities_DeliverableID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="ProjectID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_Projects" row="ProjectID" />
+</row>
+<row name="ActivityID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_Activities" row="ActivityID" />
+</row>
+<row name="DeliverableID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+<relation table="PM_Deliverables" row="DeliverableID" />
+</row>
+<row name="IsModifiable" null="1" autoincrement="0">
+<datatype>BOOLEAN</datatype>
+<default>NULL</default></row>
+<row name="ActualStartDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="ActualEndDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="ActualDuration" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Weight" null="1" autoincrement="0">
+<datatype>DECIMAL(6,4)</datatype>
+<default>NULL</default></row>
+<row name="ProgressPercentage" null="1" autoincrement="0">
+<datatype>DECIMAL(6,4)</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="LastUpdated" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>R_Activities_DeliverableID</part>
+</key>
+</table>
+<table x="1200.25" y="407.5" name="PM_DeliverableTypes">
+<row name="DeliverableTypeID" null="0" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="ProjectID" null="1" autoincrement="0">
+<datatype>UUID</datatype>
+</row>
+<row name="DeliverableCode" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>NULL</default></row>
+<row name="DeliverableSize" null="1" autoincrement="0">
+<datatype>VARCHAR(64)</datatype>
+<default>NULL</default></row>
+<row name="DeliverableTypeName" null="1" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>NULL</default></row>
+<row name="DeliverableTypeDesc" null="1" autoincrement="0">
+<datatype>VARCHAR(256)</datatype>
+<default>NULL</default></row>
+<row name="ExtraData" null="1" autoincrement="0">
+<datatype>JSONB</datatype>
+<default>NULL</default></row>
+<row name="RecordStatus" null="1" autoincrement="0">
+<datatype>SMALLINT</datatype>
+<default>NULL</default></row>
+<row name="CreatedDate" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="CreatedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<row name="LastUpdated" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="LastUpdatedByUserID" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>DeliverableTypeID</part>
 </key>
 </table>
 </sql>

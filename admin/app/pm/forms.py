@@ -5,6 +5,7 @@ import uuid
 
 class ProjectForm(FlaskForm):
     id = HiddenField('Id', id='txt_id')
+    projtypeid = SelectField('ProjectTypeID' ,id='txt_projtypeid', coerce=str,validators=[DataRequired(message='项目类型不能为空')])
     no = TextField('No', id='txt_no' ,validators=[DataRequired(message='编号不能为空')])
     name = TextField('Name', id='txt_name' ,validators=[DataRequired(message='名称不能为空')])
     fullname = TextField('FullName', id='txt_fullname' ,validators=[DataRequired(message='全称不能为空')])
@@ -33,6 +34,16 @@ class ActivityForm(FlaskForm):
     memo = TextAreaField('Memo', id='txt_memo' )
     hasdeliverables = BooleanField('HasDeliverables', id='txt_hasdeliverables')
     #isendnode = SelectField('IsEndNode', id='txt_isendnode',choices=[('False', '否'),('True', '是'), ])
+
+class DeliverableForm(FlaskForm):
+    id = HiddenField('Id', id='txt_id')
+    projid = HiddenField('ProjectId', id='txt_projid')
+    actid = HiddenField('ActivityID' ,id='txt_actid')
+    #deliid = HiddenField('DeliverableID' ,id='txt_deliid')
+    no = TextField('DeliverableNo', id='txt_no' ,validators=[DataRequired(message='编号不能为空')])
+    name = TextField('DeliverableName', id='txt_name' ,validators=[DataRequired(message='名称不能为空')])
+    desc = TextAreaField('DeliverableDesc', id='txt_desc' )
+    memo = TextAreaField('Memo', id='txt_memo' )
 
 class DocForm(FlaskForm):
     id = HiddenField('Id', id='txt_id')
