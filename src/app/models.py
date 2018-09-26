@@ -4,6 +4,20 @@ import json
 import random
 from datetime import datetime,timedelta
 
+tasks = [
+    {
+        'id': 1,
+        'title': u'Buy groceries',
+        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
+        'done': False
+    },
+    {
+        'id': 2,
+        'title': u'Learn Python',
+        'description': u'Need to find a good Python tutorial on the web',
+        'done': False
+    }
+]
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     loginname = db.Column(db.String(64), index = True, unique = True)
@@ -194,8 +208,8 @@ class District(db.Model):
     name = db.Column("districtname",db.String(120), unique=True)
     sortindex = db.Column("sortindex",db.Integer)
     def to_dict(self):
-        schoollist=School.query.filter_by(districtid=self.id)
-        hotlist=School.query.filter_by(districtid=self.id).filter_by(ishot=1)
+        schoollist=None #[item.to_dict() for item in School.query.filter_by(districtid=self.id).all()]
+        hotlist=None #[item.to_dict() for item in School.query.filter_by(districtid=self.id).filter_by(ishot=1).all()]
         data = {'id': self.id,'name': self.name,'text':self.name,'cityid':self.cityid,'schoollist':schoollist,'hotlist':hotlist}
         return data
 
@@ -210,6 +224,10 @@ class Grade(db.Model):
         schools=[item.to_dict() for item in School.query.filter_by(gradeid=self.id).limit(6)]
         data = {'id': self.id,'name': self.name,'text':self.name,'schools':schools}
         return data
+    def to_mini_dict(self):
+        
+        data = {'id': self.id,'name': self.name,'text':self.name}
+        return data
 
 class Category(db.Model):
     __tablename__ = 'Categories'
@@ -223,6 +241,10 @@ class Category(db.Model):
         data = {'id': self.id,'name': self.name,'text':self.name,'schools':schools}
         return data
 
+    def to_mini_dict(self):
+        data = {'id': self.id,'name': self.name,'text':self.name}
+        return data
+        
 class SmsCode(db.Model):
     __tablename__ = 'SmsCode'
 
