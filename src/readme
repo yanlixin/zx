@@ -6,3 +6,57 @@ pip3 install wtforms
 pip3 install flask_sqlalchemy
 pip3 install uwsgi
 pip3 install sqlalchemy-migrate
+pip3 install flask_restful
+pip3 install flask-cors
+
+列表数据请求方式
+Get
+公共参数
+pageindex:当前页数(选填,默认读取第一页)
+pagesize:每页记录数(选填,默认每页读取10条)
+
+省份
+http://39.105.3.57/api/v1.0/provs?pageindex=1&pagesize=10
+
+城市
+http://39.105.3.57/api/v1.0/cities?provid=1&pageindex=1&pagesize=10
+
+provid:省份标识
+区/县
+http://39.105.3.57/api/v1.0/dists?cityid=1&pageindex=1&pagesize=10
+cityid:市标识
+
+学校等级
+http://39.105.3.57/api/v1.0/grades?pageindex=1&pagesize=10
+
+学校类别
+http://39.105.3.57/api/v1.0/cats?pageindex=1&pagesize=10
+
+学校信息列表
+http://39.105.3.57/api/v1.0/schools?gradeid=1&catid=1&distid=1&pageindex=1&pagesize=10
+
+gradeid:等级标识(选填,默认读取所有数据)
+catid:类别标识(选填,默认读取所有数据)
+distid:地区[省-城市-区/县](选填,默认读取所有数据)
+
+学校信息
+http://39.105.3.57/api/v1.0/school?id=10
+id:学校标识(必填)
+
+返回值
+{ 
+  "msg": "", //错误原因 
+  "code": 200 //业务码,
+  "data": {
+    "page_number": 1,
+    "page_size": 2,
+    "total_page": 10,
+    "total_row": 100,
+    "list": [{
+      "id": 45678,
+    }]
+  }
+
+code:
+200:正常
+201:数据不存在

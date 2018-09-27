@@ -4,11 +4,13 @@ from flask import Flask, jsonify,abort,make_response,request,url_for
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Resource, Api,reqparse
+from flask_cors import *
 
 base_path = '/Users/YanLixin/Documents/docker/zhexiao/admin/app' #0ee6b980-a140-11e8-a6eb-720005b306c0.jpg
 #os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 app.config.from_object('config')
+CORS(app, supports_credentials=True)
 db = SQLAlchemy(app)
 lm = LoginManager(app)
 lm.init_app(app)

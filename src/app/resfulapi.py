@@ -9,10 +9,10 @@ from app.models import tasks,School,Province,City,District,Grade,Category
 class SchoolAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('id', type = int,default = -1, location='args')
+        self.reqparse.add_argument('id', type = int,default = -1, location='json')
         super(SchoolAPI, self).__init__()
-    def get(self):
-        args=self.reqparse.parse_args()
+    def post(self):
+        args=self.reqparse.parse_args(strict=True)
         id = args['id']
         school=School.query.get(id)
         if school == None:
@@ -25,15 +25,15 @@ class SchoolAPI(Resource):
 class SchoolListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('gradeid', type = int,default = -1, location='args')
-        self.reqparse.add_argument('catid', type = int, default = -1, location='args')
-        self.reqparse.add_argument('distid', type = int, default = -1, location='args')
-        self.reqparse.add_argument('pageindex', type = int, default = 1, location='args')
-        self.reqparse.add_argument('pagesize', type = int, default = 10, location='args')
+        self.reqparse.add_argument('gradeid', type = int,default = -1, location='json')
+        self.reqparse.add_argument('catid', type = int, default = -1, location='json')
+        self.reqparse.add_argument('distid', type = int, default = -1, location='json')
+        self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
+        self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
         super(SchoolListAPI, self).__init__()
 
-    def get(self):
-        args=self.reqparse.parse_args()
+    def post(self):
+        args=self.reqparse.parse_args(strict=True)
         
         gradeid = args['gradeid']
         catid = args['catid']
@@ -54,11 +54,11 @@ class SchoolListAPI(Resource):
 class ProvinceListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('pageindex', type = int, default = 1, location='args')
-        self.reqparse.add_argument('pagesize', type = int, default = 10, location='args')
+        self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
+        self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
         super(ProvinceListAPI, self).__init__()
 
-    def get(self):
+    def post(self):
         args=self.reqparse.parse_args()
         
         
@@ -75,12 +75,12 @@ class ProvinceListAPI(Resource):
 class CityListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('provid', type = int,default = -1, location='args')
-        self.reqparse.add_argument('pageindex', type = int, default = 1, location='args')
-        self.reqparse.add_argument('pagesize', type = int, default = 10, location='args')
+        self.reqparse.add_argument('provid', type = int,default = -1, location='json')
+        self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
+        self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
         super(CityListAPI, self).__init__()
 
-    def get(self):
+    def post(self):
         args=self.reqparse.parse_args()
         
         provId = args['provid']
@@ -97,12 +97,12 @@ class CityListAPI(Resource):
 class DistrictListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('cityid', type = int,default = -1, location='args')
-        self.reqparse.add_argument('pageindex', type = int, default = 1, location='args')
-        self.reqparse.add_argument('pagesize', type = int, default = 10, location='args')
+        self.reqparse.add_argument('cityid', type = int,default = -1, location='json')
+        self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
+        self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
         super(DistrictListAPI, self).__init__()
 
-    def get(self):
+    def post(self):
         args=self.reqparse.parse_args()
         
         cityId = args['cityid']
@@ -118,11 +118,11 @@ class DistrictListAPI(Resource):
 class GradeListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('pageindex', type = int, default = 1, location='args')
-        self.reqparse.add_argument('pagesize', type = int, default = 10, location='args')
+        self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
+        self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
         super(GradeListAPI, self).__init__()
 
-    def get(self):
+    def post(self):
         args=self.reqparse.parse_args()
         
         pageIndex = args['pageindex']
@@ -138,11 +138,11 @@ class GradeListAPI(Resource):
 class CategoryListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('pageindex', type = int, default = 1, location='args')
-        self.reqparse.add_argument('pagesize', type = int, default = 10, location='args')
+        self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
+        self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
         super(CategoryListAPI, self).__init__()
 
-    def get(self):
+    def post(self):
         args=self.reqparse.parse_args()
         
         pageIndex = args['pageindex']
