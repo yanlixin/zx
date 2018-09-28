@@ -4,7 +4,7 @@ from flask_restful import Resource, Api,reqparse
 from sqlalchemy import func,or_
 from app.models import User
 #api = Api(app)
-from app import auth
+from app import db,auth
 @auth.verify_password
 def verify_password(username_or_token, password):
     # first try to authenticate by token
