@@ -10,11 +10,34 @@ pip3 install flask_restful
 pip3 install flask-cors
 pip3 install Flask-HTTPAuth
 
+注册
+http://39.105.3.57/api/v1.0/reg
+  参数
+  {
+    "loginname":"test",--登录名称(手机号码)
+    "password":"111",--密码
+    "smscode":"000000"--短信验证码	
+  }
+  返回
+  {"code":200,"data":{"username":"test"},"msg":"OK"}
+
+登录
+http://39.105.3.57/api/v1.0/login
+  参数
+  {
+    "loginname":"test",--登录名称(手机号码)
+    "password":"111",--密码
+  }
+  返回
+  {"code":200,"data":{"token":"eyJhbGciOiJIUzI1NiIsImlhdCI6MTUzODE0NzU5OSwiZXhwIjoxNTM4MTQ4MTk5fQ.eyJpZCI6N30.z2DnyqVmwwdcL-Lb-V42eR_FhnfuUvJssc3e7g1Zin0"},"msg":""}
 列表数据请求方式
 Get
 公共参数
 pageindex:当前页数(选填,默认读取第一页)
 pagesize:每页记录数(选填,默认每页读取10条)
+
+商品类别
+http://39.105.3.57/api/v1.0/shop/cats
 
 省份
 http://39.105.3.57/api/v1.0/provs?pageindex=1&pagesize=10
