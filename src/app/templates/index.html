@@ -20,6 +20,21 @@
         {% endfor %}
 </div>
 <script>
-    $.get("http://39.105.3.57/api/v1.0/school?id=10");
+    userToken='eyJhbGciOiJIUzI1NiIsImlhdCI6MTUzODEyNjc4MiwiZXhwIjoxNTM4MTI3MzgyfQ.eyJpZCI6N30.oSZ2MS08g3qQA1dt_8114ICeQ3tDO5GP0X0oIK3xVxw';
+    $.ajax({
+    type: "get",
+    url: "/api/v1.0/tasks",
+    contentType: "application/json",
+    dataType: "json",
+    //processData: false,
+    beforeSend: function(request) {                
+        request.setRequestHeader("Authorization",  userToken);
+    },
+    success:function(data){
+                    console.log(data);
+    },error:function(data){
+                    console.log(data);
+    }
+});
 </script>
 {% endblock %}

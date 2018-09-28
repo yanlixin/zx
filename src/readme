@@ -8,6 +8,7 @@ pip3 install uwsgi
 pip3 install sqlalchemy-migrate
 pip3 install flask_restful
 pip3 install flask-cors
+pip3 install Flask-HTTPAuth
 
 列表数据请求方式
 Get

@@ -1,8 +1,43 @@
-from app import db
+from app import app,db
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import random
 from datetime import datetime,timedelta
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import SignatureExpired,BadSignature
+
+goods_cats = [
+    {
+       'id': 1,
+       'name': u'舞台剧',
+       'text': u'舞台剧'
+    },
+    {
+        'id': 2,
+        'name': u'音乐剧',
+        'text': u'音乐剧'  
+    },
+    {
+        'id': 3,
+        'name': u'音乐会',
+        'text': u'音乐会'  
+    },
+    {
+        'id': 4,
+        'name': u'话剧',
+        'text': u'话剧'  
+    },
+    {
+        'id': 5,
+        'name': u'展览',
+        'text': u'展览'  
+    },
+    {
+        'id': 6,
+        'name': u'芭蕾舞剧',
+        'text': u'芭蕾舞剧'  
+    }
+]
 
 tasks = [
     {
@@ -46,8 +81,25 @@ class User(db.Model):
     def check_password(self, password):
         return True #check_password_hash(self.password_hash, password)
     def set_password(self, password):
-            self.password_hash = generate_password_hash(password)
-    
+        self.password_hash = generate_password_hash(password)
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        print(token)
+        print(s)
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None # valid token, but expired
+        except BadSignature:
+            return None # invalid token
+        user = User.query.get(data['id'])
+        return user       
+
+    def generate_auth_token(self, expiration = 600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'id': self.id })
 
     def get_id(self):
         try:
@@ -157,7 +209,7 @@ class School(db.Model):
             'provid':self.provid,
             'provname':self.provname,
             'cityid':self.cityid,
-            'cityname':self.catname,
+            'cityname':self.cityname,
             'districtid':self.districtid,
             "districtname":self.districtname,
             'founded': self.founded,
@@ -170,8 +222,9 @@ class School(db.Model):
             'cramclass': self.cramclass,
             'sortindex' :self.sortindex,
             'img': self.img,
+            'img_url':'/img/school?id='+str(self.id),
             'thumb': self.thumb,
-            'thumb_url':str(self.thumb)+'__',
+            'thumb_url':'/thumb/school?id='+str(self.id),
             'isbest': self.isbest,
             'isnew':self.isnew,
             'ishot':self.ishot,
@@ -244,7 +297,7 @@ class Category(db.Model):
     def to_mini_dict(self):
         data = {'id': self.id,'name': self.name,'text':self.name}
         return data
-        
+
 class SmsCode(db.Model):
     __tablename__ = 'SmsCode'
 
