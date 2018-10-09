@@ -57,7 +57,13 @@ CREATE TABLE 'Schools' (
 'ishot' INTEGER DEFAULT NULL,
 'istopshow' INTEGER DEFAULT NULL,
 'gradeid' INTEGER DEFAULT NULL,
-'gradename' TEXT DEFAULT NULL
+'gradename' TEXT DEFAULT NULL,
+'cbdid' INTEGER DEFAULT NULL,
+'cbdname' TEXT DEFAULT NULL,
+'lon' TEXT DEFAULT NULL,
+'lag' TEXT DEFAULT NULL,
+'shcoolpid' INTEGER DEFAULT NULL,
+'isbilingual' INTEGER DEFAULT NULL
 );
 
 CREATE TABLE 'Users' (
@@ -73,13 +79,17 @@ CREATE TABLE 'Users' (
 'lasteupdatedbymanagerid' INTEGER DEFAULT NULL
 );
 
-CREATE TABLE 'Mangers' (
+CREATE TABLE 'Managers' (
 'managerid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'managername' TEXT(63) DEFAULT NULL,
 'loginname' TEXT(64) DEFAULT NULL,
 'loginpwd' TEXT(512) DEFAULT NULL,
+'salt' TEXT DEFAULT NULL,
 'mobile' TEXT(32) DEFAULT NULL,
 'email' TEXT(64) DEFAULT NULL,
+'desc' TEXT DEFAULT NULL,
+'remark' TEXT DEFAULT NULL,
+'ismaster' INTEGER DEFAULT NULL,
 'recordstatus' INTEGER DEFAULT NULL,
 'createdbydate' TEXT DEFAULT NULL,
 'createdbymanagerid' INTEGER DEFAULT NULL,
@@ -118,10 +128,8 @@ CREATE TABLE 'schoolgalleries' (
 'sortindex' INTEGER DEFAULT NULL,
 'recordstatus' INTEGER DEFAULT NULL,
 'createddate' TEXT DEFAULT NULL,
-'createdbymanagerid' INTEGER DEFAULT NULL,
-'schoolid' INTEGER DEFAULT NULL
+'createdbymanagerid' INTEGER DEFAULT NULL
 );
-
 
 CREATE TABLE 'SmsCode' (
 'smscodeid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
@@ -130,4 +138,65 @@ CREATE TABLE 'SmsCode' (
 'verifycode' TEXT DEFAULT NULL,
 'hasverified' TEXT DEFAULT NULL,
 'createdbydatetime' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'Roles' (
+'roleid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'rolename' TEXT DEFAULT NULL,
+'roledesc' TEXT DEFAULT NULL,
+'IsSys' TEXT DEFAULT NULL,
+'sortindex' INTEGER DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL,
+'lastupdatedbydate' TEXT DEFAULT NULL,
+'lastupdatedbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'R_Users_Roles' (
+'ruserroleid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'managerid' INTEGER DEFAULT NULL REFERENCES 'Managers' ('managerid'),
+'roleid' INTEGER DEFAULT NULL REFERENCES 'Roles' ('roleid'),
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' TEXT DEFAULT NULL,
+'recordstatus' INTEGER DEFAULT NULL,
+'lastupdatedbydate' TEXT DEFAULT NULL,
+'lastupdatedbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'Permissions' (
+'permid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'permuuid' TEXT DEFAULT NULL,
+'permname' TEXT DEFAULT NULL,
+'permdesc' TEXT DEFAULT NULL,
+'permgroup' TEXT DEFAULT NULL,
+'IsSys' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL,
+'createdbydate' TEXT DEFAULT NULL
+);
+
+CREATE TABLE 'R_Permissions_Roles' (
+'rpermroleid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'roleid' INTEGER DEFAULT NULL REFERENCES 'Roles' ('roleid'),
+'permid' INTEGER DEFAULT NULL REFERENCES 'Permissions' ('permid'),
+'createdbydate' TEXT DEFAULT NULL,
+'createdbymanagerid' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'new table' (
+'id' TEXT DEFAULT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE 'CBDs' (
+'cbdid' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
+'cbdname' TEXT DEFAULT NULL,
+'cbddesc' TEXT DEFAULT NULL,
+'lon' TEXT DEFAULT NULL,
+'lag' TEXT DEFAULT NULL,
+'districtid' INTEGER DEFAULT NULL REFERENCES 'Districts' ('districtid'),
+'sortindex' INTEGER DEFAULT NULL
+);
+
+CREATE TABLE 'new table' (
+'id' TEXT DEFAULT NULL PRIMARY KEY AUTOINCREMENT
 );

@@ -175,7 +175,12 @@ class School(db.Model):
     isnew = db.Column("isnew",db.Integer)
     ishot = db.Column("ishot",db.Integer)
     istopshow = db.Column("istopshow",db.Integer)
-
+    lon = db.Column("lon",db.String(64))
+    lag = db.Column("lag",db.String(64))
+    cbdname = db.Column("cbdname",db.String(126))
+    cbdid = db.Column("cbdid",db.Integer)
+    shcoolpid = db.Column("shcoolpid",db.Integer)
+    isbilingual = db.Column("isbilingual",db.Integer)
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
             # depending on whether value is an iterable or not, we must
@@ -229,6 +234,12 @@ class School(db.Model):
             'isnew':self.isnew,
             'ishot':self.ishot,
             'istopshow':self.istopshow,
+            'lon':self.lon,
+            "lag":self.lag,
+            "cbdname":self.cbdname,
+            "cbdid":self.cbdid,
+            "shcoolpid":self.shcoolpid,
+            "isbilingual":self.isbilingual
             }
         return data
 

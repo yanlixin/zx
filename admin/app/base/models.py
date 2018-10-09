@@ -69,6 +69,19 @@ class District(db.Model):
         data = {'id': self.id,'name': self.name,'text':self.name,'cityid':self.cityid}
         return data
 
+
+class CBD(db.Model):
+    __tablename__ = 'CBDs'
+
+    id = Column("cbdid",Integer, primary_key=True)
+    districtid = Column("districtid",Integer)
+    name = Column("cbdname",String(120), unique=True)
+    desc = Column("cbddesc",String(256), unique=True)
+    sortindex = Column("sortindex",Integer)
+    def to_dict(self):
+        data = {'id': self.id,'name': self.name,'text':self.name,'desc':self.desc,'districtid':self.districtid}
+        return data
+
 class Grade(db.Model):
     __tablename__ = 'Grades'
 
@@ -130,6 +143,13 @@ class School(db.Model):
     ishot = Column("ishot",Integer)
     istopshow = Column("istopshow",Integer)
 
+    lon = Column("lon",String(64))
+    lag = Column("lag",String(64))
+    cbdname = Column("cbdname",String(126))
+    cbdid = Column("cbdid",Integer)
+    shcoolpid = Column("shcoolpid",Integer)
+    isbilingual = Column("isbilingual",Integer)
+
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
             # depending on whether value is an iterable or not, we must
@@ -179,7 +199,14 @@ class School(db.Model):
             'isnew':self.isnew,
             'ishot':self.ishot,
             'istopshow':self.istopshow,
+            'lon':self.lon,
+            "lag":self.lag,
+            "cbdname":self.cbdname,
+            "cbdid":self.cbdid,
+            "shcoolpid":self.shcoolpid,
+            "isbilingual":self.isbilingual
             }
+                
         return data
 
 class SchoolGallery(db.Model):

@@ -2,7 +2,7 @@ from app.zx import blueprint
 from flask import render_template,request,make_response
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,Grade,Category,School,SchoolGallery,Province,City
+from app.base.models import User,District,CBD,Grade,Category,School,SchoolGallery,Province,City
 from app import db,uploaded_photos,base_path
 import logging
 import json
@@ -36,6 +36,19 @@ def manager_jsondata():
 @login_required
 def district_jsondata():
     table = DataTable(request.args, District, District.query, [
+        "id",
+        "name",
+        "sortindex"
+    ])
+    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
+    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+
+    return json.dumps(table.json())
+
+@blueprint.route('/cbd/jsondata', methods=['GET', 'POST'])
+@login_required
+def cbd_jsondata():
+    table = DataTable(request.args, CBD, CBD.query, [
         "id",
         "name",
         "sortindex"
@@ -105,9 +118,11 @@ def school_create():
 def school_edit():
     id = request.args.get('id', -1, type=int)
     school = School.query.get(id)
+    print(school.isbilingual)
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
     districts=[item.to_dict() for item in District.query.all()]
+    cbds=[item.to_dict() for item in CBD.query.all()]
     grades=[item.to_dict() for item in Grade.query.all()]
     cats=[item.to_dict() for item in Category.query.all()]
     return render_template(
@@ -117,7 +132,8 @@ def school_edit():
             gradeList=json.dumps(grades),
             provList=json.dumps(provs),
             cityList=json.dumps(cities),
-            districtList=json.dumps(districts)
+            districtList=json.dumps(districts),
+            cbdList=json.dumps(cbds)
         )
 
 @blueprint.route('/school/delete', methods=['POST'])

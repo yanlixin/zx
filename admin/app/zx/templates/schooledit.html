@@ -17,10 +17,11 @@
             <div class="col-sm-2">
                 <select id="catid" name="catid" class="form-control" data-placeholder="请选择类别"></select>
             </div>
-            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>级别</label>
+            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>双语</label>
     
             <div class="col-sm-2">
-                <select id="gradeid" name="gradeid" class="form-control" data-placeholder="请选择级别"></select>
+                <input type="checkbox" value="1" name="isbilingual" id="isbilingual" {{('checked' if (school.isbilingual==1) else '') }} >
+                <label for="txt-operater-manager">打勾表示双语教学</label>
             </div>
         </div>
         <div class="hr-line-dashed-10"></div>
@@ -47,7 +48,10 @@
             <div class="col-sm-2">
                 <select id="districtid" name="districtid" class="form-control" data-placeholder="点击选择地区"></select>   
             </div>
-        
+            <div class="col-sm-2">
+                <select id="cbdid" name="cbdid" class="form-control" data-placeholder="点击选择商圈"></select>   
+            </div>
+            
     
         </div>
         <div class="hr-line-dashed-10"></div>
@@ -176,18 +180,18 @@
     <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script>
     $(document).ready(function () {
-        var gradeList={{gradeList|safe}};
+        
         var catList={{catList|safe}};
         var provList={{provList|safe}};
         var cityList={{cityList|safe}};
         var districtList={{districtList|safe}};
+        var cbdList={{cbdList|safe}};
         var districtid=parseInt("{{school.districtid}}");
+        var cbdid=parseInt("{{school.cbdid}}");
         var cityid=0;
         var provid=0;
         catList.unshift({"id":0,"text":"select"});
         $("#catid").select2({"data": catList}).val({{school.catid or 0}}).trigger("change");;
-        gradeList.unshift({"id":0,"text":"select"});
-        $("#gradeid").select2({"data": gradeList}).val({{school.gradeid or 0}}).trigger("change");;
        
         provList.unshift({"id":0,"text":"select","provid":-1})
         $("#provid").select2({"data": provList}).val({{school.provid or 0}}).trigger("change");
@@ -199,6 +203,12 @@
             //"allowClear": true
         });
         $("#districtid").select2({
+            
+            "data": [{"id":0,"text":"select"}],
+            "selectedValue": '0',
+            //"allowClear": true
+        });
+        $("#cbdid").select2({
             
             "data": [{"id":0,"text":"select"}],
             "selectedValue": '0',
@@ -234,7 +244,21 @@
                 //"allowClear": true
             }).val({{school.districtid or 0}})
         });
-        
+        $('#districtid').on('select2:select', function (e) {
+            var data = e.params.data;
+            var id = e.params.data.id;
+            data=[];
+            $.each(cbdList,function(i,item){
+                if(item.districtid.toString()==id){
+                    data.push(item);
+                }
+            })
+            $("#cbdid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{school.cbdid or 0}})
+        });       
         var $win = getSubWinBody('school_create');
         var winEvents = $win.data("winEvents");
         var winButtons = $win.data("buttons");
@@ -247,8 +271,8 @@
                 id: $("#txt-id").val(),
                 catid: $("#catid").val(),
                 catname: $("#catid").select2('data')[0].text,
-                gradeid: $("#gradeid").val(),
-                gradename: $("#gradeid").select2('data')[0].text,
+                gradeid: 1,
+                gradename: "",
                 name: $("#txt-name").val(),
                 sortIndex: $("#txt-sort-index").val(),
                 desc: $("#txt-desc").val(),
@@ -272,6 +296,9 @@
                 cityname:$("#cityid").select2('data')[0].text,
                 districtid:$("#districtid").val(),
                 districtname:$("#districtid").select2('data')[0].text,
+                cbdid:$("#cbdid").val(),
+                cbdname:$("#cbdid").select2('data')[0].text,
+                isbilingual:$("input[name='isbilingual']:checked").val()=="1"?"1":"0",
             };
             var url = '/zx/school/create';
             l.ladda('start');
