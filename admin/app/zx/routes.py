@@ -11,7 +11,7 @@ import uuid
 import os
 from PIL import Image
 
-from .forms import SchoolForm
+from .forms import SchoolForm,CatForm,CBDForm
 @blueprint.route('/<template>')
 @login_required
 def route_template(template):
@@ -51,6 +51,7 @@ def cbd_jsondata():
     table = DataTable(request.args, CBD, CBD.query, [
         "id",
         "name",
+        "desc",
         "sortindex"
     ])
     #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
@@ -266,3 +267,102 @@ def flask_upload():
                 return json.dumps({'code': -1, 'filename': '', 'msg': 'Error occurred'})
     else:
         return json.dumps({'code': -1, 'filename': '', 'msg': 'Method not allowed'})
+
+
+@blueprint.route('/category/edit', methods=['GET'])
+@login_required
+def cat_edit():
+    id = request.args.get('id',-1)
+    obj = Category.query.get(id)
+    if obj==None:
+        obj = Category()
+
+    
+    form=CatForm(obj=obj)
+    return render_template(
+            'categoryedit.html',
+            form=form,
+        )
+
+@blueprint.route('/category/save', methods=['POST'])
+@login_required
+def cat_save():
+    form = CatForm(**request.form)
+    result='OK'
+    valid=True
+    msg=''
+    if not form.validate_on_submit():
+        return json.dumps({'valid':False,'result':result,'msg':form.errors })
+    else:
+        obj = Category()
+        form.populate_obj(obj)
+        if obj.id=='' or int(obj.id)<=0:
+            obj.id=None
+            db.session.add(obj)
+        else:
+            obj.id=obj.id
+            o=db.session.query(Category).filter_by(id=obj.id)
+            o.update(obj.to_data() )
+        db.session.commit()
+    return json.dumps({'valid':valid,'result':result,'msg':msg })
+
+@blueprint.route('/category/delete', methods=['POST'])
+@login_required
+def cat_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=Category.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+
+
+@blueprint.route('/cbd/edit', methods=['GET'])
+@login_required
+def cbd_edit():
+    id = request.args.get('id',-1)
+    obj = CBD.query.get(id)
+    if obj==None:
+        obj = CBD()
+
+    
+    form=CBDForm(obj=obj)
+    return render_template(
+            'cbdedit.html',
+            form=form,
+        )
+
+@blueprint.route('/cbd/save', methods=['POST'])
+@login_required
+def cbd_save():
+    form = CBDForm(**request.form)
+    result='OK'
+    valid=True
+    msg=''
+    if not form.validate_on_submit():
+        return json.dumps({'valid':False,'result':result,'msg':form.errors })
+    else:
+        obj = CBD()
+        form.populate_obj(obj)
+        if obj.id=='' or int(obj.id)<=0:
+            obj.id=None
+            db.session.add(obj)
+        else:
+            obj.id=obj.id
+            o=db.session.query(CBD).filter_by(id=obj.id)
+            o.update(obj.to_data() )
+        db.session.commit()
+    return json.dumps({'valid':valid,'result':result,'msg':msg })
+
+@blueprint.route('/cbd/delete', methods=['POST'])
+@login_required
+def cbd_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=CBD.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })

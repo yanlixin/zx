@@ -1,0 +1,78 @@
+
+<div class="form-horizontal" autocomplete="off" data-form-id="edit-category" id="edit-category">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red">*&nbsp;</span>名称</label>
+            <div class="col-sm-7">
+                {{ form.hidden_tag() }}
+                {{ form.name(class="form-control",placeholder="请输入名称") }}
+            </div>
+           
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注</label>
+    
+            <div class="col-sm-7">
+                {{ form.desc(class="form-control",placeholder="请输入备注") }}
+            </div>
+        </div>
+        
+        
+    </div>
+    <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.Common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/spin.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
+
+    <script>
+    $(document).ready(function () {
+        var $win = getSubWinBody('edit-category');
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
+
+        winButtons.save.click = function () {
+            $('.ladda-button-save').attr("data-style", "expand-left")
+            var l = $('.ladda-button-save').ladda();
+
+            var subData = {
+                id: $("#txt_id").val(),
+                name: $("#txt_name").val(),
+                desc: $("#txt_desc").val(),
+                csrf_token:$("#csrf_token").val(),
+            };
+            var url = '/zx/category/save';
+            l.ladda('start');
+            $.post(url, subData, function (rtn) {
+                var rtnDto = JSON.parse(rtn);
+                console.log(!rtnDto.valid);
+                if (!rtnDto.valid) {
+                    var msg = "";
+                    for (var i in rtnDto.msg) {
+                        msg = msg + rtnDto.msg[i] + ";";
+                    }
+                    ZTAlert({
+                        "title": "验证失败",
+                        "text": msg
+                    });
+                    l.ladda('stop');
+                } else if (rtnDto.result) {
+                    winEvents.SavedAndClose();
+                } else {
+                    ZTAlert({
+                        "title": "保存失败",
+                        "text": rtnDto.msg
+                    });
+                    l.ladda('stop');
+                }
+
+                //通知modal window Save状况
+                //return rtnValue;
+            }, "text");
+        }
+    });
+    </script>

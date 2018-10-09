@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import TextField, PasswordField
+from wtforms import TextField, PasswordField,HiddenField,TextAreaField,SelectField
 
 
 
@@ -20,3 +20,15 @@ class SchoolForm(FlaskForm):
     schoolbus = TextField('schoolbus', id='schoolbus')
     schoolbus = TextField('cramclass', id='cramclass')
     # 'districtid' INTEGER DEFAULT NULL,
+
+class CatForm(FlaskForm):
+    id = HiddenField('Id', id='txt_id')
+    name = TextField('Name', id='txt_name')
+    desc = TextAreaField('desc', id='txt_desc')
+    #pid = SelectField('TaskPId' ,id='txt_pid', coerce=str)
+
+class CBDForm(FlaskForm):
+    id = HiddenField('Id', id='txt_id')
+    name = TextField('Name', id='txt_name')
+    desc = TextAreaField('desc', id='txt_desc')
+    distid = SelectField('districtid' ,id='txt_distid', coerce=str)

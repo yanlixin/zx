@@ -104,6 +104,10 @@ class Category(db.Model):
         data = {'id': self.id,'name': self.name,'text':self.name}
         return data
 
+    def to_data(self):
+        data = {'id': self.id,'name': self.name,'desc':self.desc}
+        return data
+        
 class School(db.Model):
 
     __tablename__ = 'Schools'
