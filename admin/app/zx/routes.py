@@ -326,9 +326,13 @@ def cbd_edit():
     obj = CBD.query.get(id)
     if obj==None:
         obj = CBD()
+    form=CBDForm(obj=obj)
+    form.distid.choices = [(-1,'--select--')]
+    list=[(str(g.id), g.name) for g in District.query.order_by('sortindex')]
+    if list != None and len(list)>0:
+        form.distid.choices=form.distid.choices+list
 
     
-    form=CBDForm(obj=obj)
     return render_template(
             'cbdedit.html',
             form=form,
@@ -338,6 +342,10 @@ def cbd_edit():
 @login_required
 def cbd_save():
     form = CBDForm(**request.form)
+    form.distid.choices = [(-1,'--select--')]
+    list=[(str(g.id), g.name) for g in District.query.order_by('sortindex')]
+    if list != None and len(list)>0:
+        form.distid.choices=form.distid.choices+list
     result='OK'
     valid=True
     msg=''
@@ -351,6 +359,7 @@ def cbd_save():
             db.session.add(obj)
         else:
             obj.id=obj.id
+            print(obj.to_data() )
             o=db.session.query(CBD).filter_by(id=obj.id)
             o.update(obj.to_data() )
         db.session.commit()

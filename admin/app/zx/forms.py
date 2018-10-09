@@ -31,4 +31,4 @@ class CBDForm(FlaskForm):
     id = HiddenField('Id', id='txt_id')
     name = TextField('Name', id='txt_name')
     desc = TextAreaField('desc', id='txt_desc')
-    distid = SelectField('districtid' ,id='txt_distid', coerce=str)
+    distid = SelectField('distid' ,id='txt_distid', coerce=str)

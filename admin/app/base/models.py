@@ -74,13 +74,17 @@ class CBD(db.Model):
     __tablename__ = 'CBDs'
 
     id = Column("cbdid",Integer, primary_key=True)
-    districtid = Column("districtid",Integer)
+    distid = Column("districtid",Integer)
     name = Column("cbdname",String(120), unique=True)
     desc = Column("cbddesc",String(256), unique=True)
     sortindex = Column("sortindex",Integer)
     def to_dict(self):
-        data = {'id': self.id,'name': self.name,'text':self.name,'desc':self.desc,'districtid':self.districtid}
+        data = {'id': self.id,'name': self.name,'text':self.name,'desc':self.desc,'distid':self.distid}
         return data
+    def to_data(self):
+        data = {'id': self.id,'name': self.name,'desc':self.desc,'distid':self.distid}
+        return data
+        
 
 class Grade(db.Model):
     __tablename__ = 'Grades'
