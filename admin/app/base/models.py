@@ -152,7 +152,7 @@ class School(db.Model):
     istopshow = Column("istopshow",Integer)
 
     lon = Column("lon",String(64))
-    lag = Column("lag",String(64))
+    lat = Column("lat",String(64))
     cbdname = Column("cbdname",String(126))
     cbdid = Column("cbdid",Integer)
     shcoolpid = Column("shcoolpid",Integer)
@@ -208,7 +208,7 @@ class School(db.Model):
             'ishot':self.ishot,
             'istopshow':self.istopshow,
             'lon':self.lon,
-            "lag":self.lag,
+            "lat":self.lat,
             "cbdname":self.cbdname,
             "cbdid":self.cbdid,
             "shcoolpid":self.shcoolpid,

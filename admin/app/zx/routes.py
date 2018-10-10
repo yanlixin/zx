@@ -119,7 +119,7 @@ def school_create():
 def school_edit():
     id = request.args.get('id', -1, type=int)
     school = School.query.get(id)
-    print(school.isbilingual)
+    
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
     districts=[item.to_dict() for item in District.query.all()]

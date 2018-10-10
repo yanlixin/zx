@@ -65,5 +65,5 @@ class GoodsCatListAPI(Resource):
         data=paging(pageIndex,pageSize,goods_cats)
         totalRow=len(goods_cats)
         totalPage=int(totalRow/pageSize)+1
-        print(data.__dir__)
+        
         return jsonify({'msg':'','code':200,'data':{'page_number':pageIndex,'page_size':pageSize,'total_page':totalPage,'total_row':totalRow,'list': data}})

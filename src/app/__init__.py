@@ -18,7 +18,7 @@ from app.models import School
 
 from app.resources.user import RegistAPI,LoginAPI
 from app.resources.task import TaskAPI,TaskListAPI
-from app.resources.school import SchoolListAPI,ProvinceListAPI,CityListAPI,DistrictListAPI,GradeListAPI,CategoryListAPI,SchoolAPI
+from app.resources.school import SchoolListAPI,ProvinceListAPI,CityListAPI,DistrictListAPI,GradeListAPI,CategoryListAPI,SchoolAPI,CBDListAPI
 from app.resources.goods import GoodsCatAPI,GoodsCatListAPI
 
 api = Api(app)
@@ -69,6 +69,7 @@ api.add_resource(SchoolAPI, '/api/v1.0/school', endpoint = 'school')
 api.add_resource(ProvinceListAPI, '/api/v1.0/provs', endpoint = 'provs')
 api.add_resource(CityListAPI, '/api/v1.0/cities', endpoint = 'cities')
 api.add_resource(DistrictListAPI, '/api/v1.0/dists', endpoint = 'dists')
+api.add_resource(CBDListAPI, '/api/v1.0/cbds', endpoint = 'cbds')
 api.add_resource(GradeListAPI, '/api/v1.0/grades', endpoint = 'grades')
 api.add_resource(CategoryListAPI, '/api/v1.0/cats', endpoint = 'cats')
 #api.add_resource(SchoolThumbAPI, '/thumb/school/<int:id>', endpoint = 'thumb_school')

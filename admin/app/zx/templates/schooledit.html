@@ -20,7 +20,7 @@
             <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>双语</label>
     
             <div class="col-sm-2">
-                <input type="checkbox" value="1" name="isbilingual" id="isbilingual" {{('checked' if (school.isbilingual==1) else '') }} >
+                <input type="checkbox" value="1" name="isbilingual" id="isbilingual" {{('checked' if (school!=None and school.isbilingual==1) else '') }} >
                 <label for="txt-operater-manager">打勾表示双语教学</label>
             </div>
         </div>
@@ -63,6 +63,20 @@
                     <input type="text" id="txt-addr" name="txt-addr" class="form-control" placeholder="请输入地址" value="{{school.addr}}" />
             </div>
         </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+                <label class="col-sm-2 control-label">经度</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-lon" name="txt-lon" class="form-control" placeholder="请输入经度" value="{{school.lon}}" />
+                </div>
+                <label class="col-sm-2 control-label">纬度</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-lat" name="txt-lat" class="form-control" placeholder="请输入纬度" value="{{school.lat}}" />
+                </div>
+        </div>        
         <div class="hr-line-dashed-10"></div>
     
         <div class="form-group">
@@ -195,7 +209,9 @@
        
         provList.unshift({"id":0,"text":"select","provid":-1})
         $("#provid").select2({"data": provList}).val({{school.provid or 0}}).trigger("change");
-        
+        prov({{school.provid or 0}});
+        city({{school.cityid or 0}});
+        dist({{school.districtid or 0}});
         $("#cityid").select2({
             
             "data": [{"id":0,"text":"select","city":-1}],
@@ -217,47 +233,17 @@
         $('#provid').on('select2:select', function (e) {
             var data = e.params.data;
             var id = e.params.data.id;
-            data=[{"id":0,"text":"select","cityid":-1}];
-            $.each(cityList,function(i,item){
-                if(item.provid.toString()==id){
-                    data.push(item);
-                }
-            })
-            $("#cityid").select2({
-                "data": data,
-                "selectedValue": '',
-                //"allowClear": true
-            }).val({{school.cityid or 0}}).trigger("change");
+            prov(id);
         });
         $('#cityid').on('select2:select', function (e) {
             var data = e.params.data;
             var id = e.params.data.id;
-            data=[];
-            $.each(districtList,function(i,item){
-                if(item.cityid.toString()==id){
-                    data.push(item);
-                }
-            })
-            $("#districtid").select2({
-                "data": data,
-                "selectedValue": '',
-                //"allowClear": true
-            }).val({{school.districtid or 0}})
+            city(id);
         });
         $('#districtid').on('select2:select', function (e) {
             var data = e.params.data;
             var id = e.params.data.id;
-            data=[];
-            $.each(cbdList,function(i,item){
-                if(item.districtid.toString()==id){
-                    data.push(item);
-                }
-            })
-            $("#cbdid").select2({
-                "data": data,
-                "selectedValue": '',
-                //"allowClear": true
-            }).val({{school.cbdid or 0}})
+            dist(id);
         });       
         var $win = getSubWinBody('school_create');
         var winEvents = $win.data("winEvents");
@@ -290,6 +276,8 @@
                 foreignduration: $("#txt-foreignduration").val(),
                 schoolbus: $("#txt-schoolbus").val(),
                 cramclass: $("#txt-cramclass").val(),
+                lat: $("#txt-lat").val(),
+                lon: $("#txt-lon").val(),
                 provid:$("#provid").val(),
                 provname:$("#provid").select2('data')[0].text,
                 cityid:$("#cityid").val(),
@@ -298,6 +286,7 @@
                 districtname:$("#districtid").select2('data')[0].text,
                 cbdid:$("#cbdid").val(),
                 cbdname:$("#cbdid").select2('data')[0].text,
+                
                 isbilingual:$("input[name='isbilingual']:checked").val()=="1"?"1":"0",
             };
             var url = '/zx/school/create';
@@ -329,5 +318,48 @@
                 //return rtnValue;
             }, "text");
         }
+        function prov(provid){
+            data=[{"id":0,"text":"select","cityid":-1}];
+            $.each(cityList,function(i,item){
+                if(provid==item.provid.toString()){
+                    data.push(item);
+                }
+            });
+            $("#cityid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{school.cityid or 0}}).trigger("change");
+        }
+        function city(cityid){
+            data=[];
+            $.each(districtList,function(i,item){
+                if(item.cityid.toString()==cityid){
+                    data.push(item);
+                }
+            })
+            $("#districtid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{school.districtid or 0}})
+        }
+        function dist(distid){
+            data=[];
+            $.each(cbdList,function(i,item){
+                if(item.distid.toString()==distid){
+                    data.push(item);
+                }
+            });
+            console.log(distid);
+            $("#cbdid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{school.cbdid or 0}})
+        }
+
+
     });
+
     </script>

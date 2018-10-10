@@ -176,7 +176,7 @@ class School(db.Model):
     ishot = db.Column("ishot",db.Integer)
     istopshow = db.Column("istopshow",db.Integer)
     lon = db.Column("lon",db.String(64))
-    lag = db.Column("lag",db.String(64))
+    lat = db.Column("lat",db.String(64))
     cbdname = db.Column("cbdname",db.String(126))
     cbdid = db.Column("cbdid",db.Integer)
     shcoolpid = db.Column("shcoolpid",db.Integer)
@@ -235,7 +235,7 @@ class School(db.Model):
             'ishot':self.ishot,
             'istopshow':self.istopshow,
             'lon':self.lon,
-            "lag":self.lag,
+            "lat":self.lat,
             "cbdname":self.cbdname,
             "cbdid":self.cbdid,
             "shcoolpid":self.shcoolpid,
@@ -275,6 +275,19 @@ class District(db.Model):
         schoollist=None #[item.to_dict() for item in School.query.filter_by(districtid=self.id).all()]
         hotlist=None #[item.to_dict() for item in School.query.filter_by(districtid=self.id).filter_by(ishot=1).all()]
         data = {'id': self.id,'name': self.name,'text':self.name,'cityid':self.cityid,'schoollist':schoollist,'hotlist':hotlist}
+        return data
+
+class CBD(db.Model):
+    __tablename__ = 'Cbds'
+
+    id = db.Column("cbdid",db.Integer, primary_key=True)
+    districtid = db.Column("districtid",db.Integer)
+    name = db.Column("cbdname",db.String(120), unique=True)
+    sortindex = db.Column("sortindex",db.Integer)
+    def to_dict(self):
+        schoollist=None #[item.to_dict() for item in School.query.filter_by(districtid=self.id).all()]
+        hotlist=None #[item.to_dict() for item in School.query.filter_by(districtid=self.id).filter_by(ishot=1).all()]
+        data = {'id': self.id,'name': self.name,'text':self.name,'districtid':self.districtid,'schoollist':schoollist,'hotlist':hotlist}
         return data
 
 class Grade(db.Model):

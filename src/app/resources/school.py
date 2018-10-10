@@ -4,7 +4,7 @@ from flask_httpauth import HTTPBasicAuth
 
 from sqlalchemy import func,or_
 from app import app, db, base_path
-from app.models import School,Province,City,District,Grade,Category
+from app.models import School,Province,City,District,Grade,Category,CBD
 #api = Api(app)
 
 # class SchoolAPI(Resource):
@@ -192,6 +192,27 @@ class CategoryListAPI(Resource):
         data=[item.to_mini_dict() for item in Category.query.filter(1==1)
         .limit(pageSize).offset((pageIndex-1)*pageSize)]
         totalRow=db.session.query(func.count(Category.id)).filter(1==1).scalar()
+        totalPage=int(totalRow/pageSize)+1
+
+        return jsonify({'msg':'','code':200,'data':{'page_number':pageIndex,'page_size':pageSize,'total_page':totalPage,'total_row':totalRow,'list': data}})
+
+
+class CBDListAPI(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
+        self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
+        self.reqparse.add_argument('districtid', type = int,default = -1, location='json')
+        super(CBDListAPI, self).__init__()
+
+    def post(self):
+        args=self.reqparse.parse_args()
+        districtid = args['districtid']
+        pageIndex = args['pageindex']
+        pageSize = args['pagesize']
+        data=[item.to_dict() for item in CBD.query.filter(or_(CBD.districtid==districtid,-1==districtid))
+        .limit(pageSize).offset((pageIndex-1)*pageSize)]
+        totalRow=db.session.query(func.count(CBD.id)).filter(or_(CBD.districtid==districtid,-1==districtid)).scalar()
         totalPage=int(totalRow/pageSize)+1
 
         return jsonify({'msg':'','code':200,'data':{'page_number':pageIndex,'page_size':pageSize,'total_page':totalPage,'total_row':totalRow,'list': data}})
