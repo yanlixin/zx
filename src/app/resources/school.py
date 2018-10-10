@@ -59,6 +59,7 @@ class SchoolListAPI(Resource):
         self.reqparse.add_argument('cityid', type = int, default = -1, location='json')
         self.reqparse.add_argument('distid', type = int, default = -1, location='json')
         self.reqparse.add_argument('cbdid', type = int, default = -1, location='json')
+        self.reqparse.add_argument('isbilingual', type = int, default = -1, location='json')
         self.reqparse.add_argument('name', type = str, default = '', location='json')
         self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
         self.reqparse.add_argument('pagesize', type = int, default = 10, location='json')
@@ -72,6 +73,7 @@ class SchoolListAPI(Resource):
         cityid = args['cityid']
         distid = args['distid']
         cbdid = args['cbdid']
+        isbilingual = args['isbilingual']
         name = args['name']
         pageIndex = args['pageindex']
         pageSize=args['pagesize']
@@ -80,6 +82,7 @@ class SchoolListAPI(Resource):
         .filter(or_(School.cityid==cityid,-1==cityid))
         .filter(or_(School.districtid==distid,-1==distid))
         .filter(or_(School.cbdid==cbdid,-1==cbdid))
+        .filter(or_(School.isbilingual==isbilingual,-1==isbilingual))
         .filter(or_(School.name.like('%'+name+'%'),name==''))
         .limit(pageSize).offset((pageIndex-1)*pageSize)]
 
@@ -88,6 +91,7 @@ class SchoolListAPI(Resource):
         .filter(or_(School.cityid==cityid,-1==cityid))\
         .filter(or_(School.districtid==distid,-1==distid))\
         .filter(or_(School.cbdid==cbdid,-1==cbdid))\
+        .filter(or_(School.isbilingual==isbilingual,-1==isbilingual))\
         .filter(or_(School.name.like('%'+name+'%'),name=='')).scalar()
         totalPage=int(totalRow/pageSize)+1
 
