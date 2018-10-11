@@ -1,6 +1,6 @@
 from app import db, login_manager
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime 
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime ,Numeric
 from datetime import datetime  
 
 
@@ -207,12 +207,12 @@ class School(db.Model):
             'isnew':self.isnew,
             'ishot':self.ishot,
             'istopshow':self.istopshow,
-            'lon':self.lon,
-            "lat":self.lat,
-            "cbdname":self.cbdname,
-            "cbdid":self.cbdid,
-            "shcoolpid":self.shcoolpid,
-            "isbilingual":self.isbilingual
+            'lon':self.lon,#经度
+            "lat":self.lat,#维度
+            "cbdname":self.cbdname, #商圈名称
+            "cbdid":self.cbdid,#商圈标识
+            "shcoolpid":self.shcoolpid, #预留
+            "isbilingual":self.isbilingual #是否 
             }
                 
         return data

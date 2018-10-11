@@ -40,28 +40,39 @@ pagesize:每页记录数(选填,默认每页读取10条)
 http://39.105.3.57/api/v1.0/shop/cats
 
 省份
-http://39.105.3.57/api/v1.0/provs?pageindex=1&pagesize=10
+http://39.105.3.57/api/v1.0/provs
 
 城市
-http://39.105.3.57/api/v1.0/cities?provid=1&pageindex=1&pagesize=10
+http://39.105.3.57/api/v1.0/cities
 
 provid:省份标识
 区/县
-http://39.105.3.57/api/v1.0/dists?cityid=1&pageindex=1&pagesize=10
+http://39.105.3.57/api/v1.0/dists
 cityid:市标识
 
+商圈
+http://39.105.3.57/api/v1.0/cbds
+districtid:区/县标识
+
 学校等级
-http://39.105.3.57/api/v1.0/grades?pageindex=1&pagesize=10
+http://39.105.3.57/api/v1.0/grades
 
 学校类别
-http://39.105.3.57/api/v1.0/cats?pageindex=1&pagesize=10
+http://39.105.3.57/api/v1.0/cats
 
 学校信息列表
-http://39.105.3.57/api/v1.0/schools?gradeid=1&catid=1&distid=1&pageindex=1&pagesize=10
+http://39.105.3.57/api/v1.0/schools
 
 gradeid:等级标识(选填,默认读取所有数据)
 catid:类别标识(选填,默认读取所有数据)
 distid:地区[省-城市-区/县](选填,默认读取所有数据)
+cbdid:商圈标识(选填,默认读取所有数据)
+isbilingual:是否双语,1 双语,-1 全部
+name:名称(选填,默认读取所有数据)
+tuition:价格(字符串"0~1000"标识0到1000区间;选填,默认读取所有数据 )
+sortname:排序字段(tuition标识按照价格排序,目前只有按照价格排序与默认排序两种)
+sortorder:排序顺序(asc,desc;选填,默认读取所有数据,默认是asc ) 
+
 
 学校信息
 http://39.105.3.57/api/v1.0/school?id=10
