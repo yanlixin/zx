@@ -119,6 +119,8 @@ class SchoolListAPI(Resource):
         .filter(or_(School.districtid==distid,-1==distid))\
         .filter(or_(School.cbdid==cbdid,-1==cbdid))\
         .filter(or_(School.isbilingual==isbilingual,-1==isbilingual))\
+        .filter(or_(cast(School.tuition,Numeric(12,2))>=tuitionB))\
+        .filter(or_(cast(School.tuition,Numeric(12,2))<=tuitionE))\
         .filter(or_(School.name.like('%'+name+'%'),name=='')).scalar()
         totalPage=int(totalRow/pageSize)+1
 
