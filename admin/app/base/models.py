@@ -111,7 +111,7 @@ class Category(db.Model):
         return data
 
     def to_data(self):
-        data = {'id': self.id,'name': self.name,'desc':self.desc}
+        data = {'id': self.id,'name': self.name,'desc':self.desc,"typeid":self.typeid,"typename":self.typename}
         return data
         
 class School(db.Model):
