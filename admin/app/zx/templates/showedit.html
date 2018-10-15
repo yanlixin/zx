@@ -1,0 +1,313 @@
+<link href="{{ url_for('static', filename='vendors/ladda/dist/ladda-themeless.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/select2-bootstrap-theme/dist/select2-bootstrap.min.css') }}" rel="stylesheet">
+
+<div class="form-horizontal" autocomplete="off" data-form-id="school_create" id="school_create">
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span style="color: red">*&nbsp;</span>名称</label>
+    
+            <div class="col-sm-4">
+                <input type="hidden" name="txt-id" id="txt-id" value="{{school.id or 0}}" />
+                <input type="text" id="txt-name" name="txt-name" class="form-control" placeholder="请输入名称" value="{{school.name}}" />
+            </div>
+            <label class="col-sm-2 control-label"><span style="color: red" >*&nbsp;</span>类别</label>
+    
+            <div class="col-sm-4">
+                <select id="catid" name="catid" class="form-control" data-placeholder="请选择类别"></select>
+            </div>
+            
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><span style="color: red">*&nbsp;</span>备注</label>
+    
+            <div class="col-sm-10">
+                <textarea type="text" cols="40" rows="3" id="txt-desc" name="txt-desc" class="form-control" placeholder="请输入备注" >{{school.desc}}</textarea>
+            </div>
+    
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+            <label class="col-sm-2 control-label">地址</label>
+    
+            <div class="col-sm-2">
+                <select id="provid" name="provid" class="form-control" data-placeholder="点击选择省"></select> 
+            </div>
+            <div class="col-sm-2">
+                <select id="cityid" name="cityid" class="form-control" data-placeholder="点击选择市"></select> 
+            </div>
+            <div class="col-sm-2">
+                <select id="districtid" name="districtid" class="form-control" data-placeholder="点击选择地区"></select>   
+            </div>
+            <div class="col-sm-2">
+                <select id="cbdid" name="cbdid" class="form-control" data-placeholder="点击选择商圈"></select>   
+            </div>
+            
+    
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+
+            <label class="col-sm-2 control-label">&nbsp;</label>
+            <div class="col-sm-10">
+                    <input type="text" id="txt-addr" name="txt-addr" class="form-control" placeholder="请输入地址" value="{{school.addr}}" />
+            </div>
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+                <label class="col-sm-2 control-label">经度</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-lon" name="txt-lon" class="form-control" placeholder="请输入经度" value="{{school.lon}}" />
+                </div>
+                <label class="col-sm-2 control-label">纬度</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-lat" name="txt-lat" class="form-control" placeholder="请输入纬度" value="{{school.lat}}" />
+                </div>
+        </div>        
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+                <label class="col-sm-2 control-label">电话</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-phone" name="txt-phone" class="form-control" placeholder="请输入电话" value="{{school.phone}}" />
+                </div>
+                <label class="col-sm-2 control-label">时长</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-duration" name="txt-duration" class="form-control" placeholder="请输入时长" value="{{school.duration}}" />
+                    分钟
+                </div>
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+            <label class="col-sm-2 control-label">特色介绍</label>
+    
+            <div class="col-sm-10">
+                    <input type="text" id="txt-features" name="txt-features" class="form-control" placeholder="请输入特色简介" value="{{school.features}}" />
+            </div>
+    
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+            <label class="col-sm-2 control-label">特色介绍</label>
+    
+            <div class="col-sm-10">
+                    <textarea type="text" cols="40" rows="3" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入特色介绍" >{{school.intro}}</textarea>
+            </div>
+    
+        </div>
+        
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
+                <label class="col-sm-2 control-label">最低价格</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-price" name="txt-price" class="form-control" placeholder="请输入最低价格" value="{{school.price}}" />
+                </div>
+                <label class="col-sm-2 control-label">最高价格</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-maxprice" name="txt-maxprice" class="form-control" placeholder="请输入最高价格" value="{{school.maxprice}}" />
+                </div>
+
+        </div>
+        <div class="form-group">
+        
+                <label class="col-sm-2 control-label">时间</label>
+        
+                <div class="col-sm-4">
+                    <input type="text" id="txt-begindate" name="txt-begindate" class="form-control" placeholder="请输入课后托班" value="{{school.begindate}}" />
+                </div>
+                <label class="col-sm-2 control-label"><span style="color: red" >*&nbsp;</span>排序</label>
+            
+                <div class="col-sm-4">
+                    <input type="text" id="txt-sort-index" name="txt-sort-index" class="form-control" placeholder="请输入排序"  value="{{school.sortindex}}" />
+                </div>
+        </div>
+        
+    </div>
+    <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.Common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/spin.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
+    <script>
+    $(document).ready(function () {
+        
+        var catList={{catList|safe}};
+        var provList={{provList|safe}};
+        var cityList={{cityList|safe}};
+        var districtList={{districtList|safe}};
+        var cbdList={{cbdList|safe}};
+        var districtid=parseInt("{{school.districtid}}");
+        var cbdid=parseInt("{{school.cbdid}}");
+        var cityid=0;
+        var provid=0;
+        catList.unshift({"id":0,"text":"select"});
+        $("#catid").select2({"data": catList}).val({{school.catid or 0}}).trigger("change");;
+       
+        provList.unshift({"id":0,"text":"select","provid":-1})
+        $("#provid").select2({"data": provList}).val({{school.provid or 0}}).trigger("change");
+        prov({{school.provid or 0}});
+        city({{school.cityid or 0}});
+        dist({{school.districtid or 0}});
+        $("#cityid").select2({
+            
+            "data": [{"id":0,"text":"select","city":-1}],
+            "selectedValue": '0',
+            //"allowClear": true
+        });
+        $("#districtid").select2({
+            
+            "data": [{"id":0,"text":"select"}],
+            "selectedValue": '0',
+            //"allowClear": true
+        });
+        $("#cbdid").select2({
+            
+            "data": [{"id":0,"text":"select"}],
+            "selectedValue": '0',
+            //"allowClear": true
+        });
+        $('#provid').on('select2:select', function (e) {
+            var data = e.params.data;
+            var id = e.params.data.id;
+            prov(id);
+        });
+        $('#cityid').on('select2:select', function (e) {
+            var data = e.params.data;
+            var id = e.params.data.id;
+            city(id);
+        });
+        $('#districtid').on('select2:select', function (e) {
+            var data = e.params.data;
+            var id = e.params.data.id;
+            dist(id);
+        });       
+        var $win = getSubWinBody('school_create');
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
+
+        winButtons.save.click = function () {
+            $('.ladda-button-save').attr("data-style", "expand-left")
+            var l = $('.ladda-button-save').ladda();
+
+            var subData = {
+                id: $("#txt-id").val(),
+                catid: $("#catid").val(),
+                catname: $("#catid").select2('data')[0].text,
+                name: $("#txt-name").val(),
+                sortindex: $("#txt-sort-index").val(),
+                desc: $("#txt-desc").val(),
+                addr: $("#txt-addr").val(),
+                
+                features: $("#txt-features").val(),
+                intro: $("#txt-intro").val(),
+                
+                phone: $("#txt-phone").val(),
+               
+                duration: $("#txt-duration").val(),
+                price: $("#txt-price").val(),
+                maxprice: $("#txt-maxprice").val(),
+                begindate: $("#txt-begindate").val(),
+                enddate: $("#txt-enddate").val(),
+                lat: $("#txt-lat").val(),
+                lon: $("#txt-lon").val(),
+                provid:$("#provid").val(),
+                provname:$("#provid").select2('data')[0].text,
+                cityid:$("#cityid").val(),
+                cityname:$("#cityid").select2('data')[0].text,
+                districtid:$("#districtid").val(),
+                districtname:$("#districtid").select2('data')[0].text,
+                cbdid:$("#cbdid").val(),
+                cbdname:$("#cbdid").select2('data')[0].text,
+                
+            };
+            var url = '/zx/show/create';
+            l.ladda('start');
+            $.post(url, subData, function (rtn) {
+                var rtnDto = JSON.parse(rtn);
+                console.log(!rtnDto.valid);
+                if (!rtnDto.valid) {
+                    var msg = "";
+                    for (var i in rtnDto.msg) {
+                        msg = msg + rtnDto.msg[i] + ";";
+                    }
+                    ZTAlert({
+                        "title": "验证失败",
+                        "text": msg
+                    });
+                    l.ladda('stop');
+                } else if (rtnDto.result) {
+                    winEvents.SavedAndClose();
+                } else {
+                    ZTAlert({
+                        "title": "保存失败",
+                        "text": rtnDto.msg
+                    });
+                    l.ladda('stop');
+                }
+
+                //通知modal window Save状况
+                //return rtnValue;
+            }, "text");
+        }
+        function prov(provid){
+            data=[{"id":0,"text":"select","cityid":-1}];
+            $.each(cityList,function(i,item){
+                if(provid==item.provid.toString()){
+                    data.push(item);
+                }
+            });
+            $("#cityid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{school.cityid or 0}}).trigger("change");
+        }
+        function city(cityid){
+            data=[];
+            $.each(districtList,function(i,item){
+                if(item.cityid.toString()==cityid){
+                    data.push(item);
+                }
+            })
+            $("#districtid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{school.districtid or 0}})
+        }
+        function dist(distid){
+            data=[];
+            $.each(cbdList,function(i,item){
+                if(item.distid.toString()==distid){
+                    data.push(item);
+                }
+            });
+            console.log(distid);
+            $("#cbdid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{school.cbdid or 0}})
+        }
+
+
+    });
+
+    </script>

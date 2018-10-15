@@ -213,16 +213,17 @@ class GradeListAPI(Resource):
 class CategoryListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('typeid', type = int, default = 1, location='json')
         self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
         self.reqparse.add_argument('pagesize', type = int, default = 1000, location='json')
         super(CategoryListAPI, self).__init__()
 
     def post(self):
         args=self.reqparse.parse_args()
-        
+        typeid = args['typeid']
         pageIndex = args['pageindex']
         pageSize=args['pagesize']
-        data=[item.to_mini_dict() for item in Category.query.filter(1==1)
+        data=[item.to_mini_dict() for item in Category.query.filter(Category.typeid==typeid)
         .limit(pageSize).offset((pageIndex-1)*pageSize)]
         totalRow=db.session.query(func.count(Category.id)).filter(1==1).scalar()
         totalPage=int(totalRow/pageSize)+1

@@ -12,6 +12,15 @@
         <div class="hr-line-dashed-10"></div>
     
         <div class="form-group">
+            <label class="col-sm-3 control-label">类型</label>
+    
+            <div class="col-sm-7">
+                {{ form.typeid(class="form-control",placeholder="请输入类型") }}
+            </div>
+        </div>
+        <div class="hr-line-dashed-10"></div>
+    
+        <div class="form-group">
             <label class="col-sm-3 control-label">备注</label>
     
             <div class="col-sm-7">
@@ -42,6 +51,8 @@
             var subData = {
                 id: $("#txt_id").val(),
                 name: $("#txt_name").val(),
+                typeid: $("#txt_typeid").val(),
+                typename:$("#txt_typeid").find("option:selected").text(),
                 desc: $("#txt_desc").val(),
                 csrf_token:$("#csrf_token").val(),
             };

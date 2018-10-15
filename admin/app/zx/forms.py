@@ -25,6 +25,8 @@ class CatForm(FlaskForm):
     id = HiddenField('Id', id='txt_id')
     name = TextField('Name', id='txt_name')
     desc = TextAreaField('desc', id='txt_desc')
+    typeid = SelectField('typeid' ,id='txt_typeid',choices=[('1', '学校'), ('2', '课余'), ('3', '培训机构')])
+    typename = HiddenField('typename', id='txt_typename')
     #pid = SelectField('TaskPId' ,id='txt_pid', coerce=str)
 
 class CBDForm(FlaskForm):

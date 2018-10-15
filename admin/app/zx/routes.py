@@ -2,7 +2,7 @@ from app.zx import blueprint
 from flask import render_template,request,make_response
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,CBD,Grade,Category,School,SchoolGallery,Province,City
+from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,Province,City
 from app import db,uploaded_photos,base_path
 import logging
 import json
@@ -65,6 +65,8 @@ def category_jsondata():
     table = DataTable(request.args, Category, Category.query, [
         "id",
         "name",
+        "typeid",
+        "typename",
         "desc",
         "sortindex"
     ])
@@ -148,6 +150,79 @@ def school_del():
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
 
+
+
+@blueprint.route('/show/jsondata', methods=['GET', 'POST'])
+@login_required
+def show_jsondata():
+    table = DataTable(request.args, Show, Show.query, [
+        "id",
+        "name",
+        "desc",
+        "addr",
+        "features",
+        "phone",
+        "sortindex"
+    ])
+    
+    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
+    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+
+    return json.dumps(table.json())
+
+@blueprint.route('/show/create', methods=['POST'])
+@login_required
+def show_create():
+    school = Show(**request.form)
+    result='OK'
+    msg=''
+    try:
+        if int(school.id)>0:
+            dd=db.session.query(Show).filter_by(id=school.id)
+            dd.update(school.to_dict() )
+        else:
+            school.id=None
+            db.session.add(school)
+        db.session.commit()
+    except Exception as e:  # 这样做就写不了reason了
+        result=None
+        msg=str(e)
+        logging.error(e)
+        #msg=e
+
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/show/edit', methods=['GET'])
+@login_required
+def show_edit():
+    id = request.args.get('id', -1, type=int)
+    school = Show.query.get(id)
+    
+    provs=[item.to_dict() for item in Province.query.all()]
+    cities=[item.to_dict() for item in City.query.all()]
+    districts=[item.to_dict() for item in District.query.all()]
+    cbds=[item.to_dict() for item in CBD.query.all()]
+    cats=[item.to_dict() for item in Category.query.all()]
+    return render_template(
+            'showedit.html',
+            school=school,
+            catList=json.dumps(cats),
+            provList=json.dumps(provs),
+            cityList=json.dumps(cities),
+            districtList=json.dumps(districts),
+            cbdList=json.dumps(cbds)
+        )
+
+@blueprint.route('/show/delete', methods=['POST'])
+@login_required
+def show_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=School.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
 
 @blueprint.route('/gallery/list', methods=['GET'])
 @login_required

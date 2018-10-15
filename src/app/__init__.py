@@ -20,7 +20,7 @@ from app.resources.user import RegistAPI,LoginAPI
 from app.resources.task import TaskAPI,TaskListAPI
 from app.resources.school import SchoolListAPI,ProvinceListAPI,CityListAPI,DistrictListAPI,GradeListAPI,CategoryListAPI,SchoolAPI,CBDListAPI
 from app.resources.goods import GoodsCatAPI,GoodsCatListAPI
-
+from app.resources.show import ShowAPI,ShowListAPI
 api = Api(app)
 
 class SchoolThumbAPI(Resource):
@@ -65,6 +65,9 @@ api.add_resource(LoginAPI, '/api/v1.0/login', endpoint = 'userlogin')
 api.add_resource(SchoolListAPI, '/api/v1.0/schools', endpoint = 'schools')
 
 api.add_resource(SchoolAPI, '/api/v1.0/school', endpoint = 'school')
+
+api.add_resource(ShowListAPI, '/api/v1.0/shows', endpoint = 'shows')
+api.add_resource(ShowAPI, '/api/v1.0/show', endpoint = 'show')
 
 api.add_resource(ProvinceListAPI, '/api/v1.0/provs', endpoint = 'provs')
 api.add_resource(CityListAPI, '/api/v1.0/cities', endpoint = 'cities')

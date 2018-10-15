@@ -9,10 +9,11 @@
   <link href="{{ url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='vendors/jquery-ui/themes/base/jquery-ui.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
+  
 {% endblock stylesheets %}
 
 {% block content %}
-  <div class="right_col" role="main" data-panel-id='list-category'>
+  <div class="right_col" role="main" data-panel-id='show_list'>
     <div class="">
       
 
@@ -23,7 +24,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
             <div class="x_title">
-              <h2>数据管理<small>分类</small></h2>
+              <h2>数据管理<small>课余</small></h2>
               <div class="title_right">
                   <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
@@ -38,15 +39,17 @@
             </div>
             <div class="x_content">
              
-              <table id="datatable-ditrict" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+              <table id="datatable-show" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                 <thead>
                   <tr>
                     <th>标识</th>
                     <th>名称</th>
-                    <th>类型</th>
                     <th>描述</th>
-                    <th>排序</th>
+                    <th>地址</th>
+                    <th>特色</th>
+                    <th>电话</th>
                     <th></th>
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -65,7 +68,7 @@
       </div>
     </div>
   </div>
-  <div class="hide" id="Dialog-Category"></div>
+  <div class="hide" id="schoolDialog"></div>
 {% endblock content %}
 
 {% block javascripts %}
@@ -90,11 +93,10 @@
   <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
   <script src="{{ url_for('static', filename='build/js/Zt.dialog.min.js') }}"></script>
   <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
- 
   <script>
      $(document).ready(function () {
-        var $win = $("[data-panel-id='list-category']");
-        var $table = $("#datatable-ditrict");
+        var $win = $("[data-panel-id='show_list']");
+        var $table = $("#datatable-show");
 
         $win.on("click", "button", function () {
             if ($(this).has("data-click-name")) {
@@ -104,26 +106,29 @@
                 switch(clickName){
                     case "create":
                     case "edit":
-                        var url = clickName == "create" ? '/zx/category/edit' : '/zx/category/edit?id=' + clickValue;
-                        $("#Dialog-Category").ztdialog({
+                        var url = clickName == "create" ? '/zx/show/edit' : '/zx/show/edit?id=' + clickValue;
+                        $("#schoolDialog").ztdialog({
                             'url': url,
-                            'title': clickName == "create"?"添加学校": "修改学校",
+                            'title': clickName == "create"?"添加课余": "修改课余",
                             'buttons': 'Save',
-                            'height': 500,
-                            'width': 700,
+                            'height': 768,
+                            'width': 1024,
                             'fnSaved': function () { $table.DataTable().draw(false); }
                         });
                         break;
-                    
+                    case "gallery":
+                        var url = '/zx/gallery/list?showid='+ clickValue;
+                        window.location.href=url
+                        break;
                     case "delete":
                         ZTConfirm({
-                            "title": "删除分类",
+                            "title": "删除课余",
                             "text": "是否确认删除?",
                             'parms': { id: clickValue },
                             'confirmButtonText': '确定删除',
                             'cancelButtonText': '取消删除',
                             'fnConfirmCallback': function (parms) {
-                                var url = '/zx/category/delete?id=' + parms.id;
+                                var url = '/zx/show/delete?id=' + parms.id;
                                 $.post(url, function (rtn) {
                                     var rtnDto = JSON.parse(rtn);
                                     if (rtnDto.result) {
@@ -148,10 +153,10 @@
                 }
             }
         });
-    $('#datatable-ditrict').DataTable( {
+    $('#datatable-show').DataTable( {
       serverSide: true,
       ajax: {
-        url: '/zx/category/jsondata',
+        url: '/zx/show/jsondata',
         dataSrc: 'data'
     }, 
       columns: [
@@ -159,9 +164,10 @@
                   data: "id"
               },
               { data: "name" },
-              { data: "typename" },
               { data: "desc" },
-              { data: "sortindex" },
+              { data: "addr" },
+              { data: "features" },
+              { data: "phone" },
               {
                     "sWidth": "55px",
                     "mData": "id",
@@ -170,6 +176,7 @@
                         var sOut = '';
                       
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit"></i></button>';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="gallery" data-click-value="' + data + '"><i class="glyphicon glyphicon-picture"></i></button>';
                         sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove"></i></button>';
                         
                         return sOut;
@@ -177,7 +184,13 @@
                 }
           ]
     });
-
-     });
+    $('#datatable-show tbody').on('click', 'tr', function () {
+            $table.data("clickIndex", $table.DataTable().row(this).index());
+            $('#deptTable tbody tr').each(function (index, item) {
+                $(this).removeAttr("style");
+            });
+            $(this).attr("style", "background:#f2fbff");
+        });
+    });
   </script>
 {% endblock javascripts %}

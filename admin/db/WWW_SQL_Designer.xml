@@ -195,10 +195,12 @@
 <default>NULL</default></row>
 <row name="lon" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="lag" null="1" autoincrement="0">
+<default>NULL</default><comment>经度</comment>
+</row>
+<row name="lat" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
-<default>NULL</default></row>
+<default>NULL</default><comment>纬度</comment>
+</row>
 <row name="shcoolpid" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -210,7 +212,7 @@
 <part>schoolid</part>
 </key>
 </table>
-<table x="702" y="10" name="Users">
+<table x="940" y="13" name="Users">
 <row name="userid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -245,7 +247,7 @@
 <part>userid</part>
 </key>
 </table>
-<table x="1052" y="0" name="Managers">
+<table x="1172" y="0" name="Managers">
 <row name="managerid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -295,7 +297,7 @@
 <part>managerid</part>
 </key>
 </table>
-<table x="10" y="941" name="Categories">
+<table x="50" y="508" name="Categories">
 <row name="catid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -317,11 +319,17 @@
 <row name="createdbymanagerid" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
+<row name="typeid" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>1</default></row>
+<row name="typename" null="0" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>'学校'</default></row>
 <key type="PRIMARY" name="">
 <part>catid</part>
 </key>
 </table>
-<table x="217" y="1050" name="Grades">
+<table x="16" y="779" name="Grades">
 <row name="gradeid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -347,7 +355,7 @@
 <part>gradeid</part>
 </key>
 </table>
-<table x="427" y="1045" name="schoolgalleries">
+<table x="690" y="1054" name="schoolgalleries">
 <row name="galleryid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -386,7 +394,7 @@
 </key>
 <comment>学校图片</comment>
 </table>
-<table x="710" y="319" name="SmsCode">
+<table x="974" y="350" name="SmsCode">
 <row name="smscodeid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -409,7 +417,7 @@
 <part>smscodeid</part>
 </key>
 </table>
-<table x="1055" y="382" name="Roles">
+<table x="1173" y="356" name="Roles">
 <row name="roleid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -444,7 +452,7 @@
 <part>roleid</part>
 </key>
 </table>
-<table x="1415" y="298" name="R_Users_Roles">
+<table x="1507" y="361" name="R_Users_Roles">
 <row name="ruserroleid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -475,7 +483,7 @@
 <part>ruserroleid</part>
 </key>
 </table>
-<table x="1059" y="660" name="Permissions">
+<table x="1193" y="665" name="Permissions">
 <row name="permid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -504,7 +512,7 @@
 <part>permid</part>
 </key>
 </table>
-<table x="1351" y="558" name="R_Permissions_Roles">
+<table x="1531" y="653" name="R_Permissions_Roles">
 <row name="rpermroleid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -534,7 +542,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="221" y="228" name="CBDs">
+<table x="231" y="185" name="CBDs">
 <row name="cbdid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -547,7 +555,7 @@
 <row name="lon" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
-<row name="lag" null="1" autoincrement="0">
+<row name="lat" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="districtid" null="1" autoincrement="0">
@@ -561,12 +569,136 @@
 <part>cbdid</part>
 </key>
 </table>
-<table x="258" y="388" name="new table">
+<table x="232" y="404" name="new table">
 <row name="id" null="1" autoincrement="1">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
+</key>
+</table>
+<table x="725" y="10.5" name="InterestClasses">
+<row name="InterestClassID" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="districtid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="InterestClassName" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="interestclassdesc" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="addr" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="new field" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>InterestClassID</part>
+</key>
+</table>
+<table x="756" y="325" name="Shows">
+<row name="showid" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="showname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="addr" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="begindate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="enddate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="price" null="1" autoincrement="0">
+<datatype>NUMERIC(10,2)</datatype>
+<default>NULL</default></row>
+<row name="maxprice" null="1" autoincrement="0">
+<datatype>NUMERIC(10,2)</datatype>
+<default>NULL</default></row>
+<row name="duration" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="districtid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="districtname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="cityid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cityname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="provid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="provname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="img" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="thumb" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="isbest" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="isnew" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ishot" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="istopshow" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cbdid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cbdname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="lon" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="lat" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="features" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="intro" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="catid" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="recordstatus" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="catname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="phone" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="showdesc" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="sortindex" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>showid</part>
 </key>
 </table>
 </sql>
