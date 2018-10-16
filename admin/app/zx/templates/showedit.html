@@ -6,136 +6,134 @@
 <div class="form-horizontal" autocomplete="off" data-form-id="school_create" id="school_create">
 
         <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color: red">*&nbsp;</span>名称</label>
+            <label class="col-sm-1 control-label"><span style="color: red">*&nbsp;</span>名称</label>
     
-            <div class="col-sm-4">
+            <div class="col-sm-5">
                 <input type="hidden" name="txt-id" id="txt-id" value="{{school.id or 0}}" />
                 <input type="text" id="txt-name" name="txt-name" class="form-control" placeholder="请输入名称" value="{{school.name}}" />
             </div>
-            <label class="col-sm-2 control-label"><span style="color: red" >*&nbsp;</span>类别</label>
+
+            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>排序</label>
+            
+            <div class="col-sm-2">
+                <input type="text" id="txt-sort-index" name="txt-sort-index" class="form-control" placeholder="请输入排序"  value="{{school.sortindex}}" />
+            </div>
+            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>类别</label>
     
-            <div class="col-sm-4">
+            <div class="col-sm-2">
                 <select id="catid" name="catid" class="form-control" data-placeholder="请选择类别"></select>
             </div>
-            
         </div>
-        <div class="hr-line-dashed-10"></div>
-    
-        <div class="form-group">
-            <label class="col-sm-2 control-label"><span style="color: red">*&nbsp;</span>备注</label>
-    
-            <div class="col-sm-10">
-                <textarea type="text" cols="40" rows="3" id="txt-desc" name="txt-desc" class="form-control" placeholder="请输入备注" >{{school.desc}}</textarea>
-            </div>
-    
-        </div>
-        <div class="hr-line-dashed-10"></div>
-    
-        <div class="form-group">
-            <label class="col-sm-2 control-label">地址</label>
-    
-            <div class="col-sm-2">
-                <select id="provid" name="provid" class="form-control" data-placeholder="点击选择省"></select> 
-            </div>
-            <div class="col-sm-2">
-                <select id="cityid" name="cityid" class="form-control" data-placeholder="点击选择市"></select> 
-            </div>
-            <div class="col-sm-2">
-                <select id="districtid" name="districtid" class="form-control" data-placeholder="点击选择地区"></select>   
-            </div>
-            <div class="col-sm-2">
-                <select id="cbdid" name="cbdid" class="form-control" data-placeholder="点击选择商圈"></select>   
-            </div>
-            
-    
-        </div>
-        <div class="hr-line-dashed-10"></div>
-    
-        <div class="form-group">
 
-            <label class="col-sm-2 control-label">&nbsp;</label>
-            <div class="col-sm-10">
+    
+        <div class="form-group">
+            <label class="col-sm-1 control-label">时间</label>
+        
+            <div class="col-sm-5">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <div class="control-group">
+                        <div class="controls">
+                            <div class="input-prepend input-group">
+                            <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                            <input type="text" style="width: 200px" name="reservation" id="reservation" class="form-control" value="{{school.begindate}} - {{school.enddate}}" />
+                            </div>
+                        </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <label class="col-sm-1 control-label">最低价格</label>
+    
+            <div class="col-sm-2">
+                <input type="number" id="txt-price" name="txt-price" class="form-control" placeholder="请输入最低价格" value="{{school.price}}" />
+            </div>
+            <label class="col-sm-1 control-label">最高价格</label>
+    
+            <div class="col-sm-2">
+                <input type="number" id="txt-maxprice" name="txt-maxprice" class="form-control" placeholder="请输入最高价格" value="{{school.maxprice}}" />
+            </div>
+
+        </div>
+
+    
+        <div class="form-group">
+            <label class="col-sm-1 control-label">地址</label>
+            <div class="col-sm-2">
+                    <select id="provid" name="provid" class="form-control" data-placeholder="点击选择省"></select> 
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                   
+                    <div class="col-sm-4">
+                        <select id="cityid" name="cityid" class="form-control" data-placeholder="点击选择市"></select> 
+                    </div>
+                    <div class="col-sm-4"><select id="districtid" name="districtid" class="form-control" data-placeholder="点击选择地区"></select>  </div>
+                    <div class="col-sm-4"><select id="cbdid" name="cbdid" class="form-control" data-placeholder="点击选择商圈"></select>  </div>
+                
+                </div>
+            </div>
+            <div class="col-sm-4">
                     <input type="text" id="txt-addr" name="txt-addr" class="form-control" placeholder="请输入地址" value="{{school.addr}}" />
             </div>
         </div>
-        <div class="hr-line-dashed-10"></div>
+
+ 
     
         <div class="form-group">
-                <label class="col-sm-2 control-label">经度</label>
+                <label class="col-sm-1 control-label">电话</label>
         
-                <div class="col-sm-4">
-                    <input type="text" id="txt-lon" name="txt-lon" class="form-control" placeholder="请输入经度" value="{{school.lon}}" />
-                </div>
-                <label class="col-sm-2 control-label">纬度</label>
-        
-                <div class="col-sm-4">
-                    <input type="text" id="txt-lat" name="txt-lat" class="form-control" placeholder="请输入纬度" value="{{school.lat}}" />
-                </div>
-        </div>        
-        <div class="hr-line-dashed-10"></div>
-    
-        <div class="form-group">
-                <label class="col-sm-2 control-label">电话</label>
-        
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <input type="text" id="txt-phone" name="txt-phone" class="form-control" placeholder="请输入电话" value="{{school.phone}}" />
                 </div>
-                <label class="col-sm-2 control-label">时长</label>
+                <label class="col-sm-1 control-label">经度</label>
         
-                <div class="col-sm-4">
-                    <input type="text" id="txt-duration" name="txt-duration" class="form-control" placeholder="请输入时长" value="{{school.duration}}" />
-                    分钟
+                <div class="col-sm-2">
+                    <input type="text" id="txt-lon" name="txt-lon" class="form-control" placeholder="请输入经度" value="{{school.lon}}" />
                 </div>
-        </div>
-        <div class="hr-line-dashed-10"></div>
+                <label class="col-sm-1 control-label">纬度</label>
+        
+                <div class="col-sm-2">
+                    <input type="text" id="txt-lat" name="txt-lat" class="form-control" placeholder="请输入纬度" value="{{school.lat}}" />
+                </div>
+                <label class="col-sm-1 control-label">时长</label>
+        
+                <div class="col-sm-2">
+                    <input type="text" id="txt-duration" name="txt-duration" class="form-control" placeholder="请输入时长(分钟)" value="{{school.duration}}" />
+                    
+                </div>
+        </div>        
+
     
         <div class="form-group">
-            <label class="col-sm-2 control-label">特色介绍</label>
+            <label class="col-sm-1 control-label">特色介绍</label>
     
-            <div class="col-sm-10">
+            <div class="col-sm-11">
                     <input type="text" id="txt-features" name="txt-features" class="form-control" placeholder="请输入特色简介" value="{{school.features}}" />
             </div>
     
         </div>
-        <div class="hr-line-dashed-10"></div>
+
     
         <div class="form-group">
-            <label class="col-sm-2 control-label">特色介绍</label>
+            <label class="col-sm-1 control-label">介绍</label>
     
-            <div class="col-sm-10">
+            <div class="col-sm-11">
                     <textarea type="text" cols="40" rows="3" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入特色介绍" >{{school.intro}}</textarea>
             </div>
     
         </div>
-        
-        <div class="hr-line-dashed-10"></div>
-    
-        <div class="form-group">
-                <label class="col-sm-2 control-label">最低价格</label>
-        
-                <div class="col-sm-4">
-                    <input type="text" id="txt-price" name="txt-price" class="form-control" placeholder="请输入最低价格" value="{{school.price}}" />
-                </div>
-                <label class="col-sm-2 control-label">最高价格</label>
-        
-                <div class="col-sm-4">
-                    <input type="text" id="txt-maxprice" name="txt-maxprice" class="form-control" placeholder="请输入最高价格" value="{{school.maxprice}}" />
-                </div>
 
-        </div>
         <div class="form-group">
-        
-                <label class="col-sm-2 control-label">时间</label>
-        
-                <div class="col-sm-4">
-                    <input type="text" id="txt-begindate" name="txt-begindate" class="form-control" placeholder="请输入课后托班" value="{{school.begindate}}" />
-                </div>
-                <label class="col-sm-2 control-label"><span style="color: red" >*&nbsp;</span>排序</label>
-            
-                <div class="col-sm-4">
-                    <input type="text" id="txt-sort-index" name="txt-sort-index" class="form-control" placeholder="请输入排序"  value="{{school.sortindex}}" />
-                </div>
+            <label class="col-sm-1 control-label">备注</label>
+    
+            <div class="col-sm-11">
+                <textarea type="text" cols="40" rows="2" id="txt-desc" name="txt-desc" class="form-control" placeholder="请输入备注" >{{school.desc}}</textarea>
+            </div>
+    
         </div>
+       
+
         
     </div>
     <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
@@ -147,7 +145,7 @@
     <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script>
     $(document).ready(function () {
-        
+        init_daterangepicker_reservation();
         var catList={{catList|safe}};
         var provList={{provList|safe}};
         var cityList={{cityList|safe}};
@@ -205,7 +203,7 @@
         winButtons.save.click = function () {
             $('.ladda-button-save').attr("data-style", "expand-left")
             var l = $('.ladda-button-save').ladda();
-
+            var daterange=$("#reservation").val().split(" - ");
             var subData = {
                 id: $("#txt-id").val(),
                 catid: $("#catid").val(),
@@ -223,8 +221,8 @@
                 duration: $("#txt-duration").val(),
                 price: $("#txt-price").val(),
                 maxprice: $("#txt-maxprice").val(),
-                begindate: $("#txt-begindate").val(),
-                enddate: $("#txt-enddate").val(),
+                begindate: daterange[0],
+                enddate: daterange[1],
                 lat: $("#txt-lat").val(),
                 lon: $("#txt-lon").val(),
                 provid:$("#provid").val(),

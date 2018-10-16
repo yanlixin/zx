@@ -10,6 +10,7 @@ import sys
 import uuid
 import os
 from PIL import Image
+from datetime import  *  
 
 from .forms import SchoolForm,CatForm,CBDForm
 @blueprint.route('/<template>')
@@ -196,8 +197,15 @@ def show_create():
 @login_required
 def show_edit():
     id = request.args.get('id', -1, type=int)
-    school = Show.query.get(id)
-    
+    show = Show.query.get(id)
+    if show==None:
+        show = Show()
+        dt = datetime.now()  
+        show.begindate= dt.strftime( '%m-%d-%Y' )  
+        show.enddate= dt.strftime( '%m-%d-%Y' )  
+        show.price=0
+        show.maxprice=0
+        print( dt.strftime( '%m-%d-%Y' )   )
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
     districts=[item.to_dict() for item in District.query.all()]
@@ -205,7 +213,7 @@ def show_edit():
     cats=[item.to_dict() for item in Category.query.all()]
     return render_template(
             'showedit.html',
-            school=school,
+            school=show,
             catList=json.dumps(cats),
             provList=json.dumps(provs),
             cityList=json.dumps(cities),
@@ -219,7 +227,7 @@ def show_del():
     id = request.args.get('id', -1, type=int)
     result='OK'
     msg=''
-    dd=School.query.get(id)
+    dd=Show.query.get(id)
     db.session.delete(dd)
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
