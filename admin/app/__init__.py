@@ -2,6 +2,7 @@ from app.config import DebugConfig
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+import flask_excel as excel
 from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
 from flask_uploads import UploadSet, IMAGES, configure_uploads
@@ -14,6 +15,7 @@ base_path = os.path.dirname(os.path.abspath(__file__))
 def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
+    excel.init_excel(app)
 
 
 def register_blueprints(app):

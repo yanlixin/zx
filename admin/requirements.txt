@@ -4,6 +4,8 @@ flask_migrate
 flask_wtf
 flask_sqlalchemy
 flask_uploads
+Flask-Excel
+pyexcel-xls
 Pillow
 datatables
 gunicorn

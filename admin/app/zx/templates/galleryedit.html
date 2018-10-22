@@ -222,9 +222,14 @@
         winButtons.save.click = function () {
             $('.ladda-button-save').attr("data-style", "expand-left")
             var l = $('.ladda-button-save').ladda();
-
+            var url = '';
+            {% if type =='school' %}
+              url='/zx/school/gallery/save';
+            {% endif %}
+            {% if type =='show' %}
+              url='/zx/show/gallery/save';
+            {% endif %}
             
-            var url = '/zx/gallery/save';
             l.ladda('start');
                    //提交图片
         
@@ -250,7 +255,7 @@
            var $dataScaleX = $('#dataScaleX');
            var $dataScaleY = $('#dataScaleY');
            var subData = {
-                schoolid: {{schoolid}},
+                objid: {{objid}},
                 isdefault:'1',
                 istopshow:'1',
                 isenable:'1',

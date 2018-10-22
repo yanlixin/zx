@@ -218,11 +218,47 @@ class School(db.Model):
             }
                 
         return data
+    @staticmethod
+    def get_column_names():
+        data = [
+            'id',
+            'catname',#分类
+            'gradeid',
+            'gradename',#等级
+            'name',#名称
+            'desc',#描述
+            'addr',#地址
+            'tuition',#学费
+            'features',#特色简介
+            'phone',#电话
+            'intro',#介绍
+            'team',#团队介绍
+            'provname',#省
+            'cityname',#城市
+            'districtname',#区
+            'founded',#建校时间
+            'age',#学生年龄段
+            'scale',#学校规模
+            'population',#师生数
+            'duration',#上课时间
+            'foreignduration',#外教授课时长
+            'schoolbus',#校车
+            'cramclass',#课后托班
+            'sortindex',#排序
+            'lon',#经度
+            "lat",#维度
+            "cbdname", #商圈名称
+            "cbdid",#商圈标识
+            "shcoolpid", #预留
+            "isbilingual" #是否双语 
+            ]
+                
+        return data
 
 class SchoolGallery(db.Model):
     __tablename__ = 'schoolgalleries'
     id = Column("galleryid",Integer, primary_key=True)
-    schoolid=Column("schoolid",Integer)
+    objid=Column("schoolid",Integer)
     title = Column("imagetitle",String(120))
     desc = Column("imagedesc",String(120))
     path = Column("imagepath",String(120))
@@ -244,7 +280,7 @@ class SchoolGallery(db.Model):
     def to_dict(self):
         data = {
             'id': self.id,
-            'schoolid':self.schoolid,
+            'objid':self.objid,
             'title': self.title,
             'text':self.title,
             'path':self.path,
@@ -340,4 +376,40 @@ class Show(db.Model):
             "cbdid":self.cbdid,#商圈标识
             }
                 
+        return data
+
+class ShowGallery(db.Model):
+    __tablename__ = 'showgalleries'
+    id = Column("galleryid",Integer, primary_key=True)
+    objid=Column("showid",Integer)
+    title = Column("imagetitle",String(120))
+    desc = Column("imagedesc",String(120))
+    path = Column("imagepath",String(120))
+    isdefault = Column("isdefault",Integer)
+    istopshow = Column("istopshow",Integer)
+    isenable = Column("isenable",Integer)
+    sortindex = Column("sortindex",Integer)
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'objid':self.objid,
+            'title': self.title,
+            'text':self.title,
+            'path':self.path,
+            'isdefault': self.isdefault,
+            'istopshow':self.istopshow,
+            'isenable':self.isenable,
+            'sortindex':self.sortindex,
+        }
         return data

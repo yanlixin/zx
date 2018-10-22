@@ -31,6 +31,7 @@
                      &nbsp;
                       <span class="input-group-btn">
                         <button class="btn btn-default" type="button" data-click-name="create"><i class="fa fa-plus"></i>新增</button>
+                        <button class="btn btn-default" type="button" data-click-name="export"><i class="fa fa-file-excel-o"></i>导出</button>
                       </span>
                     </div>
                   </div>
@@ -117,8 +118,12 @@
                         });
                         break;
                     case "gallery":
-                        var url = '/zx/gallery/list?schoolid='+ clickValue;
+                        var url = '/zx/school/gallery/list?schoolid='+ clickValue;
                         window.location.href=url
+                        break;
+                    case "export":
+                        var url = '/zx/school/export';
+                        window.open(url,'school','height=1, width=1, toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
                         break;
                     case "delete":
                         ZTConfirm({

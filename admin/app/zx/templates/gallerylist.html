@@ -20,7 +20,7 @@
             <div class="col-md-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>相册 <small> {{school.name}} </small></h2>
+                  <h2>相册 <small> {{obj.name}} </small></h2>
                   <div class="title_right">
                       <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
                         <div class="input-group">
@@ -42,7 +42,12 @@
                     <div class="col-md-55">
                       <div class="thumbnail">
                         <div class="image view view-first">
-                          <img style="width: 100%; display: block;" src="/zx/gallery/show?id={{gallery.id}}" alt="image" />
+                          {% if type =='school' %}
+                          <img style="width: 100%; display: block;" src="/zx/school/gallery/view?id={{gallery.id}}" alt="image" />
+                          {% endif %}
+                          {% if type =='show' %}
+                          <img style="width: 100%; display: block;" src="/zx/show/gallery/view?id={{gallery.id}}" alt="image" />
+                          {% endif %}
                           <div class="mask">
                             <p>{{gallery.title}}</p>
                             <div class="tools tools-bottom">
@@ -100,7 +105,14 @@
                  var clickValue = $(this).attr("data-click-value");
                  switch(clickName){
                      case "create":
-                         var url = '/zx/gallery/create?schoolid='+{{school.id}};
+                         var url ='';
+                          
+                         {% if type =='school' %}
+                           url='/zx/school/gallery/create?schoolid='+{{obj.id}};
+                         {% endif %}
+                         {% if type =='show' %}
+                           url='/zx/show/gallery/create?showid='+{{obj.id}};
+                         {% endif %}
                          $("#galleryDialog").ztdialog({
                              'url': url,
                              'title': "添加图片",
@@ -112,14 +124,25 @@
                          break;
                     
                      case "delete":
+                         console.log("delete");
+
                          ZTConfirm({
-                             "title": "删除学校",
+                             "title": "删除图片",
                              "text": "是否确认删除?",
                              'parms': { id: clickValue },
                              'confirmButtonText': '确定删除',
                              'cancelButtonText': '取消删除',
                              'fnConfirmCallback': function (parms) {
-                                 var url = '/zx/gallery/delete?id=' + parms.id;
+                                  var url=''
+                                  console.log(url);
+                                  
+                                  {% if type =='school' %}
+                                  var  url='/zx/school/gallery/delete?id='+parms.id;
+                                  {% endif %}
+                                  {% if type =='show' %}
+                                  var  url='/zx/show/gallery/delete?id='+parms.id;
+                                  {% endif %}
+                                  console.log(url);
                                  $.post(url, function (rtn) {
                                      var rtnDto = JSON.parse(rtn);
                                      if (rtnDto.result) {

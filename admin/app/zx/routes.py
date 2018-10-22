@@ -2,7 +2,7 @@ from app.zx import blueprint
 from flask import render_template,request,make_response
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,Province,City
+from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City
 from app import db,uploaded_photos,base_path
 import logging
 import json
@@ -10,6 +10,7 @@ import sys
 import uuid
 import os
 from PIL import Image
+import flask_excel as excel 
 from datetime import  *  
 
 from .forms import SchoolForm,CatForm,CBDForm
@@ -151,8 +152,19 @@ def school_del():
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
 
+@blueprint.route('/school/export', methods=['GET'])
+@login_required
+def school_export():
+    # id = request.args.get('id', -1, type=int)
+    # result='OK'
+    # msg=''
+    
+    query_sets=[ g for g in  School.query.all()]
+   
+    column_names =School.get_column_names()
 
-
+    return excel.make_response_from_query_sets(query_sets, column_names, "xls",200,file_name=u"school.xls",sheet_name='school')
+    
 @blueprint.route('/show/jsondata', methods=['GET', 'POST'])
 @login_required
 def show_jsondata():
@@ -232,30 +244,65 @@ def show_del():
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
 
-@blueprint.route('/gallery/list', methods=['GET'])
+@blueprint.route('/school/gallery/list', methods=['GET'])
 @login_required
-def gallery_list():
+def school_gallery_list():
     schoolid = request.args.get('schoolid', -1, type=int)
-    school = School.query.get(schoolid)
-    galleries =[item.to_dict() for item in SchoolGallery.query.filter_by(schoolid=schoolid)]
+    obj = School.query.get(schoolid)
+    galleries =[item.to_dict() for item in SchoolGallery.query.filter_by(objid=schoolid)]
     print(len(galleries))
     return render_template(
             'gallerylist.html',
-            school=school,
+            obj=obj,
             galleryList=galleries,
+            type='school'
         )
 
-@blueprint.route('/gallery/create', methods=['GET'])
+@blueprint.route('/show/gallery/list', methods=['GET'])
 @login_required
-def gallery_edit():
+def show_gallery_list():
+    id = request.args.get('showid', -1, type=int)
+    obj = Show.query.get(id)
+    galleries =[item.to_dict() for item in ShowGallery.query.filter_by(objid=id)]
+    print(len(galleries))
+    return render_template(
+            'gallerylist.html',
+            obj=obj,
+            galleryList=galleries,
+            type='show'
+        )
+
+
+@blueprint.route('/school/gallery/create', methods=['GET'])
+@login_required
+def school_gallery_edit():
     id = request.args.get('schoolid', -1, type=int)
     return render_template(
             'galleryedit.html',
-            schoolid=id,
+            objid=id,
+            type='school'
         )
+@blueprint.route('/show/gallery/create', methods=['GET'])
+@login_required
+def show_gallery_edit():
+    id = request.args.get('showid', -1, type=int)
+    return render_template(
+            'galleryedit.html',
+            objid=id,
+            type='show'
+        )
+@blueprint.route('/show/gallery/delete', methods=['POST'])
+@login_required
+def show_gallery_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=ShowGallery.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
 
-
-@blueprint.route('/gallery/delete', methods=['POST'])
+@blueprint.route('/school/gallery/delete', methods=['POST'])
 @login_required
 def gallery_del():
     id = request.args.get('id', -1, type=int)
@@ -267,13 +314,13 @@ def gallery_del():
     return json.dumps({'valid':True,'result':result,'msg':msg })
 
 
-@blueprint.route('/gallery/show', methods=['GET'])
+@blueprint.route('/school/gallery/view', methods=['GET'])
 @login_required
-def gallery_photo():
+def school_gallery_photo():
     id = request.args.get('id', -1, type=int)
     gallery = SchoolGallery.query.get(id)
     imagename = os.path.splitext(gallery.path)
-    origin = [base_path,r'/files/scools/',str(gallery.schoolid),r'/',imagename[0],r'_origin_',imagename[1]]
+    origin = [base_path,r'/files/scools/',str(gallery.objid),r'/',imagename[0],r'_origin_',imagename[1]]
     originname = ''.join(origin)
 
     image_data = open(os.path.join(base_path, originname), "rb").read()
@@ -281,9 +328,9 @@ def gallery_photo():
     response.headers['Content-Type'] = 'image/png'
     return response
 
-@blueprint.route('/gallery/save', methods=['POST'])
+@blueprint.route('/school/gallery/save', methods=['POST'])
 @login_required
-def gallery_create():
+def school_gallery_save():
     dataX = request.form.get('dataX')
     dataY = request.form.get('dataY')
     dataHeight = request.form.get('dataHeight')
@@ -294,8 +341,8 @@ def gallery_create():
     fullname = '%s%s%s' % (base_path,r'/files/',gallery.path)
     im = Image.open(fullname)
     id = '-1'
-    if gallery.schoolid is not None:
-        id = str(gallery.schoolid)
+    if gallery.objid is not None:
+        id = str(gallery.objid)
 
     folder =''.join([base_path,r'/files/scools/',id,r'/']) 
     if not os.path.exists(folder):
@@ -319,6 +366,63 @@ def gallery_create():
     db.session.commit()
 
     dd=db.session.query(School).filter_by(id=int(id))
+    dd.img=origin
+    dd.thumb=origin
+    dd.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/show/gallery/view', methods=['GET'])
+@login_required
+def show_gallery_photo():
+    id = request.args.get('id', -1, type=int)
+    gallery = ShowGallery.query.get(id)
+    imagename = os.path.splitext(gallery.path)
+    origin = [base_path,r'/files/shows/',str(gallery.objid),r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+
+    image_data = open(os.path.join(base_path, originname), "rb").read()
+    response = make_response(image_data)
+    response.headers['Content-Type'] = 'image/png'
+    return response
+@blueprint.route('/show/gallery/save', methods=['POST'])
+@login_required
+def show_gallery_save():
+    dataX = request.form.get('dataX')
+    dataY = request.form.get('dataY')
+    dataHeight = request.form.get('dataHeight')
+    dataWidth = request.form.get('dataWidth')
+   
+    gallery = ShowGallery(**request.form)
+    imagename = os.path.splitext(gallery.path)
+    fullname = '%s%s%s' % (base_path,r'/files/',gallery.path)
+    im = Image.open(fullname)
+    id = '-1'
+    if gallery.objid is not None:
+        id = str(gallery.objid)
+
+    folder =''.join([base_path,r'/files/shows/',id,r'/']) 
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    origin = [base_path,r'/files/shows/',id,r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+    im.save(originname)
+    cropedIm = im.crop((int(dataX), int(dataY), int(dataWidth), int(dataHeight)))
+    imgName=''.join([r'/files/shows/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    originFullName = [base_path,imgName]
+    cropedIm.save(''.join(originFullName))
+    dataWidth = '190' 
+    dataHeight = '130'
+    cropedIm = im.resize((int(dataWidth), int(dataHeight)),Image.ANTIALIAS)
+    thumName=''.join([r'/files/shows/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumFullName = [base_path,thumName]
+    cropedIm.save(''.join(thumFullName))
+    result='OK'
+    msg=''
+    db.session.add(gallery)
+    db.session.commit()
+
+    dd=db.session.query(Show).filter_by(id=int(id))
     dd.img=origin
     dd.thumb=origin
     dd.update({'img':imgName,'thumb':thumName} )
