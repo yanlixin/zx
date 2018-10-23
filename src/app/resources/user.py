@@ -2,7 +2,7 @@ from flask import Flask, jsonify,abort,make_response,request,url_for
 from flask_restful import Resource, Api,reqparse
 
 from sqlalchemy import func,or_
-from app.models import User
+from app.models import User,SmsCode
 #api = Api(app)
 from app import db,auth
 @auth.verify_password
@@ -25,6 +25,7 @@ class LoginAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('loginname', type = str, required = True, location='json')
+        self.reqparse.add_argument('password', type = str, required = True, location='json')
         self.reqparse.add_argument('password', type = str, required = True, location='json')
         super(LoginAPI, self).__init__()
     def post(self):
@@ -55,11 +56,31 @@ class RegistAPI(Resource):
         user=User.query.filter(User.loginname==loginname).first()
         if user != None:
             return jsonify({'msg':'USER_EXISTED','code':270,'data':None})
-        if smscode==None:
+        if smscode==None or not SmsCode.verifyCode(loginname,smscode):
             return jsonify({'msg':'SMS_CODE_MISS','code':271,'data':None})
+        
         user = User(loginname=loginname)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
         return jsonify({'msg':'OK','code':200,'data':{ 'username': user.loginname }})
 
+class SmsAPI(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('phone', type = str, required = True, location='json')
+        super(SmsAPI, self).__init__()
+    def post(self):
+        args=self.reqparse.parse_args(strict=True)
+        phone = args['phone']
+        # user=User.query.filter(User.loginname==loginname).first()
+        # if user != None:
+        #     return jsonify({'msg':'USER_EXISTED','code':270,'data':None})
+        # if smscode==None:
+        #     return jsonify({'msg':'SMS_CODE_MISS','code':271,'data':None})
+        # user = User(loginname=loginname)
+        # user.set_password(password)
+        # db.session.add(user)
+        # db.session.commit()
+        timeleft= SmsCode.send(phone)
+        return jsonify({'msg':'OK','code':200,'data':{ 'phone': phone,'timeleft':timeleft ,'sended':timeleft==60}})

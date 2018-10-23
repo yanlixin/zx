@@ -589,27 +589,25 @@ class SmsCode(db.Model):
         sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.id.desc()).first()
         if sms!=None:
             delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')
-            print(delta.total_seconds())
             if delta.total_seconds()<60:
-                return ""
+                return 60-delta.total_seconds()
         code = ''
         for num in range(1,5):
             code = code + str(random.randint(0, 9))
         now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sms = SmsCode(mobile=mobileNo,verifycode=code,createdbydatetime=now)
-        print(code)
-
+        
         sms.senddatetime=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         db.session.add(sms)
         db.session.commit()
 
-        return "OK"
+        return 60
     
     @staticmethod    
     def verifyCode(mobileNo,code):
         sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(desc(SmsCode.c.senddatetime)).first()
-        if sms!=None and sms.verifycode==code:
+        if sms!=None and sms.verifycode==code and 60>(datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')) :
             sms.update({'hasverified':True})
             db.session.commit()
             return True

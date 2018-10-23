@@ -16,7 +16,7 @@ auth = HTTPBasicAuth()
 
 from app.models import School
 
-from app.resources.user import RegistAPI,LoginAPI
+from app.resources.user import RegistAPI,LoginAPI,SmsAPI
 from app.resources.task import TaskAPI,TaskListAPI
 from app.resources.school import SchoolListAPI,SchoolThumbAPI,SchoolImgAPI
 from app.resources.school import ProvinceListAPI,CityListAPI,DistrictListAPI,GradeListAPI,CategoryListAPI,SchoolAPI,CBDListAPI
@@ -37,6 +37,8 @@ api.add_resource(GoodsCatAPI, '/api/v1.0/shop/cat', endpoint = 'shop_cat')
 
 api.add_resource(RegistAPI, '/api/v1.0/reg', endpoint = 'userreg')
 api.add_resource(LoginAPI, '/api/v1.0/login', endpoint = 'userlogin')
+api.add_resource(SmsAPI, '/api/v1.0/sendsms', endpoint = 'sendsms')
+
 api.add_resource(SchoolListAPI, '/api/v1.0/schools', endpoint = 'schools')
 
 api.add_resource(SchoolAPI, '/api/v1.0/school', endpoint = 'school')
