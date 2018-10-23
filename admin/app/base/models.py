@@ -113,7 +113,10 @@ class Category(db.Model):
     def to_data(self):
         data = {'id': self.id,'name': self.name,'desc':self.desc,"typeid":self.typeid,"typename":self.typename}
         return data
-        
+    @staticmethod
+    def list(typeid):
+        data=db.session.query(Category).filter(Category.typeid==typeid).all()
+        return data    
 class School(db.Model):
 
     __tablename__ = 'Schools'
@@ -382,6 +385,132 @@ class ShowGallery(db.Model):
     __tablename__ = 'showgalleries'
     id = Column("galleryid",Integer, primary_key=True)
     objid=Column("showid",Integer)
+    title = Column("imagetitle",String(120))
+    desc = Column("imagedesc",String(120))
+    path = Column("imagepath",String(120))
+    isdefault = Column("isdefault",Integer)
+    istopshow = Column("istopshow",Integer)
+    isenable = Column("isenable",Integer)
+    sortindex = Column("sortindex",Integer)
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'objid':self.objid,
+            'title': self.title,
+            'text':self.title,
+            'path':self.path,
+            'isdefault': self.isdefault,
+            'istopshow':self.istopshow,
+            'isenable':self.isenable,
+            'sortindex':self.sortindex,
+        }
+        return data
+
+class Training(db.Model):
+
+    __tablename__ = 'Trainings'
+
+    id = Column("trainingid",Integer, primary_key=True)
+    catid = Column("catid",Integer)
+    catname =Column("catname",String(128))
+    name = Column("trainingname",String(120), unique=True)
+    desc = Column("trainingdesc",String(1024))
+    team = Column("team",String(1024))
+    content = Column("trainingcontent",String(1024))
+    addr = Column("addr",String(128))
+    features = Column("features",String(1024))
+    phone = Column("phone",String(32))
+    intro = Column("intro",String(1024))
+    begindate = Column("begindate",String(64))
+    enddate = Column("enddate",String(64))
+    price = Column("price",Numeric(10,2))
+    maxprice = Column("maxprice",Numeric(10,2))
+    provid = Column("provid",Integer)
+    provname = Column("provname",String(128))
+    cityid = Column("cityid",Integer)
+    cityname = Column("cityname",String(128))
+    districtid = Column("districtid",Integer)
+    districtname = Column("districtname",String(128))
+    duration = Column("duration",String(32))
+    sortindex = Column("sortindex",Integer)
+    img = Column("img",String(126))
+    thumb = Column("thumb",String(126))
+    isbest = Column("isbest",Integer)
+    isnew = Column("isnew",Integer)
+    ishot = Column("ishot",Integer)
+    istopshow = Column("istopshow",Integer)
+    lon = Column("lon",String(64))
+    lat = Column("lat",String(64))
+    cbdname = Column("cbdname",String(126))
+    cbdid = Column("cbdid",Integer)
+ 
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.name)
+    
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'catid':self.catid,
+            'catname':self.catname,
+            'begindate':self.begindate,
+            'enddate':self.enddate,
+            'name': self.name,
+            'content':self.content,
+            'desc':self.desc,
+            'addr': self.addr,
+            'team':self.team,
+            'features':self.features,
+            'phone': self.phone,
+            'intro': self.intro,
+            'price':self.price,
+            'maxprice':self.maxprice,
+            'provid':self.provid,
+            'provname':self.provname,
+            'cityid':self.cityid,
+            'cityname':self.cityname,
+            'districtid':self.districtid,
+            'districtname':self.districtname,
+            'duration': self.duration,
+            'sortindex':self.sortindex,
+            'img': self.img,
+            'thumb': self.thumb,
+            'isbest': self.isbest,
+            'isnew':self.isnew,
+            'ishot':self.ishot,
+            'istopshow':self.istopshow,
+            'lon':self.lon,#经度
+            "lat":self.lat,#维度
+            "cbdname":self.cbdname, #商圈名称
+            "cbdid":self.cbdid,#商圈标识
+            }
+                
+        return data
+
+class TrainingGallery(db.Model):
+    __tablename__ = 'trainingalleries'
+    id = Column("galleryid",Integer, primary_key=True)
+    objid=Column("trainingid",Integer)
     title = Column("imagetitle",String(120))
     desc = Column("imagedesc",String(120))
     path = Column("imagepath",String(120))

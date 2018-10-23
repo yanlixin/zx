@@ -229,7 +229,9 @@
             {% if type =='show' %}
               url='/zx/show/gallery/save';
             {% endif %}
-            
+            {% if type =='training' %}
+              url='/zx/training/gallery/save';
+            {% endif %}
             l.ladda('start');
                    //提交图片
         

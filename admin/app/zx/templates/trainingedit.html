@@ -1,0 +1,284 @@
+<link href="{{ url_for('static', filename='vendors/ladda/dist/ladda-themeless.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendors/select2-bootstrap-theme/dist/select2-bootstrap.min.css') }}" rel="stylesheet">
+
+<div class="form-horizontal" autocomplete="off" data-form-id="training_create" id="training_create">
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label"><span style="color: red">*&nbsp;</span>名称</label>
+    
+            <div class="col-sm-5">
+                <input type="hidden" name="txt-id" id="txt-id" value="{{obj.id or 0}}" />
+                <input type="text" id="txt-name" name="txt-name" class="form-control" placeholder="请输入名称" value="{{obj.name}}" />
+            </div>
+
+            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>排序</label>
+            
+            <div class="col-sm-2">
+                <input type="text" id="txt-sort-index" name="txt-sort-index" class="form-control" placeholder="请输入排序"  value="{{obj.sortindex}}" />
+            </div>
+            <label class="col-sm-1 control-label"><span style="color: red" >*&nbsp;</span>类别</label>
+    
+            <div class="col-sm-2">
+                <select id="catid" name="catid" class="form-control" data-placeholder="请选择类别"></select>
+            </div>
+        </div>
+
+    
+    
+        <div class="form-group">
+            <label class="col-sm-1 control-label">地址</label>
+            <div class="col-sm-2">
+                    <select id="provid" name="provid" class="form-control" data-placeholder="点击选择省"></select> 
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                   
+                    <div class="col-sm-4">
+                        <select id="cityid" name="cityid" class="form-control" data-placeholder="点击选择市"></select> 
+                    </div>
+                    <div class="col-sm-4"><select id="districtid" name="districtid" class="form-control" data-placeholder="点击选择地区"></select>  </div>
+                    <div class="col-sm-4"><select id="cbdid" name="cbdid" class="form-control" data-placeholder="点击选择商圈"></select>  </div>
+                
+                </div>
+            </div>
+            <div class="col-sm-4">
+                    <input type="text" id="txt-addr" name="txt-addr" class="form-control" placeholder="请输入地址" value="{{obj.addr}}" />
+            </div>
+        </div>
+
+ 
+    
+        <div class="form-group">
+                <label class="col-sm-1 control-label">电话</label>
+        
+                <div class="col-sm-2">
+                    <input type="text" id="txt-phone" name="txt-phone" class="form-control" placeholder="请输入电话" value="{{obj.phone}}" />
+                </div>
+                <label class="col-sm-1 control-label">经度</label>
+        
+                <div class="col-sm-2">
+                    <input type="text" id="txt-lon" name="txt-lon" class="form-control" placeholder="请输入经度" value="{{obj.lon}}" />
+                </div>
+                <label class="col-sm-1 control-label">纬度</label>
+        
+                <div class="col-sm-2">
+                    <input type="text" id="txt-lat" name="txt-lat" class="form-control" placeholder="请输入纬度" value="{{obj.lat}}" />
+                </div>
+                <label class="col-sm-1 control-label">价格</label>
+        
+                <div class="col-sm-2">
+                    <input type="text" id="txt-duration" name="txt-duration" class="form-control" placeholder="请输入价格" value="{{obj.price}}" />
+                    
+                </div>
+        </div>        
+
+    
+        <div class="form-group">
+            <label class="col-sm-1 control-label">特色介绍</label>
+    
+            <div class="col-sm-11">
+                    <input type="text" id="txt-features" name="txt-features" class="form-control" placeholder="请输入特色简介" value="{{obj.features}}" />
+            </div>
+    
+        </div>
+
+    
+        <div class="form-group">
+            <label class="col-sm-1 control-label">机构简介</label>
+    
+            <div class="col-sm-11">
+                    <textarea type="text" cols="40" rows="3" id="txt-team" name="txt-team" class="form-control" placeholder="请输入机构简介" >{{obj.team}}</textarea>
+            </div>
+    
+        </div>
+        <div class="form-group">
+                <label class="col-sm-1 control-label">介绍</label>
+        
+                <div class="col-sm-11">
+                        <textarea type="text" cols="40" rows="3" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入介绍" >{{obj.intro}}</textarea>
+                </div>
+        
+            </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label">备注</label>
+    
+            <div class="col-sm-11">
+                <textarea type="text" cols="40" rows="2" id="txt-desc" name="txt-desc" class="form-control" placeholder="请输入备注" >{{obj.desc}}</textarea>
+            </div>
+    
+        </div>
+       
+
+        
+    </div>
+    <script src="{{ url_for('static', filename='vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.Common.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/spin.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/ladda/dist/ladda.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendors/sweetalert/dist/sweetalert.min.js') }}"></script>
+    <script>
+    $(document).ready(function () {
+        init_daterangepicker_reservation();
+        var catList={{catList|safe}};
+        var provList={{provList|safe}};
+        var cityList={{cityList|safe}};
+        var districtList={{districtList|safe}};
+        var cbdList={{cbdList|safe}};
+        var districtid=parseInt("{{obj.districtid}}");
+        var cbdid=parseInt("{{obj.cbdid}}");
+        var cityid=0;
+        var provid=0;
+        catList.unshift({"id":0,"text":"select"});
+        $("#catid").select2({"data": catList}).val({{obj.catid or 0}}).trigger("change");;
+       
+        provList.unshift({"id":0,"text":"select","provid":-1})
+        $("#provid").select2({"data": provList}).val({{obj.provid or 0}}).trigger("change");
+        prov({{obj.provid or 0}});
+        city({{obj.cityid or 0}});
+        dist({{obj.districtid or 0}});
+        $("#cityid").select2({
+            
+            "data": [{"id":0,"text":"select","city":-1}],
+            "selectedValue": '0',
+            //"allowClear": true
+        });
+        $("#districtid").select2({
+            
+            "data": [{"id":0,"text":"select"}],
+            "selectedValue": '0',
+            //"allowClear": true
+        });
+        $("#cbdid").select2({
+            
+            "data": [{"id":0,"text":"select"}],
+            "selectedValue": '0',
+            //"allowClear": true
+        });
+        $('#provid').on('select2:select', function (e) {
+            var data = e.params.data;
+            var id = e.params.data.id;
+            prov(id);
+        });
+        $('#cityid').on('select2:select', function (e) {
+            var data = e.params.data;
+            var id = e.params.data.id;
+            city(id);
+        });
+        $('#districtid').on('select2:select', function (e) {
+            var data = e.params.data;
+            var id = e.params.data.id;
+            dist(id);
+        });       
+        var $win = getSubWinBody('training_create');
+        var winEvents = $win.data("winEvents");
+        var winButtons = $win.data("buttons");
+
+        winButtons.save.click = function () {
+            $('.ladda-button-save').attr("data-style", "expand-left")
+            var l = $('.ladda-button-save').ladda();
+           
+            var subData = {
+                id: $("#txt-id").val(),
+                catid: $("#catid").val(),
+                catname: $("#catid").select2('data')[0].text,
+                name: $("#txt-name").val(),
+                sortindex: $("#txt-sort-index").val(),
+                desc: $("#txt-desc").val(),
+                addr: $("#txt-addr").val(),
+                team: $("#txt-team").val(),
+                features: $("#txt-features").val(),
+                intro: $("#txt-intro").val(),
+                
+                phone: $("#txt-phone").val(),
+               
+                price: $("#txt-price").val(),
+                lat: $("#txt-lat").val(),
+                lon: $("#txt-lon").val(),
+                provid:$("#provid").val(),
+                provname:$("#provid").select2('data')[0].text,
+                cityid:$("#cityid").val(),
+                cityname:$("#cityid").select2('data')[0].text,
+                districtid:$("#districtid").val(),
+                districtname:$("#districtid").select2('data')[0].text,
+                cbdid:$("#cbdid").val(),
+                cbdname:$("#cbdid").select2('data')[0].text,
+                
+            };
+            var url = '/zx/training/create';
+            l.ladda('start');
+            $.post(url, subData, function (rtn) {
+                var rtnDto = JSON.parse(rtn);
+                console.log(!rtnDto.valid);
+                if (!rtnDto.valid) {
+                    var msg = "";
+                    for (var i in rtnDto.msg) {
+                        msg = msg + rtnDto.msg[i] + ";";
+                    }
+                    ZTAlert({
+                        "title": "验证失败",
+                        "text": msg
+                    });
+                    l.ladda('stop');
+                } else if (rtnDto.result) {
+                    winEvents.SavedAndClose();
+                } else {
+                    ZTAlert({
+                        "title": "保存失败",
+                        "text": rtnDto.msg
+                    });
+                    l.ladda('stop');
+                }
+
+                //通知modal window Save状况
+                //return rtnValue;
+            }, "text");
+        }
+        function prov(provid){
+            data=[{"id":0,"text":"select","cityid":-1}];
+            $.each(cityList,function(i,item){
+                if(provid==item.provid.toString()){
+                    data.push(item);
+                }
+            });
+            $("#cityid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{obj.cityid or 0}}).trigger("change");
+        }
+        function city(cityid){
+            data=[];
+            $.each(districtList,function(i,item){
+                if(item.cityid.toString()==cityid){
+                    data.push(item);
+                }
+            })
+            $("#districtid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{obj.districtid or 0}})
+        }
+        function dist(distid){
+            data=[];
+            $.each(cbdList,function(i,item){
+                if(item.distid.toString()==distid){
+                    data.push(item);
+                }
+            });
+            console.log(distid);
+            $("#cbdid").select2({
+                "data": data,
+                "selectedValue": '',
+                //"allowClear": true
+            }).val({{obj.cbdid or 0}})
+        }
+
+
+    });
+
+    </script>
