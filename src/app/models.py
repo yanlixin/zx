@@ -594,6 +594,7 @@ class SmsCode(db.Model):
         code = ''
         for num in range(1,5):
             code = code + str(random.randint(0, 9))
+        code='0000'
         now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sms = SmsCode(mobile=mobileNo,verifycode=code,createdbydatetime=now)
         
