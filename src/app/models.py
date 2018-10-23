@@ -332,6 +332,165 @@ class Show(db.Model):
                 
         return data
 
+class Training(db.Model):
+
+    __tablename__ = 'Trainings'
+
+    id = db.Column("trainingid",db.Integer, primary_key=True)
+    catid = db.Column("catid",db.Integer)
+    catname =db.Column("catname",db.String(128))
+    name = db.Column("trainingname",db.String(120), unique=True)
+    desc = db.Column("trainingdesc",db.String(1024))
+    team = db.Column("team",db.String(1024))
+    content = db.Column("trainingcontent",db.String(1024))
+    addr = db.Column("addr",db.String(128))
+    features = db.Column("features",db.String(1024))
+    phone = db.Column("phone",db.String(32))
+    intro = db.Column("intro",db.String(1024))
+    begindate = db.Column("begindate",db.String(64))
+    enddate = db.Column("enddate",db.String(64))
+    price = db.Column("price",db.Numeric(10,2))
+    originalprice = db.Column("originalprice",db.Numeric(10,2))
+    provid = db.Column("provid",db.Integer)
+    provname = db.Column("provname",db.String(128))
+    cityid = db.Column("cityid",db.Integer)
+    cityname = db.Column("cityname",db.String(128))
+    districtid = db.Column("districtid",db.Integer)
+    districtname = db.Column("districtname",db.String(128))
+    duration = db.Column("duration",db.String(32))
+    sortindex = db.Column("sortindex",db.Integer)
+    img = db.Column("img",db.String(126))
+    thumb = db.Column("thumb",db.String(126))
+    isbest = db.Column("isbest",db.Integer)
+    isnew = db.Column("isnew",db.Integer)
+    ishot = db.Column("ishot",db.Integer)
+    istopshow = db.Column("istopshow",db.Integer)
+    lon = db.Column("lon",db.String(64))
+    lat = db.Column("lat",db.String(64))
+    cbdname = db.Column("cbdname",db.String(126))
+    cbdid = db.Column("cbdid",db.Integer)
+ 
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.name)
+    
+    def to_dict(self):
+        classList=[ g.to_dict() for g in  db.session.query(TrainingClass).filter(TrainingClass.trainingid==self.id).limit(5)] 
+        data = {
+            'id': self.id,
+            'catid':self.catid,
+            'catname':self.catname,
+            'begindate':self.begindate,
+            'enddate':self.enddate,
+            'name': self.name,
+            'content':self.content,
+            'desc':self.desc,
+            'addr': self.addr,
+            'team':self.team,
+            'features':self.features,
+            'phone': self.phone,
+            'intro': self.intro,
+            'price':str(self.price),
+            'provid':self.provid,
+            'provname':self.provname,
+            'cityid':self.cityid,
+            'cityname':self.cityname,
+            'districtid':self.districtid,
+            'districtname':self.districtname,
+            'duration': self.duration,
+            'sortindex':self.sortindex,
+            'img': '/img/training/l/'+str(self.id),
+            'thumb': '/img/training/s/'+str(self.id),
+            'isbest': self.isbest,
+            'isnew':self.isnew,
+            'ishot':self.ishot,
+            'istopshow':self.istopshow,
+            'lon':self.lon,#经度
+            "lat":self.lat,#维度
+            "cbdname":self.cbdname, #商圈名称
+            "cbdid":self.cbdid,#商圈标识
+            "classlist":classList,#课程列表(前五条)
+            }
+                
+        return data
+class TrainingClass(db.Model):
+
+    __tablename__ = 'TrainingClasses'
+
+    id = db.Column("classid",db.Integer, primary_key=True)
+    trainingid = db.Column("trainingid",db.Integer)
+    name = db.Column("classname",db.String(120), unique=True)
+    desc = db.Column("classdesc",db.String(1024))
+    content = db.Column("classcontent",db.String(1024))
+    features = db.Column("features",db.String(1024))
+    
+    intro = db.Column("intro",db.String(1024))
+    begindate = db.Column("begindate",db.String(64))
+    enddate = db.Column("enddate",db.String(64))
+    price = db.Column("price",db.Numeric(10,2))
+    originalprice = db.Column("originalprice",db.Numeric(10,2))
+    
+    duration = db.Column("duration",db.String(32))
+    sortindex = db.Column("sortindex",db.Integer)
+    img = db.Column("img",db.String(126))
+    thumb = db.Column("thumb",db.String(126))
+    isbest = db.Column("isbest",db.Integer)
+    isnew = db.Column("isnew",db.Integer)
+    ishot = db.Column("ishot",db.Integer)
+    istopshow = db.Column("istopshow",db.Integer)
+   
+ 
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.name)
+    
+    def to_dict(self):
+        data = {
+            'id': self.id,
+           
+            'begindate':self.begindate,
+            'enddate':self.enddate,
+            'name': self.name,
+            'content':self.content,
+            'desc':self.desc,
+            
+            'features':self.features,
+            
+            'intro': self.intro,
+            'price':str(self.price),
+            'originalprice':str(self.originalprice),
+            
+            'duration': self.duration,
+            'sortindex':self.sortindex,
+            'img': '/img/class/l/'+str(self.id),
+            'thumb': '/img/class/s/'+str(self.id),
+            'isbest': self.isbest,
+            'isnew':self.isnew,
+            'ishot':self.ishot,
+            'istopshow':self.istopshow,
+            
+            }
+                
+        return data
+    
 class Province(db.Model):
     __tablename__ = 'Provinces'
 

@@ -484,7 +484,7 @@ def training_edit():
         obj.enddate= dt.strftime( '%m-%d-%Y' )  
         obj.price=0
         obj.originalprice=0
-        
+    print(obj.__dict__)    
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
     districts=[item.to_dict() for item in District.query.all()]

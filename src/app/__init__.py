@@ -18,39 +18,14 @@ from app.models import School
 
 from app.resources.user import RegistAPI,LoginAPI
 from app.resources.task import TaskAPI,TaskListAPI
-from app.resources.school import SchoolListAPI,ProvinceListAPI,CityListAPI,DistrictListAPI,GradeListAPI,CategoryListAPI,SchoolAPI,CBDListAPI
+from app.resources.school import SchoolListAPI,SchoolThumbAPI,SchoolImgAPI
+from app.resources.school import ProvinceListAPI,CityListAPI,DistrictListAPI,GradeListAPI,CategoryListAPI,SchoolAPI,CBDListAPI
 from app.resources.goods import GoodsCatAPI,GoodsCatListAPI
-from app.resources.show import ShowAPI,ShowListAPI
+from app.resources.show import ShowAPI,ShowListAPI,ShowThumbAPI,ShowImgAPI
+from app.resources.training import TrainingAPI,TrainingListAPI,TrainingThumbAPI,TrainingImgAPI
+from app.resources.trainingclass import TrainingClassAPI,TrainingClassListAPI,TrainingClassThumbAPI,TrainingClassImgAPI
 api = Api(app)
 
-class SchoolThumbAPI(Resource):
-    def get(self,id):
-        # Default to 200 OK
-        #id = request.args.get('id', -1, type=int)
-        school = School.query.get(id)
-        
-        image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
-        if school.thumb is not None:
-            image_data = open(''.join([base_path,  school.thumb]), "rb").read()
-        response = make_response(image_data)
-        response.headers['Content-Type'] = 'image/png'
-        return response
-
-class SchoolImgAPI(Resource):
-    def get(self,t,id):
-        # Default to 200 OK
-        #id = request.args.get('id', -1, type=int)
-        school = School.query.get(id)
-        
-        image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
-
-        if t=='s' and  school.thumb is not None:
-            image_data = open(''.join([base_path,  school.thumb]), "rb").read()
-        if t=='l' and  school.img is not None:
-            image_data = open(''.join([base_path,  school.img]), "rb").read()
-        response = make_response(image_data)
-        response.headers['Content-Type'] = 'image/png'
-        return response
               
 api.add_resource(TaskListAPI, '/api/v1.0/tasks', endpoint = 'tasks')
 api.add_resource(TaskAPI, '/api/v1.0/task/<int:id>', endpoint = 'task')
@@ -69,6 +44,12 @@ api.add_resource(SchoolAPI, '/api/v1.0/school', endpoint = 'school')
 api.add_resource(ShowListAPI, '/api/v1.0/shows', endpoint = 'shows')
 api.add_resource(ShowAPI, '/api/v1.0/show', endpoint = 'show')
 
+api.add_resource(TrainingListAPI, '/api/v1.0/trainings', endpoint = 'trainings')
+api.add_resource(TrainingAPI, '/api/v1.0/training', endpoint = 'training')
+
+api.add_resource(TrainingClassListAPI, '/api/v1.0/classes', endpoint = 'classes')
+api.add_resource(TrainingClassAPI, '/api/v1.0/class', endpoint = 'class')
+
 api.add_resource(ProvinceListAPI, '/api/v1.0/provs', endpoint = 'provs')
 api.add_resource(CityListAPI, '/api/v1.0/cities', endpoint = 'cities')
 api.add_resource(DistrictListAPI, '/api/v1.0/dists', endpoint = 'dists')
@@ -77,5 +58,8 @@ api.add_resource(GradeListAPI, '/api/v1.0/grades', endpoint = 'grades')
 api.add_resource(CategoryListAPI, '/api/v1.0/cats', endpoint = 'cats')
 #api.add_resource(SchoolThumbAPI, '/thumb/school/<int:id>', endpoint = 'thumb_school')
 api.add_resource(SchoolImgAPI, '/img/school/<string:t>/<int:id>', endpoint = 'img_school')
+api.add_resource(ShowImgAPI, '/img/show/<string:t>/<int:id>', endpoint = 'img_show')
+api.add_resource(TrainingImgAPI, '/img/training/<string:t>/<int:id>', endpoint = 'img_training')
+api.add_resource(TrainingClassImgAPI, '/img/class/<string:t>/<int:id>', endpoint = 'img_class')
 
 

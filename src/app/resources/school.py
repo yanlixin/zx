@@ -126,6 +126,36 @@ class SchoolListAPI(Resource):
 
         return jsonify({'msg':'','code':200,'data':{'page_number':pageIndex,'page_size':pageSize,'total_page':totalPage,'total_row':totalRow,'list': data}})
 
+
+class SchoolThumbAPI(Resource):
+    def get(self,id):
+        # Default to 200 OK
+        #id = request.args.get('id', -1, type=int)
+        school = School.query.get(id)
+        
+        image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
+        if school.thumb is not None:
+            image_data = open(''.join([base_path,  school.thumb]), "rb").read()
+        response = make_response(image_data)
+        response.headers['Content-Type'] = 'image/png'
+        return response
+
+class SchoolImgAPI(Resource):
+    def get(self,t,id):
+        # Default to 200 OK
+        #id = request.args.get('id', -1, type=int)
+        school = School.query.get(id)
+        
+        image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
+
+        if t=='s' and  school.thumb is not None:
+            image_data = open(''.join([base_path,  school.thumb]), "rb").read()
+        if t=='l' and  school.img is not None:
+            image_data = open(''.join([base_path,  school.img]), "rb").read()
+        response = make_response(image_data)
+        response.headers['Content-Type'] = 'image/png'
+        return response
+
 class ProvinceListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
