@@ -13,7 +13,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-  <div class="right_col" role="main" data-panel-id='training_list'>
+  <div class="right_col" role="main" data-panel-id='trainingclass_list'>
     <div class="">
       
 
@@ -24,7 +24,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
             <div class="x_title">
-              <h2>数据管理<small>培训机构</small></h2>
+              <h2>数据管理<small>培训课程</small></h2>
               <div class="title_right">
                   <div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
                     <div class="input-group">
@@ -39,15 +39,15 @@
             </div>
             <div class="x_content">
              
-              <table id="datatable-training" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+              <table id="datatable-trainingclass" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                 <thead>
                   <tr>
                     <th>标识</th>
                     <th>名称</th>
                     <th>描述</th>
-                    <th>地址</th>
+                   
                     <th>特色</th>
-                    <th>电话</th>
+                    
                     <th></th>
                     
                   </tr>
@@ -68,7 +68,7 @@
       </div>
     </div>
   </div>
-  <div class="hide" id="trainingDialog"></div>
+  <div class="hide" id="trainingclassDialog"></div>
 {% endblock content %}
 
 {% block javascripts %}
@@ -95,8 +95,8 @@
   <script src="{{ url_for('static', filename='build/js/Zt.SweetAlert.min.js') }}"></script>
   <script>
      $(document).ready(function () {
-        var $win = $("[data-panel-id='training_list']");
-        var $table = $("#datatable-training");
+        var $win = $("[data-panel-id='trainingclass_list']");
+        var $table = $("#datatable-trainingclass");
 
         $win.on("click", "button", function () {
             if ($(this).has("data-click-name")) {
@@ -106,22 +106,18 @@
                 switch(clickName){
                     case "create":
                     case "edit":
-                        var url = clickName == "create" ? '/zx/training/edit' : '/zx/training/edit?id=' + clickValue;
-                        $("#trainingDialog").ztdialog({
+                        var url = clickName == "create" ? '/zx/trainingclass/edit?trainingid={{trainingid}}' : '/zx/trainingclass/edit?trainingid={{trainingid}}&id=' + clickValue;
+                        $("#trainingclassDialog").ztdialog({
                             'url': url,
-                            'title': clickName == "create"?"添加培训机构": "修改培训机构",
+                            'title': clickName == "create"?"添加培训课程": "修改培训课程",
                             'buttons': 'Save',
                             'height': 768,
                             'width': 1024,
                             'fnSaved': function () { $table.DataTable().draw(false); }
                         });
                         break;
-                    case "trainingclass":
-                        var url = '/zx/trainingclass/list?trainingid='+ clickValue;
-                        window.location.href=url
-                        break;
                     case "gallery":
-                        var url = '/zx/training/gallery/list?trainingid='+ clickValue;
+                        var url = '/zx/trainingclass/gallery/list?classid='+ clickValue;
                         window.location.href=url
                         break;
                     case "delete":
@@ -132,7 +128,7 @@
                             'confirmButtonText': '确定删除',
                             'cancelButtonText': '取消删除',
                             'fnConfirmCallback': function (parms) {
-                                var url = '/zx/training/delete?id=' + parms.id;
+                                var url = '/zx/trainingclass/delete?id=' + parms.id;
                                 $.post(url, function (rtn) {
                                     var rtnDto = JSON.parse(rtn);
                                     if (rtnDto.result) {
@@ -157,10 +153,10 @@
                 }
             }
         });
-    $('#datatable-training').DataTable( {
+    $('#datatable-trainingclass').DataTable( {
       serverSide: true,
       ajax: {
-        url: '/zx/training/jsondata',
+        url: '/zx/trainingclass/jsondata?trainingid={{trainingid}}',
         dataSrc: 'data'
     }, 
       columns: [
@@ -169,26 +165,26 @@
               },
               { data: "name" },
               { data: "desc" },
-              { data: "addr" },
+             
               { data: "features" },
-              { data: "phone" },
+              
               {
                     "sWidth": "55px",
                     "mData": "id",
                     "bSortable": false,
                     "mRender": function (data, type, full) {
                         var sOut = '';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="trainingclass" data-click-value="' + data + '"><i class="glyphicon glyphicon-plus-sign">课程</i></button>';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit"></i>编辑</button>';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="gallery" data-click-value="' + data + '"><i class="glyphicon glyphicon-picture">图片</i></button>';
-                        sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove">删除</i></button>';
+                      
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit"></i></button>';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="gallery" data-click-value="' + data + '"><i class="glyphicon glyphicon-picture"></i></button>';
+                        sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove"></i></button>';
                         
                         return sOut;
                     }
                 }
           ]
     });
-    $('#datatable-training tbody').on('click', 'tr', function () {
+    $('#datatable-trainingclass tbody').on('click', 'tr', function () {
             $table.data("clickIndex", $table.DataTable().row(this).index());
             $('#deptTable tbody tr').each(function (index, item) {
                 $(this).removeAttr("style");

@@ -2,7 +2,7 @@ from app.zx import blueprint
 from flask import render_template,request,make_response
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City,Training,TrainingGallery
+from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City,Training,TrainingGallery,TrainingClass,TrainingClassGallery
 from app import db,uploaded_photos,base_path
 import sys,os,logging,traceback, json,uuid
 
@@ -483,7 +483,7 @@ def training_edit():
         obj.begindate= dt.strftime( '%m-%d-%Y' )  
         obj.enddate= dt.strftime( '%m-%d-%Y' )  
         obj.price=0
-        obj.maxprice=0
+        obj.originalprice=0
         
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
@@ -603,6 +603,186 @@ def training_gallery_save():
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
 #end training
+
+
+
+
+#begin trainingclass 
+@blueprint.route('/trainingclass/list', methods=['GET'])
+@login_required
+def trainingclass_list():
+    trainingid = request.args.get('trainingid', -1, type=int)
+        
+    return render_template(
+            'trainingclasslist.html',
+            trainingid=trainingid
+        )
+
+@blueprint.route('/trainingclass/jsondata', methods=['GET', 'POST'])
+@login_required
+def trainingclass_jsondata():
+    trainingid = request.args.get('trainingid', -1, type=int)
+    table = DataTable(request.args, TrainingClass, TrainingClass.query.filter_by(trainingid=trainingid), [
+        "id",
+        "name",
+        "desc",
+        "features",
+        "sortindex"
+    ])
+    
+    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
+    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+
+    return json.dumps(table.json())
+
+@blueprint.route('/trainingclass/create', methods=['POST'])
+@login_required
+def trainingclass_create():
+    obj = TrainingClass(**request.form)
+    print(obj.__dict__)
+    result='OK'
+    msg=''
+    try:
+        if int(obj.id)>0:
+            dd=db.session.query(TrainingClass).filter_by(id=obj.id)
+            dd.update(obj.to_dict() )
+        else:
+            obj.id=None
+            db.session.add(obj)
+        db.session.commit()
+    except Exception as e:  # 这样做就写不了reason了
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        logging.error(repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
+        result=None
+        msg=str(e)
+        #logging.error(e)
+        #msg=e
+
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/trainingclass/edit', methods=['GET'])
+@login_required
+def trainingclass_edit():
+    id = request.args.get('id', -1, type=int)
+    trainingid = request.args.get('trainingid', -1, type=int)
+    obj = TrainingClass.query.get(id)
+    if obj==None:
+        obj = TrainingClass()
+        obj.trainingid=trainingid
+        dt = datetime.now()  
+        obj.begindate= dt.strftime( '%m-%d-%Y' )  
+        obj.enddate= dt.strftime( '%m-%d-%Y' )  
+        obj.price=0
+        obj.originalprice=0
+        
+    return render_template(
+            'trainingclassedit.html',
+            obj=obj
+        )
+
+@blueprint.route('/trainingclass/delete', methods=['POST'])
+@login_required
+def trainingclass_del():
+    id = request.args.get('id', type=int)
+    result='OK'
+    msg=''
+    dd=TrainingClass.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/trainingclass/gallery/list', methods=['GET'])
+@login_required
+def trainingclass_gallery_list():
+    id = request.args.get('classid', -1, type=int)
+    obj = TrainingClass.query.get(id)
+    galleries =[item.to_dict() for item in TrainingClassGallery.query.filter_by(objid=id)]
+    
+    return render_template(
+            'gallerylist.html',
+            obj=obj,
+            galleryList=galleries,
+            type='trainingclass'
+        )
+
+@blueprint.route('/trainingclass/gallery/create', methods=['GET'])
+@login_required
+def trainingclass_gallery_edit():
+    id = request.args.get('classid', type=int)
+    return render_template(
+            'galleryedit.html',
+            objid=id,
+            type='trainingclass'
+        )
+@blueprint.route('/trainingclass/gallery/delete', methods=['POST'])
+@login_required
+def trainingclass_gallery_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=TrainingClassGallery.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/trainingclass/gallery/view', methods=['GET'])
+@login_required
+def trainingclass_gallery_photo():
+    id = request.args.get('id', -1, type=int)
+    gallery = TrainingClassGallery.query.get(id)
+    imagename = os.path.splitext(gallery.path)
+    origin = [base_path,r'/files/trainingclasses/',str(gallery.objid),r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+
+    image_data = open(os.path.join(base_path, originname), "rb").read()
+    response = make_response(image_data)
+    response.headers['Content-Type'] = 'image/png'
+    return response
+
+@blueprint.route('/trainingclass/gallery/save', methods=['POST'])
+@login_required
+def trainingclass_gallery_save():
+    dataX = request.form.get('dataX')
+    dataY = request.form.get('dataY')
+    dataHeight = request.form.get('dataHeight')
+    dataWidth = request.form.get('dataWidth')
+   
+    gallery = TrainingClassGallery(**request.form)
+    imagename = os.path.splitext(gallery.path)
+    fullname = '%s%s%s' % (base_path,r'/files/',gallery.path)
+    im = Image.open(fullname)
+    id = '-1'
+    if gallery.objid is not None:
+        id = str(gallery.objid)
+
+    folder =''.join([base_path,r'/files/trainingclasses/',id,r'/']) 
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    origin = [base_path,r'/files/trainingclasses/',id,r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+    im.save(originname)
+    cropedIm = im.crop((int(dataX), int(dataY), int(dataWidth), int(dataHeight)))
+    imgName=''.join([r'/files/trainingclasses/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    originFullName = [base_path,imgName]
+    cropedIm.save(''.join(originFullName))
+    dataWidth = '190' 
+    dataHeight = '130'
+    cropedIm = im.resize((int(dataWidth), int(dataHeight)),Image.ANTIALIAS)
+    thumName=''.join([r'/files/trainingclasses/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumFullName = [base_path,thumName]
+    cropedIm.save(''.join(thumFullName))
+    result='OK'
+    msg=''
+    db.session.add(gallery)
+    db.session.commit()
+
+    dd=db.session.query(TrainingClass).filter_by(id=int(id))
+    dd.img=origin
+    dd.thumb=origin
+    dd.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+#end trainingclass
 
 @blueprint.route('/gallery/upload', methods=['POST'])
 def flask_upload():

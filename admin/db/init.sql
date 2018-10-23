@@ -26,3 +26,4 @@ insert into Districts("cityid","districtname","sortindex") values(1,"朝阳",111
 insert into Districts("cityid","districtname","sortindex") values(1,"海淀",111001);
 insert into Districts("cityid","districtname","sortindex") values(1,"东城",111001);
 insert into Districts("cityid","districtname","sortindex") values(1,"西城",111001);
+insert into Districts("cityid","districtname","sortindex") values(1,"通州",111001);

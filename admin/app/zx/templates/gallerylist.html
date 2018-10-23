@@ -50,7 +50,10 @@
                           {% endif %}
                           {% if type =='training' %}
                           <img style="width: 100%; display: block;" src="/zx/training/gallery/view?id={{gallery.id}}" alt="image" />
-                          {% endif %}                      
+                          {% endif %}          
+                          {% if type =='trainingclass' %}
+                          <img style="width: 100%; display: block;" src="/zx/trainingclass/gallery/view?id={{gallery.id}}" alt="image" />
+                          {% endif %}                 
                           <div class="mask">
                             <p>{{gallery.title}}</p>
                             <div class="tools tools-bottom">
@@ -109,7 +112,7 @@
                  switch(clickName){
                      case "create":
                          var url ='';
-                          console.log(url);
+                        
                          {% if type =='school' %}
                            url='/zx/school/gallery/create?schoolid='+{{obj.id}};
                          {% endif %}
@@ -119,6 +122,9 @@
                          {% if type =='training' %}
                            url='/zx/training/gallery/create?trainingid='+{{obj.id}};
                          {% endif %}
+                         {% if type =='trainingclass' %}
+                           url='/zx/trainingclass/gallery/create?classid='+{{obj.id}};
+                         {% endif %}                         
                          $("#galleryDialog").ztdialog({
                              'url': url,
                              'title': "添加图片",
@@ -147,8 +153,11 @@
                                   var  url='/zx/show/gallery/delete?id='+parms.id;
                                   {% endif %}
                                   {% if type =='training' %}
-                                  var  url='/zx/show/gallery/delete?id='+parms.id;
+                                  var  url='/zx/training/gallery/delete?id='+parms.id;
                                   {% endif %}
+                                  {% if type =='trainingclass' %}
+                                  var  url='/zx/trainingclass/gallery/delete?id='+parms.id;
+                                  {% endif %}                                  
                                  $.post(url, function (rtn) {
                                      var rtnDto = JSON.parse(rtn);
                                      if (rtnDto.result) {

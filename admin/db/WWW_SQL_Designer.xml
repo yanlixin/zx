@@ -538,6 +538,9 @@
 <row name="trainingid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
+<row name="trainingpid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <row name="trainingname" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
@@ -553,7 +556,7 @@
 <row name="price" null="1" autoincrement="0">
 <datatype>NUMERIC(10,2)</datatype>
 <default>NULL</default></row>
-<row name="maxprice" null="1" autoincrement="0">
+<row name="originalprice" null="1" autoincrement="0">
 <datatype>NUMERIC(10,2)</datatype>
 <default>NULL</default></row>
 <row name="duration" null="1" autoincrement="0">
@@ -637,6 +640,9 @@
 <default>NULL</default></row>
 <row name="provname" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="orgid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>trainingid</part>
@@ -809,25 +815,37 @@
 <part>id</part>
 </key>
 </table>
-<table x="768" y="1099.75" name="traininggalleries">
+<table x="752" y="1132.75" name="traininggalleries">
 <row name="id" null="1" autoincrement="1">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="new field" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="1201" y="908.5" name="TrainingClasses">
-<row name="trainingclassid" null="1" autoincrement="1">
+<table x="1238" y="957.5" name="TrainingClasses">
+<row name="classid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="trainingid" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
+<row name="orgid" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
 <row name="classname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="features" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="intro" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="classdesc" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="classcontent" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="price" null="1" autoincrement="0">
@@ -835,6 +853,12 @@
 <default>NULL</default></row>
 <row name="originalprice" null="1" autoincrement="0">
 <datatype>NUMERIC(10,2)</datatype>
+<default>NULL</default></row>
+<row name="begindate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="enddate" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="duration" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
@@ -857,24 +881,6 @@
 <row name="istopshow" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="features" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="intro" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="classdesc" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="begindate" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="enddate" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
-<row name="classcontent" null="1" autoincrement="0">
-<datatype>TEXT</datatype>
-<default>NULL</default></row>
 <row name="sortindex" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -882,7 +888,32 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>trainingclassid</part>
+<part>classid</part>
+</key>
+</table>
+<table x="981" y="1489.75" name="OrgUnits">
+<row name="origid" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="orgname" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="orgdesc" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="orgremark" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>origid</part>
+</key>
+</table>
+<table x="1335" y="1459.5" name="TrainingClassGalleries">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
 </key>
 </table>
 </sql>
