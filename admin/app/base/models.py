@@ -269,6 +269,7 @@ class SchoolGallery(db.Model):
     istopshow = Column("istopshow",Integer)
     isenable = Column("isenable",Integer)
     sortindex = Column("sortindex",Integer)
+    cat = Column("category",String(1))
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -287,6 +288,7 @@ class SchoolGallery(db.Model):
             'title': self.title,
             'text':self.title,
             'path':self.path,
+            'cat':self.cat,
             'isdefault': self.isdefault,
             'istopshow':self.istopshow,
             'isenable':self.isenable,
@@ -392,6 +394,7 @@ class ShowGallery(db.Model):
     istopshow = Column("istopshow",Integer)
     isenable = Column("isenable",Integer)
     sortindex = Column("sortindex",Integer)
+    cat = Column("category",String(1))
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -410,6 +413,7 @@ class ShowGallery(db.Model):
             'title': self.title,
             'text':self.title,
             'path':self.path,
+            'cat':self.cat,
             'isdefault': self.isdefault,
             'istopshow':self.istopshow,
             'isenable':self.isenable,
@@ -508,7 +512,7 @@ class Training(db.Model):
         return data
 
 class TrainingGallery(db.Model):
-    __tablename__ = 'trainingalleries'
+    __tablename__ = 'traininggalleries'
     id = Column("galleryid",Integer, primary_key=True)
     objid=Column("trainingid",Integer)
     title = Column("imagetitle",String(120))
@@ -517,6 +521,7 @@ class TrainingGallery(db.Model):
     isdefault = Column("isdefault",Integer)
     istopshow = Column("istopshow",Integer)
     isenable = Column("isenable",Integer)
+    cat = Column("category",String(1))
     sortindex = Column("sortindex",Integer)
 
     def __init__(self, **kwargs):
@@ -536,6 +541,7 @@ class TrainingGallery(db.Model):
             'title': self.title,
             'text':self.title,
             'path':self.path,
+            'cat':self.cat,
             'isdefault': self.isdefault,
             'istopshow':self.istopshow,
             'isenable':self.isenable,
@@ -619,6 +625,7 @@ class TrainingClassGallery(db.Model):
     title = Column("imagetitle",String(120))
     desc = Column("imagedesc",String(120))
     path = Column("imagepath",String(120))
+    cat = Column("category",String(1))
     isdefault = Column("isdefault",Integer)
     istopshow = Column("istopshow",Integer)
     isenable = Column("isenable",Integer)
@@ -641,6 +648,7 @@ class TrainingClassGallery(db.Model):
             'title': self.title,
             'text':self.title,
             'path':self.path,
+            'cat':self.cat,
             'isdefault': self.isdefault,
             'istopshow':self.istopshow,
             'isenable':self.isenable,

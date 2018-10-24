@@ -4,7 +4,7 @@ from flask_httpauth import HTTPBasicAuth
 import os
 from sqlalchemy import func,or_,cast,Numeric
 from app import app, db, base_path
-from app.models import Training
+from app.models import Training,TrainingGallery
 
 
 class TrainingAPI(Resource):
@@ -101,14 +101,21 @@ class TrainingImgAPI(Resource):
     def get(self,t,id):
         # Default to 200 OK
         #id = request.args.get('id', -1, type=int)
-        obj = Training.query.get(id)
-        
-        image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
+        image_data=None
+        if t=='n':
+            obj=TrainingGallery.query.get(id)
+            imagename = os.path.splitext(obj.path)
+            origin = [base_path,r'/files/trainings/',str(obj.objid),r'/',imagename[0],r'_origin_',imagename[1]]
+            originname = ''.join(origin)
+            image_data = open(os.path.join(base_path, originname), "rb").read()
+        else:
+            obj = Training.query.get(id)
+            image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
 
-        if t=='s' and  obj.thumb is not None:
-            image_data = open(''.join([base_path,  obj.thumb]), "rb").read()
-        if t=='l' and  obj.img is not None:
-            image_data = open(''.join([base_path,  obj.img]), "rb").read()
+            if t=='s' and  obj.thumb is not None:
+                image_data = open(''.join([base_path,  obj.thumb]), "rb").read()
+            if t=='l' and  obj.img is not None:
+                image_data = open(''.join([base_path,  obj.img]), "rb").read()
         response = make_response(image_data)
         response.headers['Content-Type'] = 'image/png'
         return response

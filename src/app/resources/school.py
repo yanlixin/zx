@@ -1,10 +1,10 @@
 from flask import Flask, jsonify,abort,make_response,request,url_for
 from flask_restful import Resource, Api,reqparse,fields
 from flask_httpauth import HTTPBasicAuth
-
+import os
 from sqlalchemy import func,or_,cast,Numeric
 from app import app, db, base_path
-from app.models import School,Province,City,District,Grade,Category,CBD
+from app.models import School,SchoolGallery,Province,City,District,Grade,Category,CBD
 #api = Api(app)
 
 # class SchoolAPI(Resource):
@@ -144,14 +144,23 @@ class SchoolImgAPI(Resource):
     def get(self,t,id):
         # Default to 200 OK
         #id = request.args.get('id', -1, type=int)
-        school = School.query.get(id)
-        
-        image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
+        print(t)
+        image_data=None
+        if t=='n':
+            obj=SchoolGallery.query.get(id)
+            imagename = os.path.splitext(obj.path)
+            origin = [base_path,r'/files/schools/',str(obj.objid),r'/',imagename[0],r'_origin_',imagename[1]]
+            originname = ''.join(origin)
+            image_data = open(os.path.join(base_path, originname), "rb").read()
+        else:
+            school = School.query.get(id)
+            
+            image_data = open(os.path.join(base_path, 'timg.jpg'), "rb").read()
 
-        if t=='s' and  school.thumb is not None:
-            image_data = open(''.join([base_path,  school.thumb]), "rb").read()
-        if t=='l' and  school.img is not None:
-            image_data = open(''.join([base_path,  school.img]), "rb").read()
+            if t=='s' and  school.thumb is not None:
+                image_data = open(''.join([base_path,  school.thumb]), "rb").read()
+            if t=='l' and  school.img is not None:
+                image_data = open(''.join([base_path,  school.img]), "rb").read()
         response = make_response(image_data)
         response.headers['Content-Type'] = 'image/png'
         return response

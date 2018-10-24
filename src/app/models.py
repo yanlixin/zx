@@ -197,6 +197,7 @@ class School(db.Model):
 
 
     def to_dict(self):
+        galleryList=db.session.query(SchoolGallery).filter(SchoolGallery.objid==self.id)
         data = {
             'id': self.id,
             'catid':self.catid,
@@ -239,10 +240,33 @@ class School(db.Model):
             "cbdname":self.cbdname,
             "cbdid":self.cbdid,
             "shcoolpid":self.shcoolpid,
-            "isbilingual":self.isbilingual
+            "isbilingual":self.isbilingual,
+            'imglist':[{"id":g.id,"img":"/img/school/n/"+str(g.id)} for g in galleryList],
             }
         return data
 
+class SchoolGallery(db.Model):
+    __tablename__ = 'schoolgalleries'
+    id =  db.Column("galleryid", db.Integer, primary_key=True)
+    objid= db.Column("schoolid", db.Integer)
+    title =  db.Column("imagetitle", db.String(120))
+    desc =  db.Column("imagedesc", db.String(120))
+    path =  db.Column("imagepath", db.String(120))
+    isdefault =  db.Column("isdefault", db.Integer)
+    istopshow =  db.Column("istopshow",db.Integer)
+    isenable =  db.Column("isenable", db.Integer)
+    cat =  db.Column("category", db.String(1))
+    sortindex =  db.Column("sortindex", db.Integer)
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
 
 
 class Show(db.Model):
@@ -296,6 +320,7 @@ class Show(db.Model):
         return str(self.name)
     
     def to_dict(self):
+        galleryList=db.session.query(ShowGallery).filter(ShowGallery.objid==self.id)
         data = {
             'id': self.id,
             'catid':self.catid,
@@ -328,9 +353,34 @@ class Show(db.Model):
             "lat":self.lat,#维度
             "cbdname":self.cbdname, #商圈名称
             "cbdid":self.cbdid,#商圈标识
+            'imglist':[{"id":g.id,"img":"/img/show/n/"+str(g.id)} for g in galleryList],
             }
                 
         return data
+
+class ShowGallery(db.Model):
+    __tablename__ = 'showgalleries'
+    id =  db.Column("galleryid", db.Integer, primary_key=True)
+    objid= db.Column("showid", db.Integer)
+    title =  db.Column("imagetitle", db.String(120))
+    desc =  db.Column("imagedesc", db.String(120))
+    path =  db.Column("imagepath", db.String(120))
+    isdefault =  db.Column("isdefault", db.Integer)
+    istopshow =  db.Column("istopshow",db.Integer)
+    isenable =  db.Column("isenable", db.Integer)
+    cat =  db.Column("category", db.String(1))
+    sortindex =  db.Column("sortindex", db.Integer)
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
 
 class Training(db.Model):
 
@@ -385,6 +435,7 @@ class Training(db.Model):
     
     def to_dict(self):
         classList=[ g.to_dict() for g in  db.session.query(TrainingClass).filter(TrainingClass.trainingid==self.id).limit(5)] 
+        galleryList=db.session.query(TrainingGallery).filter(TrainingGallery.objid==self.id)
         data = {
             'id': self.id,
             'catid':self.catid,
@@ -415,10 +466,12 @@ class Training(db.Model):
             'ishot':self.ishot,
             'istopshow':self.istopshow,
             'lon':self.lon,#经度
-            "lat":self.lat,#维度
-            "cbdname":self.cbdname, #商圈名称
-            "cbdid":self.cbdid,#商圈标识
-            "classlist":classList,#课程列表(前五条)
+            'lat':self.lat,#维度
+            'cbdname':self.cbdname, #商圈名称
+            'cbdid':self.cbdid,#商圈标识
+            'classlist':classList,#课程列表(前五条)
+            'imglistforenv':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='2' ],
+            'imglist':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='1' ],
             }
                 
         return data
@@ -463,6 +516,7 @@ class TrainingClass(db.Model):
         return str(self.name)
     
     def to_dict(self):
+       
         data = {
             'id': self.id,
            
@@ -486,11 +540,35 @@ class TrainingClass(db.Model):
             'isnew':self.isnew,
             'ishot':self.ishot,
             'istopshow':self.istopshow,
-            
+
             }
                 
         return data
-    
+
+class TrainingGallery(db.Model):
+    __tablename__ = 'traininggalleries'
+    id =  db.Column("galleryid", db.Integer, primary_key=True)
+    objid= db.Column("trainingid", db.Integer)
+    title =  db.Column("imagetitle", db.String(120))
+    desc =  db.Column("imagedesc", db.String(120))
+    path =  db.Column("imagepath", db.String(120))
+    isdefault =  db.Column("isdefault", db.Integer)
+    istopshow =  db.Column("istopshow",db.Integer)
+    isenable =  db.Column("isenable", db.Integer)
+    cat =  db.Column("category", db.String(1))
+    sortindex =  db.Column("sortindex", db.Integer)
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+     
 class Province(db.Model):
     __tablename__ = 'Provinces'
 

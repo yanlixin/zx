@@ -205,7 +205,7 @@ def school_gallery_photo():
     id = request.args.get('id', -1, type=int)
     gallery = SchoolGallery.query.get(id)
     imagename = os.path.splitext(gallery.path)
-    origin = [base_path,r'/files/scools/',str(gallery.objid),r'/',imagename[0],r'_origin_',imagename[1]]
+    origin = [base_path,r'/files/schools/',str(gallery.objid),r'/',imagename[0],r'_origin_',imagename[1]]
     originname = ''.join(origin)
 
     image_data = open(os.path.join(base_path, originname), "rb").read()
@@ -229,20 +229,20 @@ def school_gallery_save():
     if gallery.objid is not None:
         id = str(gallery.objid)
 
-    folder =''.join([base_path,r'/files/scools/',id,r'/']) 
+    folder =''.join([base_path,r'/files/schools/',id,r'/']) 
     if not os.path.exists(folder):
         os.makedirs(folder)
-    origin = [base_path,r'/files/scools/',id,r'/',imagename[0],r'_origin_',imagename[1]]
+    origin = [base_path,r'/files/schools/',id,r'/',imagename[0],r'_origin_',imagename[1]]
     originname = ''.join(origin)
     im.save(originname)
     cropedIm = im.crop((int(dataX), int(dataY), int(dataWidth), int(dataHeight)))
-    imgName=''.join([r'/files/scools/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    imgName=''.join([r'/files/schools/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
     originFullName = [base_path,imgName]
     cropedIm.save(''.join(originFullName))
     dataWidth = '190' 
     dataHeight = '130'
     cropedIm = im.resize((int(dataWidth), int(dataHeight)),Image.ANTIALIAS)
-    thumName=''.join([r'/files/scools/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumName=''.join([r'/files/schools/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
     thumFullName = [base_path,thumName]
     cropedIm.save(''.join(thumFullName))
     result='OK'
@@ -574,6 +574,8 @@ def training_gallery_save():
     id = '-1'
     if gallery.objid is not None:
         id = str(gallery.objid)
+    print(gallery.cat)
+    gallery.title= '环境图片' if gallery.cat=='2' else '一般图片'
 
     folder =''.join([base_path,r'/files/trainings/',id,r'/']) 
     if not os.path.exists(folder):
@@ -639,7 +641,6 @@ def trainingclass_jsondata():
 @login_required
 def trainingclass_create():
     obj = TrainingClass(**request.form)
-    print(obj.__dict__)
     result='OK'
     msg=''
     try:

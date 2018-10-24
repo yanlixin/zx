@@ -130,7 +130,8 @@ CREATE TABLE 'schoolgalleries' (
 'sortindex' INTEGER DEFAULT NULL,
 'recordstatus' INTEGER DEFAULT NULL,
 'createddate' TEXT DEFAULT NULL,
-'createdbymanagerid' INTEGER DEFAULT NULL
+'createdbymanagerid' INTEGER DEFAULT NULL,
+'category' TEXT DEFAULT NULL
 );
 
 CREATE TABLE 'SmsCode' (
