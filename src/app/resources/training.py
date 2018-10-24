@@ -33,7 +33,7 @@ class TrainingListAPI(Resource):
         self.reqparse.add_argument('name', type = str, default = '', location='json')
         self.reqparse.add_argument('pageindex', type = int, default = 1, location='json')
         self.reqparse.add_argument('pagesize', type = int, default = 1000, location='json')
-        #self.reqparse.add_argument('price', type = str, default = '0~9999999', location='json') #tuition:0~1000
+        self.reqparse.add_argument('price', type = str, default = '0~9999999', location='json') #tuition:0~1000
         self.reqparse.add_argument('sortname', type = str, default = '', location='json') #价格:tuition,默认:default
         self.reqparse.add_argument('sortorder', type = str, default = 'asc', location='json') # can only be 'asc' or 'desc'
         super(TrainingListAPI, self).__init__()
@@ -49,13 +49,18 @@ class TrainingListAPI(Resource):
         pageSize=args['pagesize']
         sortName=args['sortname']
         sortOrder=args['sortorder']
-       
+        tuition=args['price']
+        tuitionList=str.split(tuition,'~') 
+        print(tuitionList)
+        tuitionB=tuitionList[0]
+        tuitionE=tuitionList[1]
         query=Training.query
         query=query.filter(or_(Training.catid==catid,-1==catid))
         query=query.filter(or_(Training.cityid==cityid,-1==cityid))
         query=query.filter(or_(Training.districtid==distid,-1==distid))
         query=query.filter(or_(Training.cbdid==cbdid,-1==cbdid))
-        
+        query=query.filter(or_(cast(Training.price,Numeric(12,2))>=tuitionB))
+        query=query.filter(or_(cast(Training.price,Numeric(12,2))<=tuitionE))
         query=query.filter(or_(Training.name.like('%'+name+'%'),name==''))
         if sortName=="price":
             if sortOrder=='desc':
@@ -78,6 +83,8 @@ class TrainingListAPI(Resource):
         .filter(or_(Training.cityid==cityid,-1==cityid))\
         .filter(or_(Training.districtid==distid,-1==distid))\
         .filter(or_(Training.cbdid==cbdid,-1==cbdid))\
+        .filter(or_(cast(Training.price,Numeric(12,2))>=tuitionB))\
+        .filter(or_(cast(Training.price,Numeric(12,2))<=tuitionE))\
         .filter(or_(Training.name.like('%'+name+'%'),name=='')).scalar()
         totalPage=int(totalRow/pageSize)+1
 

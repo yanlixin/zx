@@ -434,16 +434,14 @@ class Training(db.Model):
         return str(self.name)
     
     def to_dict(self):
-        classList=[ g.to_dict() for g in  db.session.query(TrainingClass).filter(TrainingClass.trainingid==self.id).limit(5)] 
+        #classList=[ g.to_dict() for g in  db.session.query(TrainingClass).filter(TrainingClass.trainingid==self.id).limit(5)] 
         galleryList=db.session.query(TrainingGallery).filter(TrainingGallery.objid==self.id)
         data = {
             'id': self.id,
             'catid':self.catid,
             'catname':self.catname,
-            'begindate':self.begindate,
-            'enddate':self.enddate,
             'name': self.name,
-            'content':self.content,
+            #'content':self.content,
             'desc':self.desc,
             'addr': self.addr,
             'team':self.team,
@@ -457,7 +455,6 @@ class Training(db.Model):
             'cityname':self.cityname,
             'districtid':self.districtid,
             'districtname':self.districtname,
-            'duration': self.duration,
             'sortindex':self.sortindex,
             'img': '/img/training/l/'+str(self.id),
             'thumb': '/img/training/s/'+str(self.id),
@@ -469,7 +466,7 @@ class Training(db.Model):
             'lat':self.lat,#维度
             'cbdname':self.cbdname, #商圈名称
             'cbdid':self.cbdid,#商圈标识
-            'classlist':classList,#课程列表(前五条)
+
             'imglistforenv':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='2' ],
             'imglist':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='1' ],
             }
