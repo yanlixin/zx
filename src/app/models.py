@@ -565,7 +565,121 @@ class TrainingGallery(db.Model):
                 value = value[0]
             setattr(self, property, value)
 
-     
+
+
+
+class Lecturer(db.Model):
+
+    __tablename__ = 'Lecturers'
+
+    id = db.Column("lecturerid",db.Integer, primary_key=True)
+    catid = db.Column("catid",db.Integer)
+    catname =db.Column("catname",db.String(128))
+    name = db.Column("lecturername",db.String(120), unique=True)
+    desc = db.Column("lecturerdesc",db.String(1024))
+    team = db.Column("team",db.String(1024))
+    content = db.Column("lecturercontent",db.String(1024))
+    addr = db.Column("addr",db.String(128))
+    features = db.Column("features",db.String(1024))
+    phone = db.Column("phone",db.String(32))
+    intro = db.Column("intro",db.String(1024))
+    begindate = db.Column("begindate",db.String(64))
+    enddate = db.Column("enddate",db.String(64))
+    price = db.Column("price",db.Numeric(10,2))
+    provid = db.Column("provid",db.Integer)
+    provname = db.Column("provname",db.String(128))
+    cityid = db.Column("cityid",db.Integer)
+    cityname = db.Column("cityname",db.String(128))
+    districtid = db.Column("districtid",db.Integer)
+    districtname = db.Column("districtname",db.String(128))
+    duration = db.Column("duration",db.String(32))
+    sortindex = db.Column("sortindex",db.Integer)
+    img = db.Column("img",db.String(126))
+    thumb = db.Column("thumb",db.String(126))
+    isbest = db.Column("isbest",db.Integer)
+    isnew = db.Column("isnew",db.Integer)
+    ishot = db.Column("ishot",db.Integer)
+    istopshow = db.Column("istopshow",db.Integer)
+    lon = db.Column("lon",db.String(64))
+    lat = db.Column("lat",db.String(64))
+    cbdname = db.Column("cbdname",db.String(126))
+    cbdid = db.Column("cbdid",db.Integer)
+ 
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def __repr__(self):
+        return str(self.name)
+    
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'catid':self.catid,
+            'catname':self.catname,
+            'name': self.name,
+            'content':self.content,
+            'desc':self.desc,
+            'features':self.features,
+            'intro': self.intro,
+            'sortindex':self.sortindex,
+            'img': self.img,
+            'thumb': self.thumb,
+            'isbest': self.isbest,
+            'isnew':self.isnew,
+            'ishot':self.ishot,
+            'istopshow':self.istopshow,
+            "title":self.title
+            }
+                
+        return data
+
+class LecturerGallery(db.Model):
+    __tablename__ = 'lecturergalleries'
+    id = db.Column("galleryid",db.Integer, primary_key=True)
+    objid=db.Column("trainingid",db.Integer)
+    title = db.Column("imagetitle",db.String(120))
+    desc = db.Column("imagedesc",db.String(120))
+    path = db.Column("imagepath",db.String(120))
+    isdefault = db.Column("isdefault",db.Integer)
+    istopshow = db.Column("istopshow",db.Integer)
+    isenable = db.Column("isenable",db.Integer)
+    cat = db.Column("category",db.String(1))
+    sortindex = db.Column("sortindex",db.Integer)
+
+    def __init__(self, **kwargs):
+        for property, value in kwargs.items():
+            # depending on whether value is an iterable or not, we must
+            # unpack it's value (when **kwargs is request.form, some values
+            # will be a 1-element list)
+            if hasattr(value, '__iter__') and not isinstance(value, str):
+                # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
+                value = value[0]
+            setattr(self, property, value)
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'objid':self.objid,
+            'title': self.title,
+            'text':self.title,
+            'path':self.path,
+            'cat':self.cat,
+            'isdefault': self.isdefault,
+            'istopshow':self.istopshow,
+            'isenable':self.isenable,
+            'sortindex':self.sortindex,
+        }
+        return data
+
+
+
 class Province(db.Model):
     __tablename__ = 'Provinces'
 

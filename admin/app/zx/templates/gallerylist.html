@@ -53,7 +53,10 @@
                           {% endif %}          
                           {% if type =='trainingclass' %}
                           <img style="width: 100%; display: block;" src="/zx/trainingclass/gallery/view?id={{gallery.id}}" alt="image" />
-                          {% endif %}                 
+                          {% endif %}  
+                          {% if type =='lecturer' %}
+                          <img style="width: 100%; display: block;" src="/zx/lecturer/gallery/view?id={{gallery.id}}" alt="image" />
+                          {% endif %}                
                           <div class="mask">
                             <p>{{gallery.title}}</p>
                             <div class="tools tools-bottom">
@@ -124,7 +127,10 @@
                          {% endif %}
                          {% if type =='trainingclass' %}
                            url='/zx/trainingclass/gallery/create?classid='+{{obj.id}};
-                         {% endif %}                         
+                         {% endif %}  
+                         {% if type =='lecturer' %}
+                           url='/zx/lecturer/gallery/create?lecturerid='+{{obj.id}};
+                         {% endif %}                          
                          $("#galleryDialog").ztdialog({
                              'url': url,
                              'title': "添加图片",
@@ -157,7 +163,10 @@
                                   {% endif %}
                                   {% if type =='trainingclass' %}
                                   var  url='/zx/trainingclass/gallery/delete?id='+parms.id;
-                                  {% endif %}                                  
+                                  {% endif %}      
+                                  {% if type =='lecturer' %}
+                                  var  url='/zx/lecturer/gallery/delete?id='+parms.id;
+                                  {% endif %}                                
                                  $.post(url, function (rtn) {
                                      var rtnDto = JSON.parse(rtn);
                                      if (rtnDto.result) {

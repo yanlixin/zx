@@ -2,7 +2,7 @@ from app.zx import blueprint
 from flask import render_template,request,make_response
 from flask_login import login_required
 from datatables import DataTable
-from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City,Training,TrainingGallery,TrainingClass,TrainingClassGallery
+from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City,Training,TrainingGallery,TrainingClass,TrainingClassGallery,Lecturer,LecturerGallery
 from app import db,uploaded_photos,base_path
 import sys,os,logging,traceback, json,uuid
 
@@ -476,15 +476,7 @@ def training_create():
 @login_required
 def training_edit():
     id = request.args.get('id', -1, type=int)
-    obj = Training.query.get(id)
-    if obj==None:
-        obj = Training()
-        dt = datetime.now()  
-        obj.begindate= dt.strftime( '%m-%d-%Y' )  
-        obj.enddate= dt.strftime( '%m-%d-%Y' )  
-        obj.price=0
-        obj.originalprice=0
-    print(obj.__dict__)    
+    obj = Training.query.get(id)    
     provs=[item.to_dict() for item in Province.query.all()]
     cities=[item.to_dict() for item in City.query.all()]
     districts=[item.to_dict() for item in District.query.all()]
@@ -784,6 +776,170 @@ def trainingclass_gallery_save():
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
 #end trainingclass
+
+#begin lecturer 
+@blueprint.route('/lecturer/jsondata', methods=['GET', 'POST'])
+@login_required
+def lecturer_jsondata():
+    table = DataTable(request.args, Lecturer, Lecturer.query, [
+        "id",
+        "name",
+        "desc",
+        "addr",
+        "features",
+        "phone",
+        "sortindex"
+    ])
+    
+    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
+    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+
+    return json.dumps(table.json())
+
+@blueprint.route('/lecturer/create', methods=['POST'])
+@login_required
+def lecturer_create():
+    obj = Lecturer(**request.form)
+    result='OK'
+    msg=''
+    try:
+        if int(obj.id)>0:
+            dd=db.session.query(Lecturer).filter_by(id=obj.id)
+            dd.update(obj.to_dict() )
+        else:
+            obj.id=None
+            db.session.add(obj)
+        db.session.commit()
+    except Exception as e:  # 这样做就写不了reason了
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        logging.error(repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
+        result=None
+        msg=str(e)
+        #logging.error(e)
+        #msg=e
+
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/lecturer/edit', methods=['GET'])
+@login_required
+def lecturer_edit():
+    id = request.args.get('id', -1, type=int)
+    obj = Lecturer.query.get(id)    
+ 
+    cats=[item.to_dict() for item in Category.list(4)]
+    return render_template(
+            'lectureredit.html',
+            obj=obj,
+            catList=json.dumps(cats),
+            
+        )
+
+@blueprint.route('/lecturer/delete', methods=['POST'])
+@login_required
+def lecturer_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=Lecturer.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/lecturer/gallery/list', methods=['GET'])
+@login_required
+def lecturer_gallery_list():
+    id = request.args.get('lecturerid', -1, type=int)
+    obj = Lecturer.query.get(id)
+    galleries =[item.to_dict() for item in LecturerGallery.query.filter_by(objid=id)]
+   
+    return render_template(
+            'gallerylist.html',
+            obj=obj,
+            galleryList=galleries,
+            type='lecturer'
+        )
+
+@blueprint.route('/lecturer/gallery/create', methods=['GET'])
+@login_required
+def lecturer_gallery_edit():
+    id = request.args.get('lecturerid', type=int)
+    return render_template(
+            'galleryedit.html',
+            objid=id,
+            type='lecturer'
+        )
+@blueprint.route('/lecturer/gallery/delete', methods=['POST'])
+@login_required
+def lecturer_gallery_del():
+    id = request.args.get('id', -1, type=int)
+    result='OK'
+    msg=''
+    dd=LecturerGallery.query.get(id)
+    db.session.delete(dd)
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
+@blueprint.route('/lecturer/gallery/view', methods=['GET'])
+@login_required
+def lecturer_gallery_photo():
+    id = request.args.get('id', -1, type=int)
+    gallery = LecturerGallery.query.get(id)
+    imagename = os.path.splitext(gallery.path)
+    origin = [base_path,r'/files/lecturers/',str(gallery.objid),r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+
+    image_data = open(os.path.join(base_path, originname), "rb").read()
+    response = make_response(image_data)
+    response.headers['Content-Type'] = 'image/png'
+    return response
+
+@blueprint.route('/lecturer/gallery/save', methods=['POST'])
+@login_required
+def lecturer_gallery_save():
+    dataX = request.form.get('dataX')
+    dataY = request.form.get('dataY')
+    dataHeight = request.form.get('dataHeight')
+    dataWidth = request.form.get('dataWidth')
+   
+    gallery = LecturerGallery(**request.form)
+    imagename = os.path.splitext(gallery.path)
+    fullname = '%s%s%s' % (base_path,r'/files/',gallery.path)
+    im = Image.open(fullname)
+    id = '-1'
+    if gallery.objid is not None:
+        id = str(gallery.objid)
+    print(gallery.cat)
+    gallery.title= '环境图片' if gallery.cat=='2' else '一般图片'
+
+    folder =''.join([base_path,r'/files/lecturers/',id,r'/']) 
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    origin = [base_path,r'/files/lecturers/',id,r'/',imagename[0],r'_origin_',imagename[1]]
+    originname = ''.join(origin)
+    im.save(originname)
+    cropedIm = im.crop((int(dataX), int(dataY), int(dataWidth), int(dataHeight)))
+    imgName=''.join([r'/files/lecturers/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    originFullName = [base_path,imgName]
+    cropedIm.save(''.join(originFullName))
+    dataWidth = '190' 
+    dataHeight = '130'
+    cropedIm = im.resize((int(dataWidth), int(dataHeight)),Image.ANTIALIAS)
+    thumName=''.join([r'/files/lecturers/',id,r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumFullName = [base_path,thumName]
+    cropedIm.save(''.join(thumFullName))
+    result='OK'
+    msg=''
+    db.session.add(gallery)
+    db.session.commit()
+
+    dd=db.session.query(Lecturer).filter_by(id=int(id))
+    dd.img=origin
+    dd.thumb=origin
+    dd.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+#end lecturer
+
 
 @blueprint.route('/gallery/upload', methods=['POST'])
 def flask_upload():
