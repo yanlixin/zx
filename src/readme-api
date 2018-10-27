@@ -22,7 +22,7 @@ code:
 
 用户注册登录
 注册
-http://39.105.3.57/api/v1.0/reg
+http://localhost/api/v1.0/reg
   参数
   {
     "loginname":"test",--登录名称(手机号码)
@@ -33,7 +33,7 @@ http://39.105.3.57/api/v1.0/reg
   {"code":200,"data":{"username":"test"},"msg":"OK"}
 
 登录
-http://39.105.3.57/api/v1.0/login
+http://localhost/api/v1.0/login
   参数
   {
     "loginname":"test",--登录名称(手机号码)
@@ -48,34 +48,34 @@ http://39.105.3.57/api/v1.0/login
     pagesize:每页记录数(选填,默认每页读取10条)
 
 学校类别
-http://39.105.3.57/api/v1.0/shop/cats
+http://localhost/api/v1.0/shop/cats
 
 省份
-http://39.105.3.57/api/v1.0/provs
+http://localhost/api/v1.0/provs
 
 城市
-http://39.105.3.57/api/v1.0/cities
+http://localhost/api/v1.0/cities
 
 provid:省份标识
 区/县
-http://39.105.3.57/api/v1.0/dists
+http://localhost/api/v1.0/dists
 cityid:市标识
 
 商圈
-http://39.105.3.57/api/v1.0/cbds
+http://localhost/api/v1.0/cbds
 请求参数:
     districtid:区/县标识
 
 #学校等级
-#http://39.105.3.57/api/v1.0/grades
+#http://localhost/api/v1.0/grades
 
 学校类别
-http://39.105.3.57/api/v1.0/cats
+http://localhost/api/v1.0/cats
 请求参数:
     typeid:类型标识 1:学校,2:课余,3:培训机构(选填,默认读取1学校)
 
 学校信息列表
-http://39.105.3.57/api/v1.0/schools
+http://localhost/api/v1.0/schools
 请求参数:
     gradeid:等级标识(选填,默认读取所有数据)
     catid:类别标识(选填,默认读取所有数据)
@@ -89,16 +89,16 @@ http://39.105.3.57/api/v1.0/schools
 返回值:
 
 学校信息
-http://39.105.3.57/api/v1.0/school?id=10
+http://localhost/api/v1.0/school?id=10
 id:学校标识(必填)
 
 --课余接口
 课余信息
-http://39.105.3.57/api/v1.0/show
+http://localhost/api/v1.0/show
 参数:
   id:标识
 课余列表
-http://39.105.3.57/api/v1.0/shows
+http://localhost/api/v1.0/shows
 参数
   catid:类别标识(选填,默认读取所有数据)
   distid:地区[省-城市-区/县](选填,默认读取所有数据)
@@ -168,11 +168,11 @@ http://39.105.3.57/api/v1.0/shows
 
 --培训机构接口
 课余信息
-http://39.105.3.57/api/v1.0/training
+http://localhost/api/v1.0/training
 参数:
   id:标识
 培训机构列表
-http://39.105.3.57/api/v1.0/trainings
+http://localhost/api/v1.0/trainings
 参数
   catid:类别标识(选填,默认读取所有数据)
   distid:地区[省-城市-区/县](选填,默认读取所有数据)
@@ -240,4 +240,52 @@ http://39.105.3.57/api/v1.0/trainings
             ]
         #环境图片列表
 
-               
+
+--讲师接口
+讲师信息
+http://localhost/api/v1.0/lecturer
+参数:
+  id:标识
+讲师列表
+http://localhost/api/v1.0/lecturers
+参数
+  name:名称(选填,默认读取所有数据)
+  sortname:排序字段(目前只有默认排序)
+  sortorder:排序顺序(asc,desc;选填,默认读取所有数据,默认是asc )
+
+返回值
+  "id": 1
+        #标识
+  "name": "朱锋" 
+        #名称
+  "title": "2018年第1期讲师-朱锋-日语启蒙" 
+        #标题
+
+  "features": "中国戏曲学院附中民族乐团常任指挥" 
+        #简介
+  "intro": "本次授课内容介绍"
+        #详细介绍 HMTL
+  "content":"课程链接/获取方式"
+        #获取方式
+  "catid": "11" 
+        #分类标识
+  "catname": "启蒙" 
+        #分类名称
+  "desc": "演出是以恐龙从兴盛到灭绝的经历为主线，让观众穿越到6500万年前，揭秘了一个前所未见的恐龙世界"
+        #描述(预留)
+  "thumb": "/img/show/s/1"
+        #缩略图地址
+  "img": "/img/show/l/1"
+        #图片地址
+  "lat": ""
+        #维度
+  "lon": ""
+        #经度
+  "imglist": [
+                  {
+                  "id": 6,
+                  "img": #图片地址
+                  }
+            ]
+        #图片列表
+
