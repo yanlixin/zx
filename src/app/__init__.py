@@ -22,6 +22,7 @@ from app.resources.school import SchoolListAPI,SchoolThumbAPI,SchoolImgAPI
 from app.resources.school import ProvinceListAPI,CityListAPI,DistrictListAPI,GradeListAPI,CategoryListAPI,SchoolAPI,CBDListAPI
 from app.resources.goods import GoodsCatAPI,GoodsCatListAPI
 from app.resources.show import ShowAPI,ShowListAPI,ShowThumbAPI,ShowImgAPI
+from app.resources.lecturer import LecturerAPI,LecturerListAPI,LecturerImgAPI
 from app.resources.training import TrainingAPI,TrainingListAPI,TrainingThumbAPI,TrainingImgAPI
 from app.resources.trainingclass import TrainingClassAPI,TrainingClassListAPI,TrainingClassThumbAPI,TrainingClassImgAPI
 api = Api(app)
@@ -52,6 +53,10 @@ api.add_resource(TrainingAPI, '/api/v1.0/training', endpoint = 'training')
 api.add_resource(TrainingClassListAPI, '/api/v1.0/classes', endpoint = 'classes')
 api.add_resource(TrainingClassAPI, '/api/v1.0/class', endpoint = 'class')
 
+
+api.add_resource(LecturerListAPI, '/api/v1.0/lecturers', endpoint = 'lecturers')
+api.add_resource(LecturerAPI, '/api/v1.0/lecturer', endpoint = 'lecturer')
+
 api.add_resource(ProvinceListAPI, '/api/v1.0/provs', endpoint = 'provs')
 api.add_resource(CityListAPI, '/api/v1.0/cities', endpoint = 'cities')
 api.add_resource(DistrictListAPI, '/api/v1.0/dists', endpoint = 'dists')
@@ -63,5 +68,6 @@ api.add_resource(SchoolImgAPI, '/img/school/<string:t>/<int:id>', endpoint = 'im
 api.add_resource(ShowImgAPI, '/img/show/<string:t>/<int:id>', endpoint = 'img_show')
 api.add_resource(TrainingImgAPI, '/img/training/<string:t>/<int:id>', endpoint = 'img_training')
 api.add_resource(TrainingClassImgAPI, '/img/class/<string:t>/<int:id>', endpoint = 'img_class')
+api.add_resource(LecturerImgAPI, '/img/lecturer/<string:t>/<int:id>', endpoint = 'img_lecturer')
 
 

@@ -325,8 +325,8 @@ class Show(db.Model):
             'id': self.id,
             'catid':self.catid,
             'catname':self.catname,
-            'begindate':self.begindate,
-            'enddate':self.enddate,
+            'begindate':datetime.strptime(self.begindate,'%m/%d/%Y').strftime('%Y-%m-%d'),
+            'enddate':datetime.strptime(self.enddate,'%m/%d/%Y').strftime('%Y-%m-%d'),
             'name': self.name,
             'desc':self.desc,
             'addr': self.addr,
@@ -517,8 +517,8 @@ class TrainingClass(db.Model):
         data = {
             'id': self.id,
            
-            'begindate':self.begindate,
-            'enddate':self.enddate,
+            'begindate':datetime.strptime(self.begindate,'%m/%d/%Y').strftime('%Y-%m-%d'),
+            'enddate':datetime.strptime(self.enddate,'%m/%d/%Y').strftime('%Y-%m-%d'),
             'name': self.name,
             'content':self.content,
             'desc':self.desc,
@@ -575,7 +575,8 @@ class Lecturer(db.Model):
     id = db.Column("lecturerid",db.Integer, primary_key=True)
     catid = db.Column("catid",db.Integer)
     catname =db.Column("catname",db.String(128))
-    name = db.Column("lecturername",db.String(120), unique=True)
+    title = db.Column("title",db.String(126))
+    name = db.Column("lecturername",db.String(120) )
     desc = db.Column("lecturerdesc",db.String(1024))
     team = db.Column("team",db.String(1024))
     content = db.Column("lecturercontent",db.String(1024))
@@ -619,6 +620,8 @@ class Lecturer(db.Model):
         return str(self.name)
     
     def to_dict(self):
+        galleryList=db.session.query(LecturerGallery).filter(LecturerGallery.objid==self.id)
+
         data = {
             'id': self.id,
             'catid':self.catid,
@@ -629,13 +632,15 @@ class Lecturer(db.Model):
             'features':self.features,
             'intro': self.intro,
             'sortindex':self.sortindex,
-            'img': self.img,
-            'thumb': self.thumb,
+            'img': '/img/lecturer/l/'+str(self.id),
+            'thumb': '/img/lecturer/s/'+str(self.id),
             'isbest': self.isbest,
             'isnew':self.isnew,
             'ishot':self.ishot,
             'istopshow':self.istopshow,
-            "title":self.title
+            'title':self.title,
+            'imglist':[{"id":g.id,"img":"/img/lecturer/n/"+str(g.id)} for g in galleryList],
+
             }
                 
         return data
@@ -675,6 +680,7 @@ class LecturerGallery(db.Model):
             'istopshow':self.istopshow,
             'isenable':self.isenable,
             'sortindex':self.sortindex,
+
         }
         return data
 
