@@ -1,5 +1,6 @@
 from app.zx import blueprint
 from flask import render_template,request,make_response
+from sqlalchemy import or_
 from flask_login import login_required
 from datatables import DataTable
 from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City,Training,TrainingGallery,TrainingClass,TrainingClassGallery,Lecturer,LecturerGallery
@@ -90,6 +91,7 @@ def school_jsondata():
     
     #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
     #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+    table.searchable(lambda qs, sq: qs.filter(or_( School.phone.contains(sq) , School.name.contains(sq),School.addr.contains(sq), School.desc.contains(sq))))
 
     return json.dumps(table.json())
 
