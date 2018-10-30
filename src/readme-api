@@ -277,6 +277,8 @@ http://localhost/api/v1.0/lecturers
         #缩略图地址
   "img": "/img/show/l/1"
         #图片地址
+  "avatar": "/img/lecturer/a/1"
+        #头像图片地址
   "lat": ""
         #维度
   "lon": ""
@@ -287,5 +289,11 @@ http://localhost/api/v1.0/lecturers
                   "img": #图片地址
                   }
             ]
-        #图片列表
+  "imglistforavatar": [
+                  {
+                  "id": 6,
+                  "img": #图片地址
+                  }
+            ]
+        #头像图片列表
 

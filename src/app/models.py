@@ -792,7 +792,7 @@ class SmsCode(db.Model):
         code = ''
         for num in range(1,5):
             code = code + str(random.randint(0, 9))
-        code='0000'
+        code='000000'
         now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sms = SmsCode(mobile=mobileNo,verifycode=code,createdbydatetime=now)
         
@@ -805,9 +805,12 @@ class SmsCode(db.Model):
     
     @staticmethod    
     def verifyCode(mobileNo,code):
-        sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(desc(SmsCode.c.senddatetime)).first()
-        if sms!=None and sms.verifycode==code and 60>(datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')) :
-            sms.update({'hasverified':True})
+        sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.senddatetime.desc()).first()
+        delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')
+        print(sms.__dict__)
+        print(delta.total_seconds())
+        if sms!=None and sms.verifycode==code and 60>delta.total_seconds():
+            db.session.query(SmsCode).filter_by(id=sms.id).update({'hasverified':True})
             db.session.commit()
             return True
         return False
