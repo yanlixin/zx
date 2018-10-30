@@ -911,7 +911,7 @@ def lecturer_gallery_save():
     if gallery.objid is not None:
         id = str(gallery.objid)
     print(gallery.cat)
-    gallery.title= '环境图片' if gallery.cat=='2' else '一般图片'
+    gallery.title= '讲师图片' if gallery.cat=='2' else '一般图片'
 
     folder =''.join([base_path,r'/files/lecturers/',id,r'/']) 
     if not os.path.exists(folder):
@@ -935,9 +935,13 @@ def lecturer_gallery_save():
     db.session.commit()
 
     dd=db.session.query(Lecturer).filter_by(id=int(id))
-    dd.img=origin
-    dd.thumb=origin
-    dd.update({'img':imgName,'thumb':thumName} )
+    if gallery.cat=='2' :
+        db.avatar=origin
+        dd.update({'avatar':imgName} )
+    else:
+        dd.img=origin
+        dd.thumb=origin
+        dd.update({'img':imgName,'thumb':thumName} )
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
 #end lecturer

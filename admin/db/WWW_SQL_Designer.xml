@@ -810,7 +810,7 @@
 <part>showid</part>
 </key>
 </table>
-<table x="760" y="1042.75" name="showgalleries">
+<table x="760" y="1042" name="showgalleries">
 <row name="id" null="1" autoincrement="1">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
@@ -818,7 +818,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="752" y="1132.75" name="traininggalleries">
+<table x="752" y="1132" name="traininggalleries">
 <row name="id" null="1" autoincrement="1">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
@@ -826,7 +826,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="1238" y="957.5" name="TrainingClasses">
+<table x="1238" y="957" name="TrainingClasses">
 <row name="classid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -894,7 +894,7 @@
 <part>classid</part>
 </key>
 </table>
-<table x="981" y="1489.75" name="OrgUnits">
+<table x="981" y="1489" name="OrgUnits">
 <row name="origid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -911,7 +911,7 @@
 <part>origid</part>
 </key>
 </table>
-<table x="1335" y="1459.5" name="TrainingClassGalleries">
+<table x="1335" y="1459" name="TrainingClassGalleries">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -919,7 +919,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="1530.75" y="781.75" name="Lecturers">
+<table x="1530" y="781" name="Lecturers">
 <row name="lecturerid" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -1025,11 +1025,14 @@
 <row name="orgid" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
+<row name="avatar" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>lecturerid</part>
 </key>
 </table>
-<table x="1767.75" y="1124.25" name="LecturerGalleries">
+<table x="1767" y="1124" name="LecturerGalleries">
 <row name="id" null="1" autoincrement="1">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>

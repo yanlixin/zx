@@ -83,6 +83,26 @@
                         </div>
                       </div>
                       {% endif %}
+                      {% if type =='lecturer' %}
+                      <div class="col-md-12 docs-cat">
+                          <input type="hidden" id='txt_cat' value="1" >
+                        <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                              <input type="radio" class="sr-only" id="Cat0" name="Cat" value="1" checked="">
+                              <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="一般图片">
+                                  一般图片
+                              </span>
+                            </label>
+                            <label class="btn btn-primary">
+                              <input type="radio" class="sr-only" id="Cat1" name="Cat" value="2">
+                              <span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="环境图片">
+                                  讲师图片
+                              </span>
+                            </label>
+                            
+                          </div>
+                      </div>
+                      {% endif %}    
                     </div>
                   </div>
                 </div>

@@ -361,7 +361,8 @@ CREATE TABLE 'Lecturers' (
 'sortindex' INTEGER DEFAULT NULL,
 'provname' TEXT DEFAULT NULL,
 'provid' INTEGER DEFAULT NULL,
-'orgid' INTEGER DEFAULT NULL
+'orgid' INTEGER DEFAULT NULL,
+'avatar' TEXT DEFAULT NULL
 );
 
 CREATE TABLE 'LecturerGalleries' (

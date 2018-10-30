@@ -689,6 +689,7 @@ class Lecturer(db.Model):
     duration = Column("duration",String(32))
     sortindex = Column("sortindex",Integer)
     img = Column("img",String(126))
+    avatar = Column("avatar",String(126))
     thumb = Column("thumb",String(126))
     isbest = Column("isbest",Integer)
     isnew = Column("isnew",Integer)
@@ -699,6 +700,7 @@ class Lecturer(db.Model):
     cbdname = Column("cbdname",String(126))
     cbdid = Column("cbdid",Integer)
     title = Column("title",String(126))
+    
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
             # depending on whether value is an iterable or not, we must

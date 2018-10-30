@@ -596,6 +596,7 @@ class Lecturer(db.Model):
     duration = db.Column("duration",db.String(32))
     sortindex = db.Column("sortindex",db.Integer)
     img = db.Column("img",db.String(126))
+    avatar = db.Column("avatar",db.String(126))
     thumb = db.Column("thumb",db.String(126))
     isbest = db.Column("isbest",db.Integer)
     isnew = db.Column("isnew",db.Integer)
@@ -633,13 +634,15 @@ class Lecturer(db.Model):
             'intro': self.intro,
             'sortindex':self.sortindex,
             'img': '/img/lecturer/l/'+str(self.id),
+            'avatar': '/img/lecturer/a/'+str(self.id),
             'thumb': '/img/lecturer/s/'+str(self.id),
             'isbest': self.isbest,
             'isnew':self.isnew,
             'ishot':self.ishot,
             'istopshow':self.istopshow,
             'title':self.title,
-            'imglist':[{"id":g.id,"img":"/img/lecturer/n/"+str(g.id)} for g in galleryList],
+            'imglist':[{"id":g.id,"img":"/img/lecturer/n/"+str(g.id)} for g in galleryList if g.cat=='1'],
+            'imglistforavatar':[{"id":g.id,"img":"/img/lecturer/n/"+str(g.id)} for g in galleryList if g.cat=='2' ],
 
             }
                 
