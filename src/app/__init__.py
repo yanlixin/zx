@@ -10,6 +10,12 @@ from flask_httpauth import HTTPBasicAuth
 app = Flask(__name__)
 app.config.from_object('config')
 base_path=app.config['PIC_PATH']
+SMS_ACCESS_KEY_ID = app.config['SMS_ACCESS_KEY_ID']
+SMS_ACCESS_KEY_SECRET = app.config['SMS_ACCESS_KEY_SECRET']
+SMS_SIGN_NAME = app.config['SMS_SIGN_NAME']
+SMS_TEMPLATE_CODE = app.config['SMS_TEMPLATE_CODE']
+
+
 CORS(app, supports_credentials=True)
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()

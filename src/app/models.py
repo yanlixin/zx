@@ -5,7 +5,7 @@ import random
 from datetime import datetime,timedelta
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired,BadSignature
-
+from app.alisms import send_sms
 goods_cats = [
     {
        'id': 1,
@@ -785,7 +785,7 @@ class SmsCode(db.Model):
     @staticmethod
     def send(mobileNo):
         sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.id.desc()).first()
-        if sms!=None:
+        if sms!=None and sms.senddatetime!=None:
             delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')
             if delta.total_seconds()<60:
                 return 60-delta.total_seconds()
@@ -793,13 +793,18 @@ class SmsCode(db.Model):
         for num in range(1,5):
             code = code + str(random.randint(0, 9))
         code='000000'
+
         now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sms = SmsCode(mobile=mobileNo,verifycode=code,createdbydatetime=now)
-        
-        sms.senddatetime=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
         db.session.add(sms)
         db.session.commit()
+        print(sms.id)
+        sms.senddatetime=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        params = "{\"code\":\"12345\",\"product\":\"云通信\"}"
+        #send_sms(sms.id,mobile,"择校",'SMS_20181030',code)
+        result=send_sms(sms.id, "13000000000", params)
+        print(result)
+        db.session.query(SmsCode).filter_by(id=sms.id).update({'senddatetime':sms.senddatetime})  
 
         return 60
     
@@ -809,7 +814,7 @@ class SmsCode(db.Model):
         delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')
         print(sms.__dict__)
         print(delta.total_seconds())
-        if sms!=None and sms.verifycode==code and 60>delta.total_seconds():
+        if sms!=None and sms.verifycode==code and 180>delta.total_seconds():
             db.session.query(SmsCode).filter_by(id=sms.id).update({'hasverified':True})
             db.session.commit()
             return True
