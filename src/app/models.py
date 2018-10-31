@@ -325,8 +325,8 @@ class Show(db.Model):
             'id': self.id,
             'catid':self.catid,
             'catname':self.catname,
-            'begindate':datetime.strptime(self.begindate,'%m/%d/%Y').strftime('%Y-%m-%d'),
-            'enddate':datetime.strptime(self.enddate,'%m/%d/%Y').strftime('%Y-%m-%d'),
+            'begindate':datetime.strptime(self.begindate,'%m/%d/%Y').strftime('%Y.%m.%d'),
+            'enddate':datetime.strptime(self.enddate,'%m/%d/%Y').strftime('%Y.%m.%d'),
             'name': self.name,
             'desc':self.desc,
             'addr': self.addr,
@@ -517,8 +517,8 @@ class TrainingClass(db.Model):
         data = {
             'id': self.id,
            
-            'begindate':datetime.strptime(self.begindate,'%m/%d/%Y').strftime('%Y-%m-%d'),
-            'enddate':datetime.strptime(self.enddate,'%m/%d/%Y').strftime('%Y-%m-%d'),
+            'begindate':datetime.strptime(self.begindate,'%m/%d/%Y').strftime('%Y.%m.%d'),
+            'enddate':datetime.strptime(self.enddate,'%m/%d/%Y').strftime('%Y.%m.%d'),
             'name': self.name,
             'content':self.content,
             'desc':self.desc,
@@ -786,32 +786,35 @@ class SmsCode(db.Model):
     def send(mobileNo):
         sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.id.desc()).first()
         if sms!=None and sms.senddatetime!=None:
-            delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')
+            delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y.%m.%d %H:%M:%S')
             if delta.total_seconds()<60:
                 return 60-delta.total_seconds()
         code = ''
-        for num in range(1,5):
+        for num in range(1,7):
             code = code + str(random.randint(0, 9))
-        code='000000'
+        #code='000000'
 
-        now=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now=datetime.now().strftime('%Y.%m.%d %H:%M:%S')
         sms = SmsCode(mobile=mobileNo,verifycode=code,createdbydatetime=now)
         db.session.add(sms)
         db.session.commit()
         print(sms.id)
-        sms.senddatetime=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        params = "{\"code\":\"12345\",\"product\":\"云通信\"}"
-        #send_sms(sms.id,mobile,"择校",'SMS_20181030',code)
-        result=send_sms(sms.id, "13000000000", params)
-        print(result)
-        db.session.query(SmsCode).filter_by(id=sms.id).update({'senddatetime':sms.senddatetime})  
+        sms.senddatetime=datetime.now().strftime('%Y.%m.%d %H:%M:%S')
+        params = '{"code":"'+code+'"}'
+        result=send_sms(sms.id,mobileNo,params)
+        #result=send_sms(sms.id, "13000000000", params)
+        print(str(result))
+        if "OK"=="OK":
+            
+            db.session.query(SmsCode).filter_by(id=sms.id).update({'senddatetime':sms.senddatetime}) 
+            return 60
+        else:
+            return -1
 
-        return 60
-    
     @staticmethod    
     def verifyCode(mobileNo,code):
         sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.senddatetime.desc()).first()
-        delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y-%m-%d %H:%M:%S')
+        delta=datetime.now()-datetime.strptime(sms.senddatetime, '%Y.%m.%d %H:%M:%S')
         print(sms.__dict__)
         print(delta.total_seconds())
         if sms!=None and sms.verifycode==code and 180>delta.total_seconds():

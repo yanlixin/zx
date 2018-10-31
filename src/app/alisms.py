@@ -34,6 +34,8 @@ region_provider.add_endpoint(PRODUCT_NAME, REGION, DOMAIN)
 def send_sms(business_id, phone_numbers, template_param=None):
     sign_name=SMS_SIGN_NAME
     template_code=SMS_TEMPLATE_CODE
+    print(template_code)
+    print(template_param)
     smsRequest = SendSmsRequest.SendSmsRequest()
     # 申请的短信模板编码,必填
     smsRequest.set_TemplateCode(template_code)
@@ -58,7 +60,9 @@ def send_sms(business_id, phone_numbers, template_param=None):
     smsRequest.set_PhoneNumbers(phone_numbers)
 
     # 调用短信发送接口，返回json
+    print(smsRequest)
     smsResponse = acs_client.do_action_with_exception(smsRequest)
+    print(smsResponse.__dir__)
 
     # TODO 业务处理
 
