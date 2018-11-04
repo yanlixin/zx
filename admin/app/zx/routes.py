@@ -568,8 +568,15 @@ def training_gallery_save():
     id = '-1'
     if gallery.objid is not None:
         id = str(gallery.objid)
-    print(gallery.cat)
-    gallery.title= '环境图片' if gallery.cat=='2' else '一般图片'
+
+    if gallery.cat=='2':
+        gallery.title= '环境图片' 
+    elif gallery.cat=='3':
+        gallery.title= '师资团队' 
+    elif gallery.cat=='4':
+        gallery.title= '课程图片' 
+    else:
+        gallery.title= '一般图片' 
 
     folder =''.join([base_path,r'/files/trainings/',id,r'/']) 
     if not os.path.exists(folder):
@@ -591,12 +598,12 @@ def training_gallery_save():
     msg=''
     db.session.add(gallery)
     db.session.commit()
-
-    dd=db.session.query(Training).filter_by(id=int(id))
-    dd.img=origin
-    dd.thumb=origin
-    dd.update({'img':imgName,'thumb':thumName} )
-    db.session.commit()
+    if gallery.cat==1:
+        dd=db.session.query(Training).filter_by(id=int(id))
+        dd.img=origin
+        dd.thumb=origin
+        dd.update({'img':imgName,'thumb':thumName} )
+        db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
 #end training
 

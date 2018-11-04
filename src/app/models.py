@@ -150,7 +150,7 @@ class School(db.Model):
     cityname = db.Column("cityname",db.String(126))
     districtid=db.Column("districtid",db.Integer)
     districtname = db.Column("districtname",db.String(126))
-
+    price = db.Column("price",db.Numeric(10,2))
     name = db.Column("schoolname",db.String(120), unique=True)
     desc = db.Column("schooldesc",db.String(1024))
     addr = db.Column("addr",db.String(126))
@@ -333,8 +333,8 @@ class Show(db.Model):
             'features':self.features,
             'phone': self.phone,
             'intro': self.intro,
-            'price':str(self.price),
-            'maxprice':str(self.maxprice),
+            'price':{:.0f}.format(self.price),
+            'maxprice':{:.0f}.format(self.maxprice),
             'provid':self.provid,
             'provname':self.provname,
             'cityid':self.cityid,
@@ -448,7 +448,7 @@ class Training(db.Model):
             'features':self.features,
             'phone': self.phone,
             'intro': self.intro,
-            'price':str(self.price),
+            'price':{:.0f}.format(self.price),
             'provid':self.provid,
             'provname':self.provname,
             'cityid':self.cityid,
@@ -468,6 +468,8 @@ class Training(db.Model):
             'cbdid':self.cbdid,#商圈标识
 
             'imglistforenv':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='2' ],
+            'imglistforteam':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='3' ],
+            'imglistforclass':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='4' ],
             'imglist':[{"id":g.id,"img":"/img/training/n/"+str(g.id)} for g in galleryList if g.cat=='1' ],
             }
                 
@@ -526,8 +528,8 @@ class TrainingClass(db.Model):
             'features':self.features,
             
             'intro': self.intro,
-            'price':str(self.price),
-            'originalprice':str(self.originalprice),
+            'price':{:.0f}.format(self.price),
+            'originalprice':{:.0f}.format(self.originalprice),
             
             'duration': self.duration,
             'sortindex':self.sortindex,
@@ -805,16 +807,16 @@ class SmsCode(db.Model):
         #result=send_sms(sms.id, "13000000000", params)
         print(str(result))
         if "OK"=="OK":
-            
             db.session.query(SmsCode).filter_by(id=sms.id).update({'senddatetime':sms.senddatetime}) 
+            db.session.commit()
             return 60
         else:
             return -1
 
     @staticmethod    
     def verifyCode(mobileNo,code):
-        sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.senddatetime.desc()).first()
-        if sms!=None and sms.verifycode==code and 180>(datetime.now()-datetime.strptime(sms.senddatetime, '%Y.%m.%d %H:%M:%S')):
+        sms = SmsCode.query.filter_by(mobile=mobileNo).order_by(SmsCode.id.desc()).first()
+        if sms!=None and sms.verifycode==code and 180>(datetime.now()-datetime.strptime(sms.senddatetime, '%Y.%m.%d %H:%M:%S')).total_seconds():
             db.session.query(SmsCode).filter_by(id=sms.id).update({'hasverified':True})
             db.session.commit()
             return True

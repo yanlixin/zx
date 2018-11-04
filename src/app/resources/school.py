@@ -77,6 +77,8 @@ class SchoolListAPI(Resource):
         distid = args['distid']
         cbdid = args['cbdid']
         isbilingual = args['isbilingual']
+        if catid==3:
+            isbilingual=-1
         name = args['name']
         pageIndex = args['pageindex']
         pageSize=args['pagesize']
@@ -94,8 +96,8 @@ class SchoolListAPI(Resource):
         query=query.filter(or_(School.districtid==distid,-1==distid))
         query=query.filter(or_(School.cbdid==cbdid,-1==cbdid))
         query=query.filter(or_(School.isbilingual==isbilingual,-1==isbilingual))
-        query=query.filter(or_(cast(School.tuition,Numeric(12,2))>=tuitionB))
-        query=query.filter(or_(cast(School.tuition,Numeric(12,2))<=tuitionE))
+        query=query.filter(or_(cast(School.price,Numeric(12,2))>=tuitionB))
+        query=query.filter(or_(cast(School.price,Numeric(12,2))<=tuitionE))
          
         query=query.filter(or_(School.name.like('%'+name+'%'),name==''))
         if sortName=="tuition":
@@ -119,8 +121,8 @@ class SchoolListAPI(Resource):
         .filter(or_(School.districtid==distid,-1==distid))\
         .filter(or_(School.cbdid==cbdid,-1==cbdid))\
         .filter(or_(School.isbilingual==isbilingual,-1==isbilingual))\
-        .filter(or_(cast(School.tuition,Numeric(12,2))>=tuitionB))\
-        .filter(or_(cast(School.tuition,Numeric(12,2))<=tuitionE))\
+        .filter(or_(cast(School.price,Numeric(12,2))>=tuitionB))\
+        .filter(or_(cast(School.price,Numeric(12,2))<=tuitionE))\
         .filter(or_(School.name.like('%'+name+'%'),name=='')).scalar()
         totalPage=int(totalRow/pageSize)+1
 

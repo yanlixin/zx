@@ -162,6 +162,7 @@ class School(db.Model):
     cbdid = Column("cbdid",Integer)
     shcoolpid = Column("shcoolpid",Integer)
     isbilingual = Column("isbilingual",Integer)
+    price = Column("price",Numeric(10,2))
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -217,7 +218,9 @@ class School(db.Model):
             "cbdname":self.cbdname, #商圈名称
             "cbdid":self.cbdid,#商圈标识
             "shcoolpid":self.shcoolpid, #预留
-            "isbilingual":self.isbilingual #是否 
+            "isbilingual":self.isbilingual, #是否 
+            "price":self.price #是否 
+            
             }
                 
         return data
