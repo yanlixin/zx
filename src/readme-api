@@ -31,6 +31,9 @@ http://localhost/api/v1.0/reg
   }
   返回
   {"code":200,"data":{"username":"test"},"msg":"OK"}
+  code说明
+      270:用户已经存在
+      271:验证码错误
 
 登录
 http://localhost/api/v1.0/login
@@ -239,7 +242,20 @@ http://localhost/api/v1.0/trainings
                   }
             ]
         #环境图片列表
-
+  "imgforenvteam": [
+                  {
+                  "id": #图片标识,
+                  "img": #图片地址
+                  }
+            ]
+        #师资团队图片列表
+  "imgforenvclass": [
+                  {
+                  "id": #图片标识,
+                  "img": #图片地址
+                  }
+            ]
+        #课程图片列表
 
 --讲师接口
 讲师信息
