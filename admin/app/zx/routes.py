@@ -327,7 +327,17 @@ def show_edit():
             districtList=json.dumps(districts),
             cbdList=json.dumps(cbds)
         )
-
+@blueprint.route('/show/intro', methods=['GET'])
+@login_required
+def show_intro():
+    id = request.args.get('id', -1, type=int)
+    show = Show.query.get(id)
+    if show==None:
+        show = Show()
+    return render_template(
+            'showintro.html',
+            school=show,
+        )
 @blueprint.route('/show/delete', methods=['POST'])
 @login_required
 def show_del():
