@@ -171,9 +171,9 @@ def school_export():
 @blueprint.route('/school/gallery/list', methods=['GET'])
 @login_required
 def school_gallery_list():
-    schoolid = request.args.get('schoolid', -1, type=int)
-    obj = School.query.get(schoolid)
-    galleries =[item.to_dict() for item in SchoolGallery.query.filter_by(objid=schoolid)]
+    id = request.args.get('schoolid', -1, type=int)
+    obj = School.query.get(id)
+    galleries =[item.to_dict() for item in SchoolGallery.query.filter_by(objid=id)]
     createurl='/zx/school/gallery/create?schoolid='+str(id)
     deleteurl='/zx/school/gallery/delete'
     viewurl='/zx/school/gallery/view'
