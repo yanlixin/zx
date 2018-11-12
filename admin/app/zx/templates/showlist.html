@@ -116,6 +116,10 @@
                             'fnSaved': function () { $table.DataTable().draw(false); }
                         });
                         break;
+                    case "intro":
+                        var url = '/zx/show/intro/edit?id='+ clickValue;
+                        window.location.href=url
+                        break;
                     case "gallery":
                         var url = '/zx/show/gallery/list?showid='+ clickValue;
                         window.location.href=url
@@ -175,9 +179,10 @@
                     "mRender": function (data, type, full) {
                         var sOut = '';
                       
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit"></i></button>';
-                        sOut += '<button class="btn btn-info btn-xs" data-click-name="gallery" data-click-value="' + data + '"><i class="glyphicon glyphicon-picture"></i></button>';
-                        sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove"></i></button>';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit"></i>编辑</button>';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="intro" data-click-value="' + data + '"><i class="fa fa-newspaper-o"></i>介绍</button>';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="gallery" data-click-value="' + data + '"><i class="glyphicon glyphicon-picture"></i>图片</button>';
+                        sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove"></i>删除</button>';
                         
                         return sOut;
                     }

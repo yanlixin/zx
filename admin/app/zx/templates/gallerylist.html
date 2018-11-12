@@ -42,25 +42,12 @@
                     <div class="col-md-55">
                       <div class="thumbnail">
                         <div class="image view view-first">
-                          {% if type =='school' %}
-                          <img style="width: 100%; display: block;" src="/zx/school/gallery/view?id={{gallery.id}}" alt="image" />
-                          {% endif %}
-                          {% if type =='show' %}
-                          <img style="width: 100%; display: block;" src="/zx/show/gallery/view?id={{gallery.id}}" alt="image" />
-                          {% endif %}
-                          {% if type =='training' %}
-                          <img style="width: 100%; display: block;" src="/zx/training/gallery/view?id={{gallery.id}}" alt="image" />
-                          {% endif %}          
-                          {% if type =='trainingclass' %}
-                          <img style="width: 100%; display: block;" src="/zx/trainingclass/gallery/view?id={{gallery.id}}" alt="image" />
-                          {% endif %}  
-                          {% if type =='lecturer' %}
-                          <img style="width: 100%; display: block;" src="/zx/lecturer/gallery/view?id={{gallery.id}}" alt="image" />
-                          {% endif %}                
+                          <img style="width: 100%; display: block;" src="{{viewurl}}?id={{gallery.id}}" alt="image" />            
                           <div class="mask">
                             <p>{{gallery.title}}</p>
                             <div class="tools tools-bottom">
-                              <a href="javascript:void(0)" data-click-name="view" data-click-value="{{gallery.id}}" ><i class="fa fa-link"></i>查看</a>
+                              <!-- <a href="javascript:void(0)" data-click-name="view" data-click-value="{{gallery.id}}" ><i class="fa fa-link"></i>查看</a> -->
+                              <a href="javascript:void(0)" data-click-name="copy" data-click-value="{{gallery.id}}" ><i class="fa fa-copy"></i>复制地址</a>
                               <a href="javascript:void(0)" data-click-name="delete" data-click-value="{{gallery.id}}"><i class="fa fa-times"></i>删除</a>
                             </div>
                           </div>
@@ -114,23 +101,7 @@
                  var clickValue = $(this).attr("data-click-value");
                  switch(clickName){
                      case "create":
-                         var url ='';
-                        
-                         {% if type =='school' %}
-                           url='/zx/school/gallery/create?schoolid='+{{obj.id}};
-                         {% endif %}
-                         {% if type =='show' %}
-                           url='/zx/show/gallery/create?showid='+{{obj.id}};
-                         {% endif %}
-                         {% if type =='training' %}
-                           url='/zx/training/gallery/create?trainingid='+{{obj.id}};
-                         {% endif %}
-                         {% if type =='trainingclass' %}
-                           url='/zx/trainingclass/gallery/create?classid='+{{obj.id}};
-                         {% endif %}  
-                         {% if type =='lecturer' %}
-                           url='/zx/lecturer/gallery/create?lecturerid='+{{obj.id}};
-                         {% endif %}                          
+                         var url ='{{createurl}}';      
                          $("#galleryDialog").ztdialog({
                              'url': url,
                              'title': "添加图片",
@@ -140,7 +111,12 @@
                              'fnSaved': function () { window.location.reload();}
                          });
                          break;
-                    
+                     case "copy":
+                     
+                        var clipBoardContent='{{copyurl}}'+clickValue;
+                        setClipboard(clipBoardContent)
+                        break; 
+
                      case "delete":
                          ZTConfirm({
                              "title": "删除图片",
@@ -149,24 +125,7 @@
                              'confirmButtonText': '确定删除',
                              'cancelButtonText': '取消删除',
                              'fnConfirmCallback': function (parms) {
-                                  var url=''
-                                  
-                                  
-                                  {% if type =='school' %}
-                                  var  url='/zx/school/gallery/delete?id='+parms.id;
-                                  {% endif %}
-                                  {% if type =='show' %}
-                                  var  url='/zx/show/gallery/delete?id='+parms.id;
-                                  {% endif %}
-                                  {% if type =='training' %}
-                                  var  url='/zx/training/gallery/delete?id='+parms.id;
-                                  {% endif %}
-                                  {% if type =='trainingclass' %}
-                                  var  url='/zx/trainingclass/gallery/delete?id='+parms.id;
-                                  {% endif %}      
-                                  {% if type =='lecturer' %}
-                                  var  url='/zx/lecturer/gallery/delete?id='+parms.id;
-                                  {% endif %}                                
+                                  var url='{{deleteurl}}?id='+parms.id;                
                                  $.post(url, function (rtn) {
                                      var rtnDto = JSON.parse(rtn);
                                      if (rtnDto.result) {
@@ -193,5 +152,14 @@
          });
      
      });
+     function setClipboard(value) {
+    var tempInput = document.createElement("input");
+    tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+    tempInput.value = value;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+}
    </script>
 {% endblock javascripts %}

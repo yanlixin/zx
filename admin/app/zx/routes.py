@@ -5,12 +5,14 @@ from flask_login import login_required
 from datatables import DataTable
 from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City,Training,TrainingGallery,TrainingClass,TrainingClassGallery,Lecturer,LecturerGallery
 from app import db,uploaded_photos,base_path
+from app.config import Config
+
 import sys,os,logging,traceback, json,uuid
 
 from PIL import Image
 import flask_excel as excel 
 from datetime import  *  
-
+import html
 from .forms import SchoolForm,CatForm,CBDForm
 @blueprint.route('/<template>')
 @login_required
@@ -172,12 +174,20 @@ def school_gallery_list():
     schoolid = request.args.get('schoolid', -1, type=int)
     obj = School.query.get(schoolid)
     galleries =[item.to_dict() for item in SchoolGallery.query.filter_by(objid=schoolid)]
-    print(len(galleries))
+    createurl='/zx/school/gallery/create?schoolid='+str(id)
+    deleteurl='/zx/school/gallery/delete'
+    viewurl='/zx/school/gallery/view'
+    copyurl='/img/school/n/'
     return render_template(
             'gallerylist.html',
             obj=obj,
             galleryList=galleries,
-            type='school'
+            type='school',
+            createurl=createurl,
+            deleteurl=deleteurl,
+            viewurl=viewurl,
+            copyurl=copyurl
+
         )
 
 @blueprint.route('/school/gallery/create', methods=['GET'])
@@ -327,17 +337,27 @@ def show_edit():
             districtList=json.dumps(districts),
             cbdList=json.dumps(cbds)
         )
-@blueprint.route('/show/intro', methods=['GET'])
+@blueprint.route('/show/intro/edit', methods=['GET'])
 @login_required
-def show_intro():
+def show_intro_edit():
     id = request.args.get('id', -1, type=int)
     show = Show.query.get(id)
-    if show==None:
-        show = Show()
+    show.intro= html.unescape(show.intro)
     return render_template(
             'showintro.html',
-            school=show,
+            show=show,
         )
+@blueprint.route('/show/intro/save', methods=['POST'])
+@login_required
+def show_intro_save():
+    obj = Show(**request.form)
+    result='OK'
+    msg=''
+    dd=db.session.query(Show).filter_by(id=obj.id)
+    dd.update({"intro":obj.intro} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
 @blueprint.route('/show/delete', methods=['POST'])
 @login_required
 def show_del():
@@ -355,12 +375,20 @@ def show_gallery_list():
     id = request.args.get('showid', -1, type=int)
     obj = Show.query.get(id)
     galleries =[item.to_dict() for item in ShowGallery.query.filter_by(objid=id)]
-    print(len(galleries))
+    createurl='/zx/show/gallery/create?showid='+str(id)
+    deleteurl='/zx/show/gallery/delete'
+    viewurl='/zx/show/gallery/view'
+    copyurl=Config.IMAGE_DOMAIN+'/img/show/n/'
+    print(copyurl)
     return render_template(
             'gallerylist.html',
             obj=obj,
             galleryList=galleries,
-            type='show'
+            type='show',
+            createurl=createurl,
+            deleteurl=deleteurl,
+            viewurl=viewurl,
+            copyurl=copyurl
         )
 
 @blueprint.route('/show/gallery/create', methods=['GET'])
@@ -521,12 +549,19 @@ def training_gallery_list():
     id = request.args.get('trainingid', -1, type=int)
     obj = Training.query.get(id)
     galleries =[item.to_dict() for item in TrainingGallery.query.filter_by(objid=id)]
-    print(len(galleries))
+    createurl='/zx/training/gallery/create?trainingid='+str(id)
+    deleteurl='/zx/training/gallery/delete'
+    viewurl='/zx/training/gallery/view'
+    copyurl='/img/training/n/'  
     return render_template(
             'gallerylist.html',
             obj=obj,
             galleryList=galleries,
-            type='training'
+            type='training',
+            createurl=createurl,
+            deleteurl=deleteurl,
+            viewurl=viewurl,
+            copyurl=copyurl
         )
 
 @blueprint.route('/training/gallery/create', methods=['GET'])
@@ -709,12 +744,19 @@ def trainingclass_gallery_list():
     id = request.args.get('classid', -1, type=int)
     obj = TrainingClass.query.get(id)
     galleries =[item.to_dict() for item in TrainingClassGallery.query.filter_by(objid=id)]
-    
+    createurl='/zx/trainingclass/gallery/create?classid='+str(id)
+    deleteurl='/zx/trainingclass/gallery/delete'
+    viewurl='/zx/trainingclass/gallery/view'
+    copyurl='/img/trainingclass/n/'
     return render_template(
             'gallerylist.html',
             obj=obj,
             galleryList=galleries,
-            type='trainingclass'
+            type='trainingclass',
+            createurl=createurl,
+            deleteurl=deleteurl,
+            viewurl=viewurl,
+            copyurl=copyurl            
         )
 
 @blueprint.route('/trainingclass/gallery/create', methods=['GET'])
@@ -870,12 +912,19 @@ def lecturer_gallery_list():
     id = request.args.get('lecturerid', -1, type=int)
     obj = Lecturer.query.get(id)
     galleries =[item.to_dict() for item in LecturerGallery.query.filter_by(objid=id)]
-   
+    createurl='/zx/lecturer/gallery/create?lecturerid='+str(id)
+    deleteurl='/zx/lecturer/gallery/delete'
+    viewurl='/zx/lecturer/gallery/view'
+    copyurl='/img/lecturer/n/'   
     return render_template(
             'gallerylist.html',
             obj=obj,
             galleryList=galleries,
-            type='lecturer'
+            type='lecturer',
+            createurl=createurl,
+            deleteurl=deleteurl,
+            viewurl=viewurl,
+            copyurl=copyurl
         )
 
 @blueprint.route('/lecturer/gallery/create', methods=['GET'])
