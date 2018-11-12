@@ -342,7 +342,12 @@ def show_edit():
 def show_intro_edit():
     id = request.args.get('id', -1, type=int)
     show = Show.query.get(id)
-    show.intro= html.unescape(show.intro)
+    if show.intro==None:
+        show.intro=''
+    else:
+        show.intro= html.unescape(show.intro)
+    
+        
     return render_template(
             'showintro.html',
             show=show,
