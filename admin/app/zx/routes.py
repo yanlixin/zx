@@ -85,6 +85,7 @@ def school_jsondata():
         "id",
         "name",
         "desc",
+        "img",
         "addr",
         "features",
         "phone",

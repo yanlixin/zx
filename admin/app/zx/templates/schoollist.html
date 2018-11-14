@@ -46,6 +46,7 @@
                     <th>标识</th>
                     <th>名称</th>
                     <th>描述</th>
+                    <th>图片</th>
                     <th>地址</th>
                     <th>特色</th>
                     <th>电话</th>
@@ -170,6 +171,15 @@
               },
               { data: "name" },
               { data: "desc" },
+              { data: "img" ,"mRender": function (data, type, full) {
+                  
+                  if (data==null)
+                    return "";
+                  list=data.split("\/")
+                  if (list.length>0)
+                    return list[list.length-1]
+                  
+              }},
               { data: "addr" },
               { data: "features" },
               { data: "phone" },
