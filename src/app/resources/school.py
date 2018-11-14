@@ -107,9 +107,9 @@ class SchoolListAPI(Resource):
                 query=query.order_by(School.tuition.asc())
         else: 
             if sortOrder=='desc':
-                query=query.order_by(School.sortindex.desc())
-            else:
                 query=query.order_by(School.sortindex.asc())
+            else:
+                query=query.order_by(School.sortindex.desc())
 
         #[item.to_dict() for item in 
        

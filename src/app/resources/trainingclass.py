@@ -57,9 +57,9 @@ class TrainingClassListAPI(Resource):
                 query=query.order_by(TrainingClass.price.asc())
         else: 
             if sortOrder=='desc':
-                query=query.order_by(TrainingClass.sortindex.desc())
-            else:
                 query=query.order_by(TrainingClass.sortindex.asc())
+            else:
+                query=query.order_by(TrainingClass.sortindex.desc())
 
         #[item.to_dict() for item in 
        

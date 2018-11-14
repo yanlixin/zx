@@ -93,9 +93,9 @@ class ShowListAPI(Resource):
         query=query.filter(or_(Show.name.like('%'+name+'%'),name==''))
         if sortName=="price":
             if sortOrder=='desc':
-                query=query.order_by(Show.price.desc())
-            else:
                 query=query.order_by(Show.price.asc())
+            else:
+                query=query.order_by(Show.price.desc())
         else: 
             if sortOrder=='desc':
                 query=query.order_by(Show.sortindex.desc())

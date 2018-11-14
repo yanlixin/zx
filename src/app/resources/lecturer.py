@@ -50,9 +50,9 @@ class LecturerListAPI(Resource):
                 query=query.order_by(Lecturer.price.asc())
         else: 
             if sortOrder=='desc':
-                query=query.order_by(Lecturer.sortindex.desc())
-            else:
                 query=query.order_by(Lecturer.sortindex.asc())
+            else:
+                query=query.order_by(Lecturer.sortindex.desc())
 
         #[item.to_dict() for item in 
        

@@ -64,9 +64,9 @@ class TrainingListAPI(Resource):
         query=query.filter(or_(Training.name.like('%'+name+'%'),name==''))
         if sortName=="price":
             if sortOrder=='desc':
-                query=query.order_by(Training.price.desc())
-            else:
                 query=query.order_by(Training.price.asc())
+            else:
+                query=query.order_by(Training.price.desc())
         else: 
             if sortOrder=='desc':
                 query=query.order_by(Training.sortindex.desc())
