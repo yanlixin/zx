@@ -120,8 +120,15 @@
                         });
                         break;
                     case "gallery":
-                        var url = '/zx/school/gallery/list?schoolid='+ clickValue;
-                        window.location.href=url
+                       
+                        var pageIndex=$table.DataTable().page();
+                        var order =$table.DataTable().order()[0];
+
+                        var search=$table.DataTable().search()
+                        var extra='&pageindex='+pageIndex+'&orderindex='+order[0]+'&orderdir='+ order[1]+'&search='+search
+                        var url = '/zx/school/gallery/list?schoolid='+ clickValue+extra;
+                      
+                        window.location.href=url;
                         break;
                     case "export":
                         var url = '/zx/school/export';
@@ -160,13 +167,14 @@
                 }
             }
         });
-    $('#datatable-school').DataTable( {
+    var table =$('#datatable-school').DataTable( {
       serverSide: true,
       ajax: {
         url: '/zx/school/jsondata',
         dataSrc: 'data'
-    }, 
-      columns: [
+      }, 
+      
+            columns: [
               {
                   data: "id"
               },
@@ -199,7 +207,19 @@
                         return sOut;
                     }
                 }
-          ]
+          ],
+          initComplete: function () {
+      setTimeout( function () {
+          var pageindex={{pageindex|safe}};
+          var orderindex ={{orderindex|safe}};
+          var orderdir ='{{orderdir|safe}}';
+          var seach='{{search|safe}}';
+         if(pageindex >-1 ){
+          table.order([orderindex,orderdir]).draw(  );
+          table.page(pageindex).draw( 'page' );
+          //table.search().draw(  );
+        }
+      }, 10 );},
     });
     $('#datatable-school tbody').on('click', 'tr', function () {
             $table.data("clickIndex", $table.DataTable().row(this).index());
@@ -208,6 +228,12 @@
             });
             $(this).attr("style", "background:#f2fbff");
         });
+       //.on( 'init.dt', function () {
+
+        //});
+
     });
+ 
+
   </script>
 {% endblock javascripts %}

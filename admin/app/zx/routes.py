@@ -6,7 +6,7 @@ from datatables import DataTable
 from app.base.models import User,District,CBD,Grade,Category,School,Show,SchoolGallery,ShowGallery,Province,City,Training,TrainingGallery,TrainingClass,TrainingClassGallery,Lecturer,LecturerGallery
 from app import db,uploaded_photos,base_path
 from app.config import Config
-
+from urllib import parse
 import sys,os,logging,traceback, json,uuid
 
 from PIL import Image
@@ -97,6 +97,21 @@ def school_jsondata():
     table.searchable(lambda qs, sq: qs.filter(or_( School.phone.contains(sq) , School.name.contains(sq),School.addr.contains(sq), School.desc.contains(sq))))
 
     return json.dumps(table.json())
+@blueprint.route('/schoollist', methods=['GET'])
+@login_required
+def school_list():
+    
+    pageindex = request.args.get('pageindex',-1)
+    orderindex = request.args.get('orderindex','0')
+    orderdir = request.args.get('orderdir','asc')
+    search = request.args.get('search','')
+    return render_template(
+            'schoollist.html',
+            pageindex=pageindex,
+            orderindex=orderindex,
+            orderdir=orderdir,
+            search=search
+        )
 
 @blueprint.route('/school/create', methods=['POST'])
 @login_required
@@ -173,12 +188,19 @@ def school_export():
 @login_required
 def school_gallery_list():
     id = request.args.get('schoolid', -1, type=int)
+    #extra = request.args.get('extra')
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')
+    
     obj = School.query.get(id)
     galleries =[item.to_dict() for item in SchoolGallery.query.filter_by(objid=id)]
     createurl='/zx/school/gallery/create?schoolid='+str(id)
     deleteurl='/zx/school/gallery/delete'
     viewurl='/zx/school/gallery/view'
     copyurl='/img/school/n/'
+    gobackurl=''.join(['/zx/schoollist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
     return render_template(
             'gallerylist.html',
             obj=obj,
@@ -187,7 +209,8 @@ def school_gallery_list():
             createurl=createurl,
             deleteurl=deleteurl,
             viewurl=viewurl,
-            copyurl=copyurl
+            copyurl=copyurl,
+            gobackurl=gobackurl
 
         )
 

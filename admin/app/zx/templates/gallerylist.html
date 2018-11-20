@@ -27,6 +27,7 @@
                          &nbsp;
                           <span class="input-group-btn">
                             <button class="btn btn-default" type="button" data-click-name="create"><i class="fa fa-plus"></i>新增</button>
+                            <button class="btn btn-default" type="button" data-click-name="goback"><i class="fa fa-mail-reply"></i>返回</button>
                           </span>
                         </div>
                       </div>
@@ -111,6 +112,10 @@
                              'fnSaved': function () { window.location.reload();}
                          });
                          break;
+                     case "goback":
+                        var url = '{{gobackurl|safe}}';
+                        window.location.href=url
+                        break;                          
                      case "copy":
                      
                         var clipBoardContent='{{copyurl}}'+clickValue;
