@@ -69,7 +69,7 @@
                 <label class="col-sm-1 control-label">价格</label>
         
                 <div class="col-sm-2">
-                    <input type="text" id="txt-price" name="txt-duration" class="form-control" placeholder="请输入价格" value="{(0 if (obj=None ) else obj.price }}" />
+                    <input type="text" id="txt-price" name="txt-duration" class="form-control" placeholder="请输入价格" value="{{0 if obj==None  else obj.price }}" />
                     
                 </div>
         </div>        
