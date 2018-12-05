@@ -98,7 +98,7 @@ class LecturerImgAPI(Resource):
                 image_data = open(''.join([base_path,  obj.thumb]), "rb").read()
             if t=='l' and  obj.img is not None:
                 image_data = open(''.join([base_path,  obj.img]), "rb").read()
-            if t=='a' and  obj.img is not None:
+            if t=='a' and  obj.avatar is not None:
                 image_data = open(''.join([base_path,  obj.avatar]), "rb").read()
         response = make_response(image_data)
         response.headers['Content-Type'] = 'image/png'
