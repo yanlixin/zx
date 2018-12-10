@@ -42,13 +42,14 @@
                     {% for gallery in galleryList %}
                     <div class="col-md-55">
                       <div class="thumbnail">
-                        <div class="image view view-first">
+                        <div class="image view view-first" style="height:180px">
                           <img style="width: 100%; display: block;" src="{{viewurl}}?id={{gallery.id}}" alt="image" />            
                           <div class="mask">
                             <p>{{gallery.title}}</p>
                             <div class="tools tools-bottom">
                               <!-- <a href="javascript:void(0)" data-click-name="view" data-click-value="{{gallery.id}}" ><i class="fa fa-link"></i>查看</a> -->
                               <a href="javascript:void(0)" data-click-name="copy" data-click-value="{{gallery.id}}" ><i class="fa fa-copy"></i>复制地址</a>
+                              <a href="javascript:void(0)" data-click-name="defimg" data-click-value="{{gallery.id}}" ><i class="fa fa-copy"></i>默认图片</a>
                               <a href="javascript:void(0)" data-click-name="delete" data-click-value="{{gallery.id}}"><i class="fa fa-times"></i>删除</a>
                             </div>
                           </div>
@@ -121,7 +122,36 @@
                         var clipBoardContent='{{copyurl}}'+clickValue;
                         setClipboard(clipBoardContent)
                         break; 
-
+                     case "defimg":
+                         ZTConfirm({
+                             "title": "默认图片",
+                             "text": "是否确认将当前图片设置为默认图片?",
+                             'parms': { id: clickValue },
+                             'confirmButtonText': '确定设置',
+                             'cancelButtonText': '取消设置',
+                             'fnConfirmCallback': function (parms) {
+                                  var url='{{defimgurl}}?id='+parms.id;                
+                                 $.post(url, function (rtn) {
+                                     var rtnDto = JSON.parse(rtn);
+                                   
+                                     if (rtnDto.result=="OK") {
+                                         ZTAlert({
+                                             'title': '设置成功',
+                                             'text': '信息设置成功',
+                                             'type': 'success'
+                                         });
+                                         window.location.reload();
+                                     } else {
+                                         ZTAlert({
+                                             'title': '设置失败',
+                                             'text': rtnDto.msg,
+                                             'type': 'error'
+                                         });
+                                     }
+                                 }, "text");
+                             }
+                         });
+                         break;
                      case "delete":
                          ZTConfirm({
                              "title": "删除图片",

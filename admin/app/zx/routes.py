@@ -199,6 +199,8 @@ def school_gallery_list():
     createurl='/zx/school/gallery/create?schoolid='+str(id)
     deleteurl='/zx/school/gallery/delete'
     viewurl='/zx/school/gallery/view'
+    defimgurl='/zx/school/gallery/def'
+    
     copyurl='/img/school/n/'
     gobackurl=''.join(['/zx/schoollist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
     return render_template(
@@ -210,6 +212,7 @@ def school_gallery_list():
             deleteurl=deleteurl,
             viewurl=viewurl,
             copyurl=copyurl,
+            defimgurl=defimgurl,
             gobackurl=gobackurl
 
         )
@@ -248,6 +251,35 @@ def school_gallery_photo():
     response = make_response(image_data)
     response.headers['Content-Type'] = 'image/png'
     return response
+
+
+@blueprint.route('/school/gallery/def', methods=['POST'])
+@login_required
+def school_gallery_def():
+    result='OK'
+    msg=''
+    id = request.args.get('id', -1, type=int)
+    gallery=SchoolGallery.query.get(id)
+
+    imagename = os.path.splitext(gallery.path)
+    path=''.join([base_path,r'/files/schools/',str(gallery.objid),'/'])
+    dirs = os.listdir( path )
+    dataWidth = '190' 
+    dataHeight = '130'
+    imgName=''.join([r'/files/schools/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumName=''.join([r'/files/schools/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
+    for file in dirs:
+        #print (file)
+        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+            continue
+        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+            continue
+        imgName=''.join([r'/files/schools/',str(gallery.objid),r'/',file])
+    obj=db.session.query(School).filter_by(id=int(gallery.objid))
+    obj.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })    
 
 @blueprint.route('/school/gallery/save', methods=['POST'])
 @login_required
@@ -407,8 +439,9 @@ def show_gallery_list():
     createurl='/zx/show/gallery/create?showid='+str(id)
     deleteurl='/zx/show/gallery/delete'
     viewurl='/zx/show/gallery/view'
+    defimgurl='/zx/show/gallery/def'
     copyurl=Config.IMAGE_DOMAIN+'/img/show/n/'
-    print(copyurl)
+
     return render_template(
             'gallerylist.html',
             obj=obj,
@@ -417,6 +450,7 @@ def show_gallery_list():
             createurl=createurl,
             deleteurl=deleteurl,
             viewurl=viewurl,
+            defimgurl=defimgurl,
             copyurl=copyurl
         )
 
@@ -453,6 +487,34 @@ def show_gallery_photo():
     response = make_response(image_data)
     response.headers['Content-Type'] = 'image/png'
     return response
+
+@blueprint.route('/show/gallery/def', methods=['POST'])
+@login_required
+def show_gallery_def():
+    result='OK'
+    msg=''
+    id = request.args.get('id', -1, type=int)
+    gallery=ShowGallery.query.get(id)
+
+    imagename = os.path.splitext(gallery.path)
+    path=''.join([base_path,r'/files/shows/',str(gallery.objid),'/'])
+    dirs = os.listdir( path )
+    dataWidth = '190' 
+    dataHeight = '130'
+    imgName=''.join([r'/files/shows/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumName=''.join([r'/files/shows/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
+    for file in dirs:
+        #print (file)
+        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+            continue
+        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+            continue
+        imgName=''.join([r'/files/shows/',str(gallery.objid),r'/',file])
+    obj=db.session.query(School).filter_by(id=int(gallery.objid))
+    obj.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })    
 
 @blueprint.route('/show/gallery/save', methods=['POST'])
 @login_required
@@ -581,6 +643,7 @@ def training_gallery_list():
     createurl='/zx/training/gallery/create?trainingid='+str(id)
     deleteurl='/zx/training/gallery/delete'
     viewurl='/zx/training/gallery/view'
+    defimgurl='/zx/training/gallery/def'
     copyurl='/img/training/n/'  
     return render_template(
             'gallerylist.html',
@@ -590,6 +653,7 @@ def training_gallery_list():
             createurl=createurl,
             deleteurl=deleteurl,
             viewurl=viewurl,
+            defimgurl=defimgurl,
             copyurl=copyurl
         )
 
@@ -626,7 +690,34 @@ def training_gallery_photo():
     response = make_response(image_data)
     response.headers['Content-Type'] = 'image/png'
     return response
+@blueprint.route('/training/gallery/def', methods=['POST'])
+@login_required
+def training_gallery_def():
+    result='OK'
+    msg=''
+    id = request.args.get('id', -1, type=int)
+    gallery=TrainingGallery.query.get(id)
 
+    imagename = os.path.splitext(gallery.path)
+    path=''.join([base_path,r'/files/trainings/',str(gallery.objid),'/'])
+    dirs = os.listdir( path )
+    dataWidth = '190' 
+    dataHeight = '130'
+    imgName=''.join([r'/files/trainings/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumName=''.join([r'/files/trainings/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
+    for file in dirs:
+        #print (file)
+        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+            continue
+        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+            continue
+        imgName=''.join([r'/files/trainings/',str(gallery.objid),r'/',file])
+    obj=db.session.query(School).filter_by(id=int(gallery.objid))
+    obj.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })    
+    
 @blueprint.route('/training/gallery/save', methods=['POST'])
 @login_required
 def training_gallery_save():
@@ -944,6 +1035,7 @@ def lecturer_gallery_list():
     createurl='/zx/lecturer/gallery/create?lecturerid='+str(id)
     deleteurl='/zx/lecturer/gallery/delete'
     viewurl='/zx/lecturer/gallery/view'
+    defimgurl='/zx/lecturer/gallery/def'
     copyurl='/img/lecturer/n/'   
     return render_template(
             'gallerylist.html',
@@ -953,6 +1045,7 @@ def lecturer_gallery_list():
             createurl=createurl,
             deleteurl=deleteurl,
             viewurl=viewurl,
+            defimgurl=defimgurl,
             copyurl=copyurl
         )
 
@@ -989,6 +1082,37 @@ def lecturer_gallery_photo():
     response = make_response(image_data)
     response.headers['Content-Type'] = 'image/png'
     return response
+
+@blueprint.route('/lecturer/gallery/def', methods=['POST'])
+@login_required
+def lecturer_gallery_def():
+    result='OK'
+    msg=''
+    id = request.args.get('id', -1, type=int)
+    gallery=LecturerGallery.query.get(id)
+
+    imagename = os.path.splitext(gallery.path)
+    path=''.join([base_path,r'/files/lecturers/',str(gallery.objid),'/'])
+    dirs = os.listdir( path )
+    dataWidth = '190' 
+    dataHeight = '130'
+    imgName=''.join([r'/files/lecturers/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    thumName=''.join([r'/files/lecturers/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
+    #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
+    for file in dirs:
+        #print (file)
+        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+            continue
+        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+            continue
+        imgName=''.join([r'/files/lecturers/',str(gallery.objid),r'/',file])
+    obj=db.session.query(School).filter_by(id=int(gallery.objid))
+    if gallery.cat=='2' :
+        obj.update({'avatar':imgName} )
+    else:
+        obj.update({'img':imgName,'thumb':thumName} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })    
 
 @blueprint.route('/lecturer/gallery/save', methods=['POST'])
 @login_required
@@ -1031,11 +1155,8 @@ def lecturer_gallery_save():
 
     dd=db.session.query(Lecturer).filter_by(id=int(id))
     if gallery.cat=='2' :
-        db.avatar=origin
         dd.update({'avatar':imgName} )
     else:
-        dd.img=origin
-        dd.thumb=origin
         dd.update({'img':imgName,'thumb':thumName} )
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })
