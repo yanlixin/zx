@@ -511,7 +511,7 @@ def show_gallery_def():
         if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
             continue
         imgName=''.join([r'/files/shows/',str(gallery.objid),r'/',file])
-    obj=db.session.query(School).filter_by(id=int(gallery.objid))
+    obj=db.session.query(Show).filter_by(id=int(gallery.objid))
     obj.update({'img':imgName,'thumb':thumName} )
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })    
@@ -713,7 +713,7 @@ def training_gallery_def():
         if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
             continue
         imgName=''.join([r'/files/trainings/',str(gallery.objid),r'/',file])
-    obj=db.session.query(School).filter_by(id=int(gallery.objid))
+    obj=db.session.query(Training).filter_by(id=int(gallery.objid))
     obj.update({'img':imgName,'thumb':thumName} )
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })    
@@ -1106,7 +1106,7 @@ def lecturer_gallery_def():
         if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
             continue
         imgName=''.join([r'/files/lecturers/',str(gallery.objid),r'/',file])
-    obj=db.session.query(School).filter_by(id=int(gallery.objid))
+    obj=db.session.query(Lecturer).filter_by(id=int(gallery.objid))
     if gallery.cat=='2' :
         obj.update({'avatar':imgName} )
     else:
