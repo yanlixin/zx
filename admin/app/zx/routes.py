@@ -270,12 +270,15 @@ def school_gallery_def():
     thumName=''.join([r'/files/schools/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
     #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
     for file in dirs:
-        #print (file)
-        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
-            continue
-        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
-            continue
-        imgName=''.join([r'/files/schools/',str(gallery.objid),r'/',file])
+        if len(file)>=36 and len(imagename)>=36 and file[0:36]==imagename[0][0:36]:
+
+            if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+                continue
+            if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+                continue
+            imgName=''.join([r'/files/schools/',str(gallery.objid),r'/',file])
+            break
+        
     obj=db.session.query(School).filter_by(id=int(gallery.objid))
     obj.update({'img':imgName,'thumb':thumName} )
     db.session.commit()
@@ -505,12 +508,15 @@ def show_gallery_def():
     thumName=''.join([r'/files/shows/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
     #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
     for file in dirs:
-        #print (file)
-        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
-            continue
-        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
-            continue
-        imgName=''.join([r'/files/shows/',str(gallery.objid),r'/',file])
+        if len(file)>=36 and len(imagename)>=36 and file[0:36]==imagename[0][0:36]:
+
+            if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+                continue
+            if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+                continue
+            imgName=''.join([r'/files/shows/',str(gallery.objid),r'/',file])
+            break
+        
     obj=db.session.query(Show).filter_by(id=int(gallery.objid))
     obj.update({'img':imgName,'thumb':thumName} )
     db.session.commit()
@@ -697,7 +703,7 @@ def training_gallery_def():
     msg=''
     id = request.args.get('id', -1, type=int)
     gallery=TrainingGallery.query.get(id)
-
+    #print(gallery.path)
     imagename = os.path.splitext(gallery.path)
     path=''.join([base_path,r'/files/trainings/',str(gallery.objid),'/'])
     dirs = os.listdir( path )
@@ -705,15 +711,20 @@ def training_gallery_def():
     dataHeight = '130'
     imgName=''.join([r'/files/trainings/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
     thumName=''.join([r'/files/trainings/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
-    #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
+   
     for file in dirs:
-        #print (file)
-        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
-            continue
-        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
-            continue
-        imgName=''.join([r'/files/trainings/',str(gallery.objid),r'/',file])
+        
+        if len(file)>=36 and len(imagename)>=36 and file[0:36]==imagename[0][0:36]:
+
+            if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+                continue
+            if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+                continue
+            imgName=''.join([r'/files/trainings/',str(gallery.objid),r'/',file])
+            break
+
     obj=db.session.query(Training).filter_by(id=int(gallery.objid))
+
     obj.update({'img':imgName,'thumb':thumName} )
     db.session.commit()
     return json.dumps({'valid':True,'result':result,'msg':msg })    
@@ -1100,12 +1111,15 @@ def lecturer_gallery_def():
     thumName=''.join([r'/files/lecturers/',str(gallery.objid),r'/',imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]])
     #print(''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]))
     for file in dirs:
-        #print (file)
-        if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
-            continue
-        if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
-            continue
-        imgName=''.join([r'/files/lecturers/',str(gallery.objid),r'/',file])
+        if len(file)>=36 and len(imagename)>=36 and file[0:36]==imagename[0][0:36]:
+
+            if file ==''.join([imagename[0],r'_',dataWidth,r'x',dataHeight,'_',imagename[1]]):
+                continue
+            if file ==''.join([imagename[0],r'_origin_',imagename[1]]):
+                continue
+            imgName=''.join([r'/files/lecturers/',str(gallery.objid),r'/',file])
+            break
+        
     obj=db.session.query(Lecturer).filter_by(id=int(gallery.objid))
     if gallery.cat=='2' :
         obj.update({'avatar':imgName} )
