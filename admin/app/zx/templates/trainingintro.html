@@ -10,7 +10,7 @@
 
 {% block content %}
 
-  <div class="right_col" role="main" data-panel-id='view-show-intro'>
+  <div class="right_col" role="main" data-panel-id='view-training-intro'>
     <div class="">
         <div class="page-title">
             <div class="title_left">
@@ -35,7 +35,7 @@
             <div class="form-group">
                 <div class="row">
                         
-                        <textarea type="text" cols="40" rows="20" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入特色介绍" >{{show.intro}}</textarea>
+                        <textarea type="text" cols="40" rows="20" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入特色介绍" >{{obj.intro}}</textarea>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
   <!-- Datatables -->
   <script>
 $(document).ready(function () {
-    var $win = $("[data-panel-id='view-show-intro']");
+    var $win = $("[data-panel-id='view-training-intro']");
     $('#txt-intro').summernote(        {
         placeholder: '',
         tabsize: 2,
@@ -73,10 +73,10 @@ $(document).ready(function () {
                 case "save":
                     var subData = {
                       
-                        id: {{show.id}},
+                        id: {{obj.id}},
                         intro:jQuery('<div />').text($('#txt-intro').summernote('code')).html() ,
                     };
-                    var url = '/zx/show/intro/save';
+                    var url = '/zx/training/intro/save';
                     $.post(url, subData, function (rtn) {
                         var rtnDto = JSON.parse(rtn);
                         if (!rtnDto.valid) {
@@ -91,7 +91,7 @@ $(document).ready(function () {
                             
                         } else if (rtnDto.result) {
                             var url = '{{gobackurl|safe}}';
-                            window.location.href=url;                           
+                            window.location.href=url;                            
                         } else {
                             ZTAlert({
                                 "title": "保存失败",

@@ -10,11 +10,11 @@
 
 {% block content %}
 
-  <div class="right_col" role="main" data-panel-id='view-show-intro'>
+  <div class="right_col" role="main" data-panel-id='view-lecturer-intro'>
     <div class="">
         <div class="page-title">
             <div class="title_left">
-            <h3>课余介绍</h3>
+            <h3>讲师介绍</h3>
             </div>
 
             <div class="title_right">
@@ -33,11 +33,25 @@
             </div>
             <div class="hr-line-dashed-10"></div>
             <div class="form-group">
+                <label class="col-sm-2">介绍</label>
+            </div>
+            <div class="hr-line-dashed-10"></div>
+            <div class="form-group">
                 <div class="row">
-                        
-                        <textarea type="text" cols="40" rows="20" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入特色介绍" >{{show.intro}}</textarea>
+                    <textarea type="text" cols="40" rows="20" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入介绍" >{{obj.intro}}</textarea>
                 </div>
             </div>
+            <div class="hr-line-dashed-10"></div>
+            <div class="form-group">
+                <label class="col-sm-2">获取方式</label>
+            </div>
+            <div class="hr-line-dashed-10"></div>
+            <div class="form-group">
+                <div class="row">
+                    <textarea type="text" cols="40" rows="3"  id="txt-content" name="txt-content" class="form-control" placeholder="请输入获取方式" > {{obj.content}}</textarea>
+                </div>
+        
+            </div>            
         </div>
     </div>
    
@@ -53,32 +67,37 @@
   <!-- Datatables -->
   <script>
 $(document).ready(function () {
-    var $win = $("[data-panel-id='view-show-intro']");
+    var $win = $("[data-panel-id='view-lecturer-intro']");
     $('#txt-intro').summernote(        {
         placeholder: '',
         tabsize: 2,
-        height: 600
+        height: 300
+      });
+      $('#txt-content').summernote(        {
+        placeholder: '',
+        tabsize: 2,
+        height: 300
       });
     $win.on("click", "button", function () {
         
         if ($(this).has("data-click-name")) {
             var clickName = $(this).attr("data-click-name");
-            var clickValue = $(this).attr("data-click-value");
-            
+            var clickValue = $(this).attr("data-click-value");            
             switch(clickName){
                 case "goback":
                     var url = '{{gobackurl|safe}}';
                     window.location.href=url;
-                    break;
                 case "save":
+                    
                     var subData = {
-                      
-                        id: {{show.id}},
-                        intro:jQuery('<div />').text($('#txt-intro').summernote('code')).html() ,
+                        id: {{obj.id}},
+                        intro: jQuery('<div />').text($('#txt-intro').summernote('code')).html(),
+                        content:jQuery('<div />').text($('#txt-content').summernote('code')).html() ,
                     };
-                    var url = '/zx/show/intro/save';
+                    var url = '/zx/lecturer/intro/save';
                     $.post(url, subData, function (rtn) {
                         var rtnDto = JSON.parse(rtn);
+                        console.log(!rtnDto.valid)
                         if (!rtnDto.valid) {
                             var msg = "";
                             for (var i in rtnDto.msg) {
@@ -91,7 +110,7 @@ $(document).ready(function () {
                             
                         } else if (rtnDto.result) {
                             var url = '{{gobackurl|safe}}';
-                            window.location.href=url;                           
+                            window.location.href=url;
                         } else {
                             ZTAlert({
                                 "title": "保存失败",

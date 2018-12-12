@@ -109,7 +109,8 @@ $(document).ready(function () {
                             });
                             
                         } else if (rtnDto.result) {
-                            
+                            var url = '{{gobackurl|safe}}';
+                            window.location.href=url;                           
                             
                         } else {
                             ZTAlert({

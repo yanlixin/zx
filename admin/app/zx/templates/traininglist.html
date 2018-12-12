@@ -102,7 +102,10 @@
             if ($(this).has("data-click-name")) {
                 var clickName = $(this).attr("data-click-name");
                 var clickValue = $(this).attr("data-click-value");
-
+                var pageIndex=$table.DataTable().page();
+                var order =$table.DataTable().order()[0];
+                var search=$table.DataTable().search()
+                var extra='&pageindex='+pageIndex+'&orderindex='+order[0]+'&orderdir='+ order[1]+'&search='+search
                 switch(clickName){
                     case "create":
                     case "edit":
@@ -117,11 +120,16 @@
                         });
                         break;
                     case "trainingclass":
-                        var url = '/zx/trainingclass/list?trainingid='+ clickValue;
+                    
+                        var url = '/zx/trainingclass/list?trainingid='+ clickValue+extra;
                         window.location.href=url
                         break;
+                    case "intro":                       
+                        var url = '/zx/training/intro/edit?id='+ clickValue+extra;
+                        window.location.href=url
+                        break; 
                     case "gallery":
-                        var url = '/zx/training/gallery/list?trainingid='+ clickValue;
+                        var url = '/zx/training/gallery/list?trainingid='+ clickValue+extra;
                         window.location.href=url
                         break;
                     case "delete":
@@ -157,7 +165,7 @@
                 }
             }
         });
-    $('#datatable-training').DataTable( {
+        var table =$('#datatable-training').DataTable( {
       serverSide: true,
       ajax: {
         url: '/zx/training/jsondata',
@@ -179,6 +187,7 @@
                     "mRender": function (data, type, full) {
                         var sOut = '';
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="trainingclass" data-click-value="' + data + '"><i class="glyphicon glyphicon-plus-sign">课程</i></button>';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="intro" data-click-value="' + data + '"><i class="fa fa-newspaper-o"></i>介绍</button>';
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit"></i>编辑</button>';
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="gallery" data-click-value="' + data + '"><i class="glyphicon glyphicon-picture">图片</i></button>';
                         sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove">删除</i></button>';
@@ -186,7 +195,19 @@
                         return sOut;
                     }
                 }
-          ]
+          ],
+          initComplete: function () {
+      setTimeout( function () {
+          var pageindex={{pageindex|safe}};
+          var orderindex ={{orderindex|safe}};
+          var orderdir ='{{orderdir|safe}}';
+          var seach='{{search|safe}}';
+          table.order([orderindex,orderdir]).draw(  );
+          table.search(seach).draw(  );
+          if(pageindex >-1 ){
+            table.page(pageindex).draw( 'page' );
+          }
+      }, 10 );},
     });
     $('#datatable-training tbody').on('click', 'tr', function () {
             $table.data("clickIndex", $table.DataTable().row(this).index());

@@ -394,7 +394,7 @@ def show_jsondata():
         "phone",
         "sortindex"
     ])
-    table.searchable(lambda qs, sq: qs.filter(or_( Show.phone.contains(sq) , School.name.contains(sq),School.addr.contains(sq), School.desc.contains(sq))))
+    table.searchable(lambda qs, sq: qs.filter(or_( Show.phone.contains(sq) , Show.name.contains(sq),Show.addr.contains(sq), Show.desc.contains(sq))))
 
     return json.dumps(table.json())
 
@@ -632,6 +632,22 @@ def show_gallery_save():
     return json.dumps({'valid':True,'result':result,'msg':msg })
 #end show
 #begin training 
+@blueprint.route('/traininglist', methods=['GET'])
+@login_required
+def training_list():
+    
+    pageindex = request.args.get('pageindex',-1)
+    orderindex = request.args.get('orderindex','0')
+    orderdir = request.args.get('orderdir','asc')
+    search = request.args.get('search','')
+    return render_template(
+            'traininglist.html',
+            pageindex=pageindex,
+            orderindex=orderindex,
+            orderdir=orderdir,
+            search=search
+        )
+        
 @blueprint.route('/training/jsondata', methods=['GET', 'POST'])
 @login_required
 def training_jsondata():
@@ -644,9 +660,7 @@ def training_jsondata():
         "phone",
         "sortindex"
     ])
-    
-    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
-    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+    table.searchable(lambda qs, sq: qs.filter(or_( Training.phone.contains(sq) , Training.name.contains(sq),Training.addr.contains(sq), Training.desc.contains(sq))))
 
     return json.dumps(table.json())
 
@@ -674,6 +688,47 @@ def training_create():
 
     return json.dumps({'valid':True,'result':result,'msg':msg })
 
+
+
+@blueprint.route('/training/intro/edit', methods=['GET'])
+@login_required
+def training_intro_edit():
+    id = request.args.get('id', -1, type=int)
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')
+
+    obj = Training.query.get(id)
+    if obj.intro==None:
+        obj.intro=''
+    else:
+        obj.intro= html.unescape(obj.intro)
+    obj = Training.query.get(id)
+    if obj.team==None:
+        obj.team=''
+    else:
+        obj.team= html.unescape(obj.team)    
+
+    gobackurl=''.join(['/zx/traininglist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
+       
+    return render_template(
+            'trainingintro.html',
+            obj=obj,
+            gobackurl=gobackurl,
+        )
+        
+@blueprint.route('/training/intro/save', methods=['POST'])
+@login_required
+def training_intro_save():
+    obj = Training(**request.form)
+    result='OK'
+    msg=''
+    dd=db.session.query(Training).filter_by(id=obj.id)
+    dd.update({"intro":obj.intro} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
 @blueprint.route('/training/edit', methods=['GET'])
 @login_required
 def training_edit():
@@ -694,6 +749,7 @@ def training_edit():
             cbdList=json.dumps(cbds)
         )
 
+
 @blueprint.route('/training/delete', methods=['POST'])
 @login_required
 def training_del():
@@ -709,6 +765,11 @@ def training_del():
 @login_required
 def training_gallery_list():
     id = request.args.get('trainingid', -1, type=int)
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')
+
     obj = Training.query.get(id)
     galleries =[item.to_dict() for item in TrainingGallery.query.filter_by(objid=id)]
     createurl='/zx/training/gallery/create?trainingid='+str(id)
@@ -716,6 +777,7 @@ def training_gallery_list():
     viewurl='/zx/training/gallery/view'
     defimgurl='/zx/training/gallery/def'
     copyurl='/img/training/n/'  
+    gobackurl=''.join(['/zx/traininglist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
     return render_template(
             'gallerylist.html',
             obj=obj,
@@ -725,7 +787,8 @@ def training_gallery_list():
             deleteurl=deleteurl,
             viewurl=viewurl,
             defimgurl=defimgurl,
-            copyurl=copyurl
+            copyurl=copyurl,
+            gobackurl=gobackurl
         )
 
 @blueprint.route('/training/gallery/create', methods=['GET'])
@@ -1035,6 +1098,21 @@ def trainingclass_gallery_save():
 #end trainingclass
 
 #begin lecturer 
+@blueprint.route('/lecturerlist', methods=['GET'])
+@login_required
+def lecturer_list():
+    
+    pageindex = request.args.get('pageindex',-1)
+    orderindex = request.args.get('orderindex','0')
+    orderdir = request.args.get('orderdir','asc')
+    search = request.args.get('search','')
+    return render_template(
+            'lecturerlist.html',
+            pageindex=pageindex,
+            orderindex=orderindex,
+            orderdir=orderdir,
+            search=search)
+
 @blueprint.route('/lecturer/jsondata', methods=['GET', 'POST'])
 @login_required
 def lecturer_jsondata():
@@ -1047,10 +1125,7 @@ def lecturer_jsondata():
         "phone",
         "sortindex"
     ])
-    
-    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
-    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
-
+    table.searchable(lambda qs, sq: qs.filter(or_( Lecturer.phone.contains(sq) , Lecturer.name.contains(sq),Lecturer.desc.contains(sq), Lecturer.intro.contains(sq))))
     return json.dumps(table.json())
 
 @blueprint.route('/lecturer/create', methods=['POST'])
@@ -1091,6 +1166,45 @@ def lecturer_edit():
             
         )
 
+@blueprint.route('/lecturer/intro/edit', methods=['GET'])
+@login_required
+def lecturer_intro_edit():
+    id = request.args.get('id', -1, type=int)
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')
+
+    obj = Lecturer.query.get(id)
+    if obj.intro==None:
+        obj.intro=''
+    else:
+        obj.intro= html.unescape(obj.intro)
+    obj = Lecturer.query.get(id)
+    if obj.content==None:
+        obj.content=''
+    else:
+        obj.content= html.unescape(obj.content)    
+
+    gobackurl=''.join(['/zx/lecturerlist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
+       
+    return render_template(
+            'lecturerintro.html',
+            obj=obj,
+            gobackurl=gobackurl,
+        )
+        
+@blueprint.route('/lecturer/intro/save', methods=['POST'])
+@login_required
+def lecturer_intro_save():
+    obj = Lecturer(**request.form)
+    result='OK'
+    msg=''
+    dd=db.session.query(Lecturer).filter_by(id=obj.id)
+    dd.update({"intro":obj.intro,"content":obj.content} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
 @blueprint.route('/lecturer/delete', methods=['POST'])
 @login_required
 def lecturer_del():
@@ -1106,6 +1220,10 @@ def lecturer_del():
 @login_required
 def lecturer_gallery_list():
     id = request.args.get('lecturerid', -1, type=int)
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')    
     obj = Lecturer.query.get(id)
     galleries =[item.to_dict() for item in LecturerGallery.query.filter_by(objid=id)]
     createurl='/zx/lecturer/gallery/create?lecturerid='+str(id)
@@ -1113,6 +1231,8 @@ def lecturer_gallery_list():
     viewurl='/zx/lecturer/gallery/view'
     defimgurl='/zx/lecturer/gallery/def'
     copyurl='/img/lecturer/n/'   
+    gobackurl=''.join(['/zx/lecturerlist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
+
     return render_template(
             'gallerylist.html',
             obj=obj,
@@ -1122,7 +1242,8 @@ def lecturer_gallery_list():
             deleteurl=deleteurl,
             viewurl=viewurl,
             defimgurl=defimgurl,
-            copyurl=copyurl
+            copyurl=copyurl,
+            gobackurl=gobackurl
         )
 
 @blueprint.route('/lecturer/gallery/create', methods=['GET'])
