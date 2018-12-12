@@ -158,6 +158,44 @@ def school_edit():
             cbdList=json.dumps(cbds)
         )
 
+@blueprint.route('/school/intro/edit', methods=['GET'])
+@login_required
+def school_intro_edit():
+    id = request.args.get('id', -1, type=int)
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')
+    gobackurl=''.join(['/zx/schoollist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
+
+    obj = School.query.get(id)
+    if obj.intro==None:
+        obj.intro=''
+    else:
+        obj.intro= html.unescape(obj.intro)
+        
+    if obj.team==None:
+        obj.team=''
+    else:
+        obj.team= html.unescape(obj.team)
+    
+        
+    return render_template(
+            'schoolintro.html',
+            obj=obj,
+            gobackurl=gobackurl,
+        )
+@blueprint.route('/school/intro/save', methods=['POST'])
+@login_required
+def school_intro_save():
+    obj = School(**request.form)
+    result='OK'
+    msg=''
+    dd=db.session.query(School).filter_by(id=obj.id)
+    dd.update({"intro":obj.intro,"team":obj.team} )
+    db.session.commit()
+    return json.dumps({'valid':True,'result':result,'msg':msg })
+
 @blueprint.route('/school/delete', methods=['POST'])
 @login_required
 def school_del():
@@ -188,7 +226,6 @@ def school_export():
 @login_required
 def school_gallery_list():
     id = request.args.get('schoolid', -1, type=int)
-    #extra = request.args.get('extra')
     pageindex = request.args.get('pageindex')
     orderindex = request.args.get('orderindex')
     orderdir = request.args.get('orderdir')
@@ -329,6 +366,22 @@ def school_gallery_save():
     return json.dumps({'valid':True,'result':result,'msg':msg })
 #end school
 #begin show 
+@blueprint.route('/showlist', methods=['GET'])
+@login_required
+def show_list():
+    
+    pageindex = request.args.get('pageindex',-1)
+    orderindex = request.args.get('orderindex','0')
+    orderdir = request.args.get('orderdir','asc')
+    search = request.args.get('search','')
+    return render_template(
+            'showlist.html',
+            pageindex=pageindex,
+            orderindex=orderindex,
+            orderdir=orderdir,
+            search=search
+        )
+
 @blueprint.route('/show/jsondata', methods=['GET', 'POST'])
 @login_required
 def show_jsondata():
@@ -341,9 +394,7 @@ def show_jsondata():
         "phone",
         "sortindex"
     ])
-    
-    #table.add_data(link=lambda obj: url_for('view_user', id=obj.id))
-    #table.searchable(lambda queryset, user_input: perform_search(queryset, user_input))
+    table.searchable(lambda qs, sq: qs.filter(or_( Show.phone.contains(sq) , School.name.contains(sq),School.addr.contains(sq), School.desc.contains(sq))))
 
     return json.dumps(table.json())
 
@@ -400,16 +451,23 @@ def show_edit():
 @login_required
 def show_intro_edit():
     id = request.args.get('id', -1, type=int)
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')
+
     show = Show.query.get(id)
     if show.intro==None:
         show.intro=''
     else:
         show.intro= html.unescape(show.intro)
     
-        
+    gobackurl=''.join(['/zx/showlist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
+       
     return render_template(
             'showintro.html',
             show=show,
+            gobackurl=gobackurl,
         )
 @blueprint.route('/show/intro/save', methods=['POST'])
 @login_required
@@ -437,6 +495,11 @@ def show_del():
 @login_required
 def show_gallery_list():
     id = request.args.get('showid', -1, type=int)
+    pageindex = request.args.get('pageindex')
+    orderindex = request.args.get('orderindex')
+    orderdir = request.args.get('orderdir')
+    search = request.args.get('search')
+
     obj = Show.query.get(id)
     galleries =[item.to_dict() for item in ShowGallery.query.filter_by(objid=id)]
     createurl='/zx/show/gallery/create?showid='+str(id)
@@ -444,7 +507,8 @@ def show_gallery_list():
     viewurl='/zx/show/gallery/view'
     defimgurl='/zx/show/gallery/def'
     copyurl=Config.IMAGE_DOMAIN+'/img/show/n/'
-
+    gobackurl=''.join(['/zx/showlist?pageindex=',str(pageindex),'&orderindex=',orderindex,'&orderdir=',orderdir,'&search=',search])
+ 
     return render_template(
             'gallerylist.html',
             obj=obj,
@@ -454,7 +518,8 @@ def show_gallery_list():
             deleteurl=deleteurl,
             viewurl=viewurl,
             defimgurl=defimgurl,
-            copyurl=copyurl
+            copyurl=copyurl,
+            gobackurl=gobackurl
         )
 
 @blueprint.route('/show/gallery/create', methods=['GET'])

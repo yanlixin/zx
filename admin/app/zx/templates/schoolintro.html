@@ -14,7 +14,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-            <h3>课余介绍</h3>
+            <h3>学校介绍</h3>
             </div>
 
             <div class="title_right">
@@ -33,11 +33,25 @@
             </div>
             <div class="hr-line-dashed-10"></div>
             <div class="form-group">
+                <label class="col-sm-2">学校介绍</label>
+            </div>
+            <div class="hr-line-dashed-10"></div>
+            <div class="form-group">
                 <div class="row">
-                        
-                        <textarea type="text" cols="40" rows="20" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入特色介绍" >{{show.intro}}</textarea>
+                    <textarea type="text" cols="40" rows="20" id="txt-intro" name="txt-intro" class="form-control" placeholder="请输入学校介绍" >{{obj.intro}}</textarea>
                 </div>
             </div>
+            <div class="hr-line-dashed-10"></div>
+            <div class="form-group">
+                <label class="col-sm-2">团队介绍</label>
+            </div>
+            <div class="hr-line-dashed-10"></div>
+            <div class="form-group">
+                <div class="row">
+                    <textarea type="text" cols="40" rows="3"  id="txt-team" name="txt-team" class="form-control" placeholder="请输入团队介绍" > {{obj.team}}</textarea>
+                </div>
+        
+            </div>            
         </div>
     </div>
    
@@ -57,7 +71,12 @@ $(document).ready(function () {
     $('#txt-intro').summernote(        {
         placeholder: '',
         tabsize: 2,
-        height: 600
+        height: 300
+      });
+      $('#txt-team').summernote(        {
+        placeholder: '',
+        tabsize: 2,
+        height: 300
       });
     $win.on("click", "button", function () {
         
@@ -69,15 +88,14 @@ $(document).ready(function () {
                 case "goback":
                     var url = '{{gobackurl|safe}}';
                     window.location.href=url;
-                    break;
                 case "save":
-                    var markupStr = $('#txt-intro').summernote('code');
+                    
                     var subData = {
-                      
-                        id: {{show.id}},
-                        intro:htmlEncode(markupStr) ,
+                        id: {{obj.id}},
+                        intro: jQuery('<div />').text($('#txt-intro').summernote('code')).html(),
+                        team:jQuery('<div />').text($('#txt-team').summernote('code')).html() ,
                     };
-                    var url = '/zx/show/intro/save';
+                    var url = '/zx/school/intro/save';
                     $.post(url, subData, function (rtn) {
                         var rtnDto = JSON.parse(rtn);
                         if (!rtnDto.valid) {
@@ -92,7 +110,7 @@ $(document).ready(function () {
                             
                         } else if (rtnDto.result) {
                             
-                            location.href="javascript:history.go(-1)";
+                            
                         } else {
                             ZTAlert({
                                 "title": "保存失败",
@@ -112,11 +130,6 @@ $(document).ready(function () {
         
     });
 });
-function htmlEncode (str){
-var div = document.createElement("div");
-var text = document.createTextNode(str);
-div.appendChild(text);
-return div.innerHTML;
-}
+
   </script>
 {% endblock javascripts %}

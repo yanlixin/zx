@@ -134,6 +134,16 @@
                         var url = '/zx/school/export';
                         window.open(url,'school','height=1, width=1, toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
                         break;
+                      case "intro":
+                        var pageIndex=$table.DataTable().page();
+                        var order =$table.DataTable().order()[0];
+
+                        var search=$table.DataTable().search()
+                        var extra='&pageindex='+pageIndex+'&orderindex='+order[0]+'&orderdir='+ order[1]+'&search='+search
+
+                        var url = '/zx/school/intro/edit?id='+ clickValue+extra;
+                        window.location.href=url
+                        break;                        
                     case "delete":
                         ZTConfirm({
                             "title": "删除学校",
@@ -201,6 +211,7 @@
                         var sOut = '';
                       
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="edit" data-click-value="' + data + '"><i class="glyphicon glyphicon-edit"></i></button>';
+                        sOut += '<button class="btn btn-info btn-xs" data-click-name="intro" data-click-value="' + data + '"><i class="fa fa-newspaper-o"></i>介绍</button>';
                         sOut += '<button class="btn btn-info btn-xs" data-click-name="gallery" data-click-value="' + data + '"><i class="glyphicon glyphicon-picture"></i></button>';
                         sOut += '<button class="btn btn-danger btn-xs"data-click-name="delete" data-click-value="' + data + '"><i class="glyphicon glyphicon-remove"></i></button>';
                         
@@ -214,11 +225,11 @@
           var orderindex ={{orderindex|safe}};
           var orderdir ='{{orderdir|safe}}';
           var seach='{{search|safe}}';
-         if(pageindex >-1 ){
           table.order([orderindex,orderdir]).draw(  );
-          table.page(pageindex).draw( 'page' );
-          //table.search().draw(  );
-        }
+          table.search(seach).draw(  );
+          if(pageindex >-1 ){
+            table.page(pageindex).draw( 'page' );
+          }
       }, 10 );},
     });
     $('#datatable-school tbody').on('click', 'tr', function () {

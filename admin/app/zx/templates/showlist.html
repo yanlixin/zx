@@ -117,12 +117,20 @@
                         });
                         break;
                     case "intro":
-                        var url = '/zx/show/intro/edit?id='+ clickValue;
-                        window.location.href=url
+                        var pageIndex=$table.DataTable().page();
+                        var order =$table.DataTable().order()[0];
+                        var search=$table.DataTable().search()
+                        var extra='&pageindex='+pageIndex+'&orderindex='+order[0]+'&orderdir='+ order[1]+'&search='+search
+                        var url = '/zx/show/intro/edit?id='+ clickValue+extra;
+                        window.location.href=url;
                         break;
                     case "gallery":
-                        var url = '/zx/show/gallery/list?showid='+ clickValue;
-                        window.location.href=url
+                        var pageIndex=$table.DataTable().page();
+                        var order =$table.DataTable().order()[0];
+                        var search=$table.DataTable().search()
+                        var extra='&pageindex='+pageIndex+'&orderindex='+order[0]+'&orderdir='+ order[1]+'&search='+search
+                        var url = '/zx/show/gallery/list?showid='+ clickValue+extra;
+                        window.location.href=url;
                         break;
                     case "delete":
                         ZTConfirm({
@@ -157,7 +165,7 @@
                 }
             }
         });
-    $('#datatable-show').DataTable( {
+        var table =$('#datatable-show').DataTable( {
       serverSide: true,
       ajax: {
         url: '/zx/show/jsondata',
@@ -187,7 +195,19 @@
                         return sOut;
                     }
                 }
-          ]
+          ],
+          initComplete: function () {
+      setTimeout( function () {
+          var pageindex={{pageindex|safe}};
+          var orderindex ={{orderindex|safe}};
+          var orderdir ='{{orderdir|safe}}';
+          var seach='{{search|safe}}';
+          table.order([orderindex,orderdir]).draw(  );
+          table.search(seach).draw(  );
+          if(pageindex >-1 ){
+            table.page(pageindex).draw( 'page' );
+          }
+      }, 10 );},
     });
     $('#datatable-show tbody').on('click', 'tr', function () {
             $table.data("clickIndex", $table.DataTable().row(this).index());
